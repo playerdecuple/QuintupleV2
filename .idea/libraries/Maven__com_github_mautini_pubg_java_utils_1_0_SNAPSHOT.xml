@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.github.mautini:pubg-java-utils:1.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/mautini/pubg-java-utils/1.0-SNAPSHOT/pubg-java-utils-1.0-20181229.163408-14.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/mautini/pubg-java-utils/1.0-SNAPSHOT/pubg-java-utils-1.0-20181229.163408-14-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/mautini/pubg-java-utils/1.0-SNAPSHOT/pubg-java-utils-1.0-20181229.163408-14-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
