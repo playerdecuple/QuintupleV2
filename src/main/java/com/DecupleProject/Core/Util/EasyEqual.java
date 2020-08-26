@@ -59,4 +59,16 @@ public class EasyEqual {
 
     }
 
+    public boolean con(String first, String ... obj) {
+
+        for (String s : obj) {
+            if (first.toLowerCase().contains(s.toLowerCase())) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
 }

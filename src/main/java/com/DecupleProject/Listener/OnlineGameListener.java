@@ -52,17 +52,6 @@ public class OnlineGameListener extends ListenerAdapter {
                 args = msg.getContentRaw().substring(1).split(" ");
             }
 
-            if (msg.getContentRaw().charAt(0) == ':') {
-                String name = msg.getContentRaw().replace(":", "");
-                StealEmoji se = new StealEmoji(user.getId(), jda, tc);
-                String code = ":" + name + ":";
-
-                if (se.hasEmoji(name) && msg.getContentRaw().contains(code)) {
-                    se.sendStealEmoji(name);
-                    tc.deleteMessageById(msg.getId()).queue();
-                }
-            }
-
             // ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ //
 
             if (msg.getContentRaw().charAt(0) == 'Q' | msg.getContentRaw().charAt(0) == 'q' | msg.getContentRaw().charAt(0) == '.' | prefixCheck) {
