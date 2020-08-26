@@ -1,5 +1,6 @@
 package com.DecupleProject;
 
+import com.DecupleProject.Core.ReadFile;
 import com.DecupleProject.Core.Util.LogWriter;
 import com.DecupleProject.Core.WriteFile;
 import com.DecupleProject.Listener.DefaultListener;
@@ -15,7 +16,9 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class QuintupleMain {
 
@@ -36,21 +39,36 @@ public class QuintupleMain {
         File f = new File("D:/Database/NowMode.txt");
         File t = new File("D:/Database/StartTime.txt");
         WriteFile w = new WriteFile();
+        ReadFile r = new ReadFile();
 
         w.writeString(f, v); // Mode Setting
         w.writeLong(t, System.currentTimeMillis()); // save current time to calculate uptime.
 
         // ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ //
 
+        String testToken = "";
+        String realToken = "";
+
+        File testTokenFile = new File("D:/Database/TestToken.txt");
+        File realTokenFile = new File("D:/Database/RealToken.txt");
+
+        if (testTokenFile.exists() && realTokenFile.exists()) {
+            testToken = r.readString(testTokenFile);
+            realToken = r.readString(realTokenFile);
+        } else {
+            System.out.println("Bot couldn't find Token File. Please check database directory.");
+        }
+
+
         String token = "";
 
         if (v.equalsIgnoreCase("real")) {
-            token = "NjkzMDQxNDUzMTYwNDY0NDY1.Xn3Uiw.28gyQEVIfkjfMcqALZAxjWn0Xyk";
+            token = realToken;
 
             System.out.println("[QUINTUPLE] Now Quintuple version : " + version);
             System.out.println("[QUINTUPLE] Quintuple, a part of PROJECT: DECUPLE, made by DECUPLE(데큐플#6056#)");
         } else if (v.equalsIgnoreCase("test")) {
-            token = "NzA2NDU5NTk3MTU3Njk1NDkw.XrfAWg.qGudIFR6_75OEwSrOJwdvxzhgt8";
+            token = testToken;
 
             System.out.println("[QUINTUPLE] Now Quintuple version : TEST " + version);
             System.out.println("[QUINTUPLE] Quintuple, a part of PROJECT: DECUPLE, made by DECUPLE(데큐플#6056#)");
