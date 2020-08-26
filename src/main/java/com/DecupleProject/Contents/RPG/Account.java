@@ -199,6 +199,8 @@ public class Account {
 
                     LogWriter lW = new LogWriter(DefaultListener.jda);
                     lW.sendEmbed(eb.build());
+
+                    eb = new EmbedBuilder();
                 }
                 
                 eb.setTitle("소량의 금액을 지급해 드렸어요!");

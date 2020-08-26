@@ -3,10 +3,7 @@ package com.DecupleProject;
 import com.DecupleProject.Core.ReadFile;
 import com.DecupleProject.Core.Util.LogWriter;
 import com.DecupleProject.Core.WriteFile;
-import com.DecupleProject.Listener.DefaultListener;
-import com.DecupleProject.Listener.MusicListener;
-import com.DecupleProject.Listener.OnlineGameListener;
-import com.DecupleProject.Listener.ServerManagementListener;
+import com.DecupleProject.Listener.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -92,7 +89,8 @@ public class QuintupleMain {
                 .setAutoReconnect(true)
                 .setStatus(OnlineStatus.ONLINE)
 
-                .addEventListeners(new DefaultListener(), new MusicListener(), new OnlineGameListener(), new ServerManagementListener());
+                .addEventListeners(new DefaultListener(), new MusicListener(), new OnlineGameListener(), new ServerManagementListener(),
+                        new RPGListener());
 
         JDA jda = jdaBuilder.build();
         jda.getPresence().setActivity(Activity.playing(jda.getUsers().size() + " 분들과 함께"));

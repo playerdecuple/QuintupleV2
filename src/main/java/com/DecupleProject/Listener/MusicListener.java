@@ -116,6 +116,8 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "C", "Enter", "입장", "들어와", "연결")) {
 
+                    // if (args[0].equalsIgnoreCase("C")) {
+
                     msg.delete().queue();
                     try {
 
