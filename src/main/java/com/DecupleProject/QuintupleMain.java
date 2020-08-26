@@ -59,6 +59,7 @@ public class QuintupleMain {
             System.out.println("Bot couldn't find Token File. Please check database directory.");
         }
 
+        // ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ //
 
         String token = "";
 
@@ -66,7 +67,7 @@ public class QuintupleMain {
             token = realToken;
 
             System.out.println("[QUINTUPLE] Now Quintuple version : " + version);
-            System.out.println("[QUINTUPLE] Quintuple, a part of PROJECT: DECUPLE, made by DECUPLE(데큐플#6056#)");
+            System.out.println("[QUINTUPLE] Quintuple, a part of PROJECT: DECUPLE, made by DECUPLE(데큐플#6056)");
         } else if (v.equalsIgnoreCase("test")) {
             token = testToken;
 
