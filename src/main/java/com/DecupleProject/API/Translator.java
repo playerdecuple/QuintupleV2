@@ -99,8 +99,6 @@ public class Translator {
         HttpURLConnection con = (HttpURLConnection) new URL(apiUrl).openConnection();
         String postParams = "source=" + l1 + "&target=" + l2 + "&text=" + text;
 
-        System.out.println(apiUrl + "/" + postParams);
-
         try {
 
             for (Map.Entry<String, String> header : requestHeaders.entrySet()) {
