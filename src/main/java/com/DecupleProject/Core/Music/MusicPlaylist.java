@@ -197,13 +197,14 @@ public class MusicPlaylist {
         while (exists(id, i)) {
 
             oneLineMusicURL = i + ". " + getTitle(getMusicUrl(id, i)) + "<" + getMusicUrl(id, i) + ">\n";
+            allMusicPlaylistURL.append(oneLineMusicURL);
 
-            if (allMusicPlaylistURL.length() + oneLineMusicURL.length() >= 2000) {
+            if (allMusicPlaylistURL.toString().length() >= 1900) {
                 tc.sendMessage("```md\n" + allMusicPlaylistURL + "```").delay(3, TimeUnit.MINUTES).flatMap(Message::delete).queue();
                 allMusicPlaylistURL = new StringBuilder();
             }
 
-            allMusicPlaylistURL.append(oneLineMusicURL);
+            i++;
 
         }
 
