@@ -14,8 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Weather {
 
-    private EasyEqual e = new EasyEqual();
-    private GetJSON j = new GetJSON();
+    private final GetJSON j = new GetJSON();
 
     public Weather() {}
 

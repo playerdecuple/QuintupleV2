@@ -14,12 +14,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 public class Encyclopedia {
     public Encyclopedia(String sName, TextChannel tc) {
         try {
             EmbedBuilder eb = new EmbedBuilder();
-            BufferedReader br = null;
+            BufferedReader br;
 
             String clientId = "XMIUubZqhsElf34bZqwQ";
             String clientSecret = "sF5mkwexWf";
@@ -37,15 +38,15 @@ public class Encyclopedia {
             uC.setRequestProperty("X-Naver-Client-Id", clientId);
             uC.setRequestProperty("X-Naver-Client-Secret", clientSecret);
 
-            br = new BufferedReader(new InputStreamReader(uC.getInputStream(), "UTF-8"));
+            br = new BufferedReader(new InputStreamReader(uC.getInputStream(), StandardCharsets.UTF_8));
 
-            String result = "";
+            StringBuilder result = new StringBuilder();
             String line;
 
-            while ((line = br.readLine()) != null) { result = result + line; }
+            while ((line = br.readLine()) != null) { result.append(line); }
             JsonParser jp = new JsonParser();
 
-            JsonObject obj = (JsonObject) jp.parse(result);
+            JsonObject obj = (JsonObject) jp.parse(result.toString());
             JsonArray items = obj.getAsJsonArray("items");
             JsonElement i_El = items.get(0);
 

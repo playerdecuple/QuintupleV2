@@ -7,13 +7,14 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.awt.*;
 import java.io.File;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class StealEmoji {
 
-    private String id;
-    private JDA jda;
-    private TextChannel tc;
+    private final String id;
+    private final JDA jda;
+    private final TextChannel tc;
 
     private final String emojiDirectoryPath = "D:/Database/Emoji";
     private final WriteFile w = new WriteFile();
@@ -38,11 +39,13 @@ public class StealEmoji {
             if (userDir.exists()) {
 
                 File emojiFile = new File(userDir.getPath() + "/" + emojiName + ".txt");
+                String imgUrl = Objects.requireNonNull(jda.getEmoteById(emojiId)).getImageUrl();
+
                 if (emojiFile.exists()) {
                     eb.setTitle("그 이름은 이미 있어요.");
                     eb.setColor(Color.RED);
 
-                    eb.setThumbnail(jda.getEmoteById(emojiId).getImageUrl());
+                    eb.setThumbnail(imgUrl);
                     tc.sendMessage(eb.build()).queue();
                     return;
                 }
@@ -50,15 +53,16 @@ public class StealEmoji {
                 eb.setTitle(":" + emojiName + ": 이모티콘을 저장했습니다!");
                 eb.setColor(Color.green);
 
-                eb.setThumbnail(jda.getEmoteById(emojiId).getImageUrl());
+                eb.setThumbnail(imgUrl);
                 tc.sendMessage(eb.build()).queue();
 
                 w.writeString(emojiFile.getPath(), emojiId);
 
             } else {
 
-                userDir.mkdir();
-                stealEmojiFromMessage(emojiId, emojiName); // 재귀
+                boolean dirSuccess = userDir.mkdir();
+
+                if (dirSuccess) stealEmojiFromMessage(emojiId, emojiName); // 재귀
 
             }
 
@@ -84,14 +88,27 @@ public class StealEmoji {
             File emojiFile = new File(userDir.getPath() + "/" + emojiName + ".txt");
             if (emojiFile.exists()) {
                 eb.setFooter(jda.retrieveUserById(id).complete().getAsTag(), jda.retrieveUserById(id).complete().getAvatarUrl());
-                eb.setImage(jda.getEmoteById(r.readString(emojiFile.getPath())).getImageUrl());
-                tc.sendMessage(eb.build()).queue();
-                return;
+
+                String emoteUrl = r.readString(emojiFile);
+
+                if (emoteUrl != null) {
+                    String imgUrl = Objects.requireNonNull(jda.getEmoteById(emoteUrl)).getImageUrl();
+
+                    eb.setImage(imgUrl);
+                    tc.sendMessage(eb.build()).queue();
+                }
             }
 
         } else {
 
-            userDir.mkdir();
+            boolean makeDir = userDir.mkdir();
+
+            if (makeDir) {
+
+                eb.setDescription("아직, 저장한 이모티콘이 없네요. `.이모티콘 저장 [이름] [이모티콘]` 형식으로 명령어를 써서 이모티콘을 저장해 보세요.");
+                tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+
+            }
 
         }
     }
@@ -111,10 +128,16 @@ public class StealEmoji {
 
             File emojiFile = new File(userDir.getPath() + "/" + emojiName + ".txt");
             if (emojiFile.exists()) {
-                eb.setDescription(":" + emojiName + ": 이모티콘을 삭제했습니다.");
-                tc.sendMessage(eb.build()).queue();
+                boolean emojiDeleted = emojiFile.delete();
 
-                emojiFile.delete();
+                if (emojiDeleted) {
+                    eb.setDescription(":" + emojiName + ": 이모티콘을 삭제했습니다.");
+                    tc.sendMessage(eb.build()).delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                } else {
+                    eb.setDescription("해당 이모티콘을 삭제하는 데 실패했어요.");
+                    tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                }
+
                 return;
             }
 
@@ -122,10 +145,6 @@ public class StealEmoji {
             eb.setColor(Color.red);
 
             tc.sendMessage(eb.build()).queue();
-
-        } else {
-
-            userDir.mkdir();
 
         }
     }

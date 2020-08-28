@@ -16,8 +16,7 @@ public class ReadFile {
             byte[] rB = new byte[fs.available()];
             while (fs.read(rB) != -1) {}
 
-            long result = Long.parseLong(new String(rB));
-            return result;
+            return Long.parseLong(new String(rB));
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -30,8 +29,7 @@ public class ReadFile {
             byte[] rB = new byte[fs.available()];
             while (fs.read(rB) != -1) {}
 
-            long result = Long.parseLong(new String(rB));
-            return result;
+            return Long.parseLong(new String(rB));
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -44,8 +42,7 @@ public class ReadFile {
             byte[] rB = new byte[fs.available()];
             while (fs.read(rB) != -1) {}
 
-            int result = Integer.parseInt(new String(rB));
-            return result;
+            return Integer.parseInt(new String(rB));
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -58,8 +55,7 @@ public class ReadFile {
             byte[] rB = new byte[fs.available()];
             while (fs.read(rB) != -1) {}
 
-            int result = Integer.parseInt(new String(rB));
-            return result;
+            return Integer.parseInt(new String(rB));
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -73,8 +69,7 @@ public class ReadFile {
             byte[] rB = new byte[fs.available()];
             while (fs.read(rB) != -1) {}
 
-            String result = new String(rB);
-            return result;
+            return new String(rB);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -88,8 +83,7 @@ public class ReadFile {
             byte[] rB = new byte[fs.available()];
             while (fs.read(rB) != -1) {}
 
-            String result = new String(rB);
-            return result;
+            return new String(rB);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

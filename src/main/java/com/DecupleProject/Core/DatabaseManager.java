@@ -4,7 +4,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 
 import java.awt.*;
 import java.io.File;
@@ -14,10 +13,11 @@ public class DatabaseManager {
     
     private final ReadFile r = new ReadFile();
     private final WriteFile w = new WriteFile();
+    private final DeleteFile d = new DeleteFile();
     
-    private String id;
-    private TextChannel tc;
-    private JDA jda;
+    private final String id;
+    private final TextChannel tc;
+    private final JDA jda;
 
     String dFilePath = "D:/Database/";
 
@@ -45,7 +45,7 @@ public class DatabaseManager {
     public void editDatabase(String databasePath, String editTo, boolean delete) {
         
         File dbFile = new File(dFilePath + databasePath.replace(".txt", "") + ".txt");
-        Authority a = new Authority(id);
+        Authority a = new Authority();
         EmbedBuilder eb = new EmbedBuilder();
         
         int nowAuthority = a.getAuthorityForId(id);
@@ -57,7 +57,8 @@ public class DatabaseManager {
                 setDatabase(databasePath, editTo);
 
                 if (delete) {
-                    dbFile.delete();
+
+                    d.deleteFile(dbFile);
                     eb.setTitle("Database Delete Completed.");
 
                     eb.addField("Deleted DB", databasePath.replace(".txt", ""), false);
@@ -110,28 +111,6 @@ public class DatabaseManager {
         tc.sendMessage(eb.build()).queue();
     }
 
-    public boolean nowExistsAllDatabase() {
-        File attendanceCheckFile = new File(dFilePath + "AttendanceCheck/" + id + ".txt");
-        File experiencePointFile = new File(dFilePath + "EXP/" + id + ".txt");
-        File usersLevelPointFile = new File(dFilePath + "Level/" + id + ".txt");
-        File investCountFirsFile = new File(dFilePath + "Invest/Count/1/" + id + ".txt");
-        File investCountSecoFile = new File(dFilePath + "Invest/Count/2/" + id + ".txt");
-        File investCountThirFile = new File(dFilePath + "Invest/Count/3/" + id + ".txt");
-        File investCountFortFile = new File(dFilePath + "Invest/Count/4/" + id + ".txt");
-        File investCountFiftFile = new File(dFilePath + "Invest/Count/5/" + id + ".txt");
-        File usrMoneyAccountFile = new File(dFilePath + "Money/" + id + ".txt");
-        File userCoolTimeSETFile = new File(dFilePath + "Time/" + id + "T.txt");
-
-        if (!attendanceCheckFile.exists() && !experiencePointFile.exists() && !usersLevelPointFile.exists()
-                &&  !investCountFirsFile.exists() && !investCountSecoFile.exists() && !investCountThirFile.exists()
-                &&  !investCountFortFile.exists() && !investCountFiftFile.exists() && !usrMoneyAccountFile.exists()
-                &&  !userCoolTimeSETFile.exists()) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     public void createAllDatabaseFromId() {
 
         File attendanceCheckFile = new File(dFilePath + "AttendanceCheck/" + id + ".txt");
@@ -145,10 +124,7 @@ public class DatabaseManager {
         File usrMoneyAccountFile = new File(dFilePath + "Money/" + id + ".txt");
         File userCoolTimeSETFile = new File(dFilePath + "Time/" + id + "T.txt");
 
-        if (!attendanceCheckFile.exists() && !experiencePointFile.exists() && !usersLevelPointFile.exists()
-                &&  !investCountFirsFile.exists() && !investCountSecoFile.exists() && !investCountThirFile.exists()
-                &&  !investCountFortFile.exists() && !investCountFiftFile.exists() && !usrMoneyAccountFile.exists()
-                &&  !userCoolTimeSETFile.exists()) {
+        if (!existsBasicFiles()) {
             w.writeString(attendanceCheckFile.getPath(), "20051105");
             w.writeInt(experiencePointFile.getPath(), 0);
             w.writeInt(usersLevelPointFile.getPath(), 1);
@@ -161,6 +137,49 @@ public class DatabaseManager {
             w.writeInt(userCoolTimeSETFile.getPath(), 0);
 
         }
+    }
+
+    public boolean existsBasicFiles() {
+
+        File[] databaseFiles = getFilesFromPaths(dFilePath + "AttendanceCheck/" + id + ".txt",
+                        dFilePath + "EXP/" + id + ".txt",
+                        dFilePath + "Level/" + id + ".txt",
+                        dFilePath + "Invest/Count/1/" + id + ".txt",
+                        dFilePath + "Invest/Count/2/" + id + ".txt",
+                        dFilePath + "Invest/Count/3/" + id + ".txt",
+                        dFilePath + "Invest/Count/4/" + id + ".txt",
+                        dFilePath + "Invest/Count/5/" + id + ".txt",
+                        dFilePath + "Money/" + id + ".txt",
+                        dFilePath + "Time/" + id + "T.txt");
+
+        return ex(databaseFiles);
+
+    }
+
+    public File[] getFilesFromPaths(String... paths) {
+
+        File[] files = new File[paths.length];
+
+        for (int i = 0; i < paths.length; i++) {
+
+            files[i] = new File(paths[i]);
+
+        }
+
+        return files;
+
+    }
+
+    public boolean ex(File[] fs) {
+
+        for (File f : fs) {
+
+            if (!f.exists()) return false;
+
+        }
+
+        return true;
+
     }
     
 }

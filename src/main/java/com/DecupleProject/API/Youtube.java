@@ -5,12 +5,11 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchResult;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class Youtube {
@@ -59,7 +58,7 @@ public class Youtube {
         try {
             if (url != null) {
                 URL urlR = new URL("http://www.youtube.com/oembed?url=" + url + "&format=json");
-                title = new JSONObject(IOUtils.toString(urlR)).getString("title");
+                title = new JSONObject(IOUtils.toString(urlR, StandardCharsets.UTF_8)).getString("title");
             } else {
                 return null;
             }
@@ -78,7 +77,7 @@ public class Youtube {
         try {
             if (url != null) {
                 URL urlR = new URL("http://www.youtube.com/oembed?url=" + url + "&format=json");
-                thumbnailUrl = new JSONObject(IOUtils.toString(urlR)).getString("thumbnail_url");
+                thumbnailUrl = new JSONObject(IOUtils.toString(urlR, StandardCharsets.UTF_8)).getString("thumbnail_url");
             } else {
                 return null;
             }

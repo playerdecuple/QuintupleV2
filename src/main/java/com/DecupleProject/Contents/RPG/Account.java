@@ -7,7 +7,6 @@ import com.DecupleProject.Listener.DefaultListener;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import sun.rmi.runtime.Log;
 
 import java.awt.*;
 import java.io.File;
@@ -22,7 +21,7 @@ public class Account {
     String id;
     String name;
 
-    private TextChannel tc;
+    private final TextChannel tc;
 
     public Account(String id, String name, TextChannel tc) {
         this.id = id;
@@ -30,48 +29,15 @@ public class Account {
         this.tc = tc;
     }
 
-    private void createAccount() {
-        File accountFile = new File("D:/Database/Money/" + id + ".txt");
-        File timerFile = new File("D:/Database/Time/" + id + "T.txt");
-        File investFile1 = new File("D:/Database/Invest/Count/1/" + id + ".txt");
-        File investFile2 = new File("D:/Database/Invest/Count/2/" + id + ".txt");
-        File investFile3 = new File("D:/Database/Invest/Count/3/" + id + ".txt");
-        File investFile4 = new File("D:/Database/Invest/Count/4/" + id + ".txt");
-        File investFile5 = new File("D:/Database/Invest/Count/5/" + id + ".txt");
-
-        if (accountFile.exists()) {
-            return;
-        } else {
-            System.out.println(id + ": 새로운 계좌 만듬.");
-
-            EmbedBuilder eb = new EmbedBuilder();
-            eb.setTitle("새로운 계좌를 만들었습니다.");
-            eb.addField("TargetId", id, true);
-
-            LogWriter lW = new LogWriter(DefaultListener.jda);
-            lW.sendEmbed(eb.build());
-
-            try {
-                w.writeInt(accountFile.getPath(), 0);
-                w.writeInt(timerFile.getPath(), 0);
-                w.writeInt(investFile1.getPath(), 0);
-                w.writeInt(investFile2.getPath(), 0);
-                w.writeInt(investFile3.getPath(), 0);
-                w.writeInt(investFile4.getPath(), 0);
-                w.writeInt(investFile5.getPath(), 0);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return;
-        }
-    }
+    /* Never used code yet.
 
     public boolean accountExists() {
         File accountFile = new File("D:/Database/Money/" + id + ".txt");
 
         return accountFile.exists();
     }
+
+     */
 
     public long getNowMoneyForId() {
         File accountFile = new File("D:/Database/Money/" + id + ".txt");
@@ -82,6 +48,8 @@ public class Account {
             return 0L;
         }
     }
+
+    /* Never used code yet.
 
     public void sendAccountMessage(TextChannel tc) {
         EmbedBuilder eb = new EmbedBuilder();
@@ -130,6 +98,8 @@ public class Account {
             }
         }
     }
+
+     */
 
     public void giveMoney(String targetId, long moneyAmount, boolean randomMode, boolean sendText) {
 

@@ -14,6 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 public class Shopping {
 
@@ -45,16 +46,16 @@ public class Shopping {
             httpURLConnection.setRequestProperty("X-Naver-Client-Id", clientId);
             httpURLConnection.setRequestProperty("X-Naver-Client-Secret", clientSecret);
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream(), "UTF-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream(), StandardCharsets.UTF_8));
 
-            String result = "";
+            StringBuilder result = new StringBuilder();
             String line;
 
             while ((line = br.readLine()) != null) {
-                result += line;
+                result.append(line);
             }
 
-            return result;
+            return result.toString();
         } catch (Exception e) {
             return null;
         }

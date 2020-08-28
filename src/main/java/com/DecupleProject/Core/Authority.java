@@ -10,10 +10,9 @@ public class Authority {
 
     private final ReadFile r = new ReadFile();
     private final WriteFile w = new WriteFile();
-    private File authFile;
 
-    public Authority(String id) {
-        this.authFile = new File("D:/Database/Authority/" + id + ".txt");
+    public Authority() {
+
     }
 
     public void authorizationUser(int authorityLevel, String id) {

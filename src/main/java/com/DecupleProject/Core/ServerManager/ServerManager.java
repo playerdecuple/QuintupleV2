@@ -1,11 +1,9 @@
 package com.DecupleProject.Core.ServerManager;
 
 import com.DecupleProject.Core.ReadFile;
-import com.DecupleProject.Core.Util.EasyEqual;
 import com.DecupleProject.Core.Util.LinkUtility;
 import com.DecupleProject.Core.WriteFile;
 import com.DecupleProject.Listener.DefaultListener;
-import com.DecupleProject.QuintupleMain;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
@@ -17,11 +15,11 @@ import java.util.concurrent.TimeUnit;
 
 public class ServerManager {
 
-    private Guild guild;
-    private Member member;
+    private final Guild guild;
+    private final Member member;
     private final EmbedBuilder eb = new EmbedBuilder();
 
-    private Member bot;
+    private final Member bot;
 
     public ServerManager(Guild guild, Member member) {
         this.guild = guild;
@@ -30,15 +28,31 @@ public class ServerManager {
         File serverDirectory = new File("D:/Database/Servers/");
         File guildDirectory = new File(serverDirectory.getPath() + "/" + guild.getId() + "/");
 
-        if (!serverDirectory.exists()) serverDirectory.mkdir();
-        if (!guildDirectory.exists()) guildDirectory.mkdir();
+        if (!serverDirectory.exists()) {
+            boolean serverDirectoryMade = serverDirectory.mkdir();
+
+            if (!serverDirectoryMade) {
+                System.out.println("Bot couldn't made a directory. Path : " + serverDirectory.getPath());
+            }
+        }
+
+        if (!guildDirectory.exists()) {
+            boolean guildDirectoryMade = guildDirectory.mkdir();
+
+            if (!guildDirectoryMade) {
+                System.out.println("Bot couldn't made a directory. Path : " + guildDirectory.getPath());
+            }
+        }
 
         this.bot = guild.getMember(DefaultListener.jda.getSelfUser());
     }
 
+    /* Never used code yet.
     public User getServerOwner() {
-        return guild.getOwner().getUser();
+        if (guild.getOwner() != null) return guild.getOwner().getUser();
+        return null;
     }
+     */
 
     public void deleteMessages(TextChannel tc, int value) {
 
@@ -74,7 +88,15 @@ public class ServerManager {
         if (!member.hasPermission(Permission.ADMINISTRATOR)) return;
 
         if (welcomeMessage.replace(" ", "").equals("")) {
-            if (messageInfo.exists()) messageInfo.delete();
+            if (messageInfo.exists()) {
+                boolean deleted = messageInfo.delete();
+
+                if (!deleted) {
+                    eb.setDescription("서버 환영 메시지를 제거하는 데에 실패했습니다.");
+                    tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                    return;
+                }
+            }
             return;
         }
 

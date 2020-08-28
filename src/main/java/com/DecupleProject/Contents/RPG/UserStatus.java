@@ -13,8 +13,8 @@ import java.io.File;
 
 public class UserStatus {
 
-    private String id;
-    private TextChannel tc;
+    private final String id;
+    private final TextChannel tc;
     private final JDA jda = DefaultListener.jda;
 
     final ReadFile r = new ReadFile();
@@ -59,18 +59,16 @@ public class UserStatus {
                         expAmount += 100;
                         break;
                     case 12:
-                        expAmount = expAmount + (int) (expAmount / 10);
+                        expAmount = expAmount + expAmount / 10;
                         break;
                     case 22:
-                        expAmount = expAmount + (int) (expAmount / 4);
+                        expAmount = expAmount + expAmount / 4;
                         break;
                     case 31:
                         expAmount = expAmount * 2;
                         break;
                 }
             }
-
-            double beforeEXPPercent = ((double) exp / (double) level * 10D * 5D) * 100D;
 
             long finalEXP = exp + expAmount;
             int finalLevel = level;

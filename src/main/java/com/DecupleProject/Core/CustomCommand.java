@@ -6,18 +6,26 @@ import java.io.File;
 
 public class CustomCommand {
 
-    private File CCFile = new File("D:/Database/CustomCommand/");
+    private final File CCFile = new File("D:/Database/CustomCommand/");
 
     ReadFile r = new ReadFile();
-    WriteFile w = new WriteFile();
+    // WriteFile w = new WriteFile();
 
-    private User user;
+    private final User user;
 
     public CustomCommand(User user) {
         this.user = user;
 
-        if (!CCFile.exists()) CCFile.mkdir();
+        if (!CCFile.exists()) {
+            boolean directoryMade = CCFile.mkdir();
+
+            if (!directoryMade) {
+                System.out.println("Bot couldn't made directory. Path : " + CCFile.getPath());
+            }
+        }
     }
+
+    /* Never used code yet.
 
     public boolean setPrefix(String prefix) {
 
@@ -32,6 +40,8 @@ public class CustomCommand {
         return true;
     }
 
+     */
+
     public String getPrefixStr() {
         String userId = user.getId();
         File prefixDirectory = new File(CCFile.getPath() + "/prefix/");
@@ -41,12 +51,10 @@ public class CustomCommand {
         File prefixFile = new File(prefixDirectory.getPath() + "/" + userId + ".txt");
         if (!prefixFile.exists()) return "Q";
 
-        String prefix = r.readString(prefixFile.getPath());
-
-        return prefix;
+        return r.readString(prefixFile.getPath());
     }
 
-    /* It isn't using.
+    /* Never used code yet.
     public char getPrefix() {
         String userId = user.getId();
         File prefixDirectory = new File(CCFile.getPath() + "/prefix/");

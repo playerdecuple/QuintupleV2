@@ -1,7 +1,6 @@
 package com.DecupleProject.API.Game;
 
 import com.DecupleProject.Core.Util.GetJSON;
-import com.google.api.client.json.Json;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -14,10 +13,11 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
 
@@ -25,11 +25,11 @@ public class LeagueOfLegends {
 
     private final String apiKey = "RGAPI-968258bf-9891-49e0-a09e-93d8a08fa5fc";
     private final GetJSON g = new GetJSON();
-    private String summonerName = "";
+    private final String summonerName;
 
     private final String LOL_VERSION = "10.16.1";
 
-    public LeagueOfLegends(String summonerName) throws UnsupportedEncodingException {
+    public LeagueOfLegends(String summonerName) {
 
         this.summonerName = summonerName;
 
@@ -96,7 +96,6 @@ public class LeagueOfLegends {
             JsonElement element = participants.get(i);
 
             summonerName = element.getAsJsonObject().get("summonerName").getAsString();
-            String summonerIdTarget = getSummonerId(summonerName);
 
             int summonerChamp = element.getAsJsonObject().get("championId").getAsInt();
             int summonerTeam = element.getAsJsonObject().get("teamId").getAsInt() / 100;
@@ -319,8 +318,10 @@ public class LeagueOfLegends {
             String sTier = lE_Solo.getAsJsonObject().get("tier").getAsString();
             String sDivs = lE_Solo.getAsJsonObject().get("rank").getAsString();
             String sLPts = lE_Solo.getAsJsonObject().get("leaguePoints").getAsString();
+            int sWins = lE_Solo.getAsJsonObject().get("wins").getAsInt();
+            int sLoses = lE_Solo.getAsJsonObject().get("losses").getAsInt();
 
-            soloRankTier = sTier + " " + sDivs + " " + sLPts + " LP";
+            soloRankTier = sTier + " " + sDivs + " " + sLPts + " LP, 승률 " + String.format("%.2f", ((double) sWins / ((double) sWins + (double) sLoses)) * 100D) + "%(" + sWins + "승 " + sLoses + "패)";
         }
 
         if (lE_Flex != null) {
@@ -328,54 +329,51 @@ public class LeagueOfLegends {
             String fDivs = lE_Flex.getAsJsonObject().get("rank").getAsString();
             String fLPts = lE_Flex.getAsJsonObject().get("leaguePoints").getAsString();
 
-            flexRankTier = fTier + " " + fDivs + " " + fLPts + " LP";
-        }
+            int fWins = lE_Flex.getAsJsonObject().get("wins").getAsInt();
+            int fLoses = lE_Flex.getAsJsonObject().get("losses").getAsInt();
 
-        String tftLeagueUrl = "https://kr.api.riotgames.com/tft/league/v1/entries/by-summoner/" + summonerId + "?api_key=RGAPI-0c9074f3-2e70-43f2-a92c-b13f5f24c51a";
+            flexRankTier = fTier + " " + fDivs + " " + fLPts + " LP, 승률 " + String.format("%.2f", ((double) fWins / ((double) fWins + (double) fLoses)) * 100D) + "%(" + fWins + "승 " + fLoses + "패)";
+        }
 
         try {
             String apiKey = "RGAPI-0c9074f3-2e70-43f2-a92c-b13f5f24c51a";
             URL url = new URL("https://kr.api.riotgames.com/tft/summoner/v1/summoners/by-name/" + summonerName + "?api_key=" + apiKey);
 
-            EmbedBuilder eb = new EmbedBuilder();
-            BufferedReader br = null;
+            BufferedReader br;
 
             HttpURLConnection uC = (HttpURLConnection) url.openConnection();
             uC.setRequestProperty("User-Agent", "Mozilla");
             uC.setReadTimeout(5000);
             uC.setConnectTimeout(5000);
-            br = new BufferedReader(new InputStreamReader(uC.getInputStream(), "UTF-8"));
+            br = new BufferedReader(new InputStreamReader(uC.getInputStream(), StandardCharsets.UTF_8));
 
-            String result = "";
+            StringBuilder result = new StringBuilder();
             String line;
 
             while ((line = br.readLine()) != null) {
-                result = result + line;
+                result.append(line);
             }
 
             JsonParser jp = new JsonParser();
-            JsonObject obj = (JsonObject) jp.parse(result);
+            JsonObject obj = (JsonObject) jp.parse(result.toString());
 
             String e_sId = obj.get("id").getAsString();
-            int s_Lev = obj.get("summonerLevel").getAsInt();
-            String pId = String.valueOf(obj.get("profileIconId").getAsInt());
-
 
             url = new URL("https://kr.api.riotgames.com/tft/league/v1/entries/by-summoner/" + e_sId + "?api_key=" + apiKey);
             HttpURLConnection uC2 = (HttpURLConnection) url.openConnection();
             uC2.setRequestProperty("X-Riot-Token", apiKey);
             uC2.setReadTimeout(5000);
             uC2.setConnectTimeout(5000);
-            br = new BufferedReader(new InputStreamReader(uC2.getInputStream(), "UTF-8"));
+            br = new BufferedReader(new InputStreamReader(uC2.getInputStream(), StandardCharsets.UTF_8));
 
-            String result_L = "";
+            StringBuilder result_L = new StringBuilder();
             String line_L;
 
             while ((line_L = br.readLine()) != null) {
-                result_L = result_L + line_L;
+                result_L.append(line_L);
             }
 
-            jsonArray = (JsonArray) jp.parse(result_L);
+            jsonArray = (JsonArray) jp.parse(result_L.toString());
 
             JsonObject lg_obj = (JsonObject) jsonArray.get(0);
             String tftTir = lg_obj.get("tier").getAsString();
@@ -385,13 +383,11 @@ public class LeagueOfLegends {
             int tftWin = lg_obj.get("wins").getAsInt();
             int tftLose = lg_obj.get("losses").getAsInt();
 
-            Double winRate = ((double) tftWin / (double) tftLose) * 100;
-
-            String lower_t = tftTir.toLowerCase();
-
-            tft_RankTier = tftTir + " " + tftDiv + " " + tftLP + " LP";
+            tft_RankTier = tftTir + " " + tftDiv + " " + tftLP + " LP, 승률 " + String.format("%.2f", ((double) tftWin / ((double) tftWin + (double) tftLose)) * 100D) + "%(" + tftWin + "승 " + tftLose + "패)";
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (IndexOutOfBoundsException | NullPointerException e) {
+            // ignore
         }
 
         switch (mode) {
@@ -449,7 +445,6 @@ public class LeagueOfLegends {
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss");
 
-        int sinceLastLevel = element.getAsJsonObject().get("championPointsSinceLastLevel").getAsInt();
         return championName + ", " + masteryLevel + "레벨 (" + String.format("%,d", masteryPoint) + "점)\n" +
                 "최근 플레이 : " + df.format(lastPlayed) + "(" + calDateDays + "일 지남)";
 
@@ -491,7 +486,6 @@ public class LeagueOfLegends {
 
                 SimpleDateFormat df = new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss");
 
-                int sinceLastLevel = element.getAsJsonObject().get("championPointsSinceLastLevel").getAsInt();
                 return championName + ", " + masteryLevel + "레벨 (" + String.format("%,d", masteryPoint) + "점)\n" +
                         "최근 플레이 : " + df.format(lastPlayed) + "(" + calDateDays + "일 지남)";
             } else {

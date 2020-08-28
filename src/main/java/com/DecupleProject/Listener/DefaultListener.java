@@ -12,7 +12,6 @@ import com.DecupleProject.Core.Util.EasyEqual;
 import com.DecupleProject.Core.Util.LogWriter;
 import com.gikk.twirk.Twirk;
 import com.gikk.twirk.TwirkBuilder;
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sun.management.OperatingSystemMXBean;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -21,6 +20,7 @@ import net.dv8tion.jda.api.events.*;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 
 import javax.management.MBeanServerConnection;
 import javax.script.ScriptEngine;
@@ -29,11 +29,11 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -49,14 +49,13 @@ public class DefaultListener extends ListenerAdapter {
 
         EmbedBuilder eb = new EmbedBuilder();
 
-        this.jda = event.getJDA();
+        jda = event.getJDA();
         this.lW = new LogWriter(jda);
         this.owner = jda.retrieveUserById("419116887469981708").complete();
 
         try {
             Twirk twirk = new TwirkBuilder("#playerdecuple", "oauth:rhhsunhtgg4hlyr1cfkfkl939u6wfk", "oauth:rhhsunhtgg4hlyr1cfkfkl939u6wfk").build();
             twirk.addIrcListener(new TwitchListener());
-            ;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,66 +63,57 @@ public class DefaultListener extends ListenerAdapter {
         // ㅡㅡㅡㅡㅡㅡ Sending 'NOW STATUS' ㅡㅡㅡㅡㅡㅡ //
 
         int sleepSec = 600; // Sending log cooldown.
-        final SimpleDateFormat fmt = new SimpleDateFormat("HH:mm:sss");
         final ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
 
-        exec.scheduleAtFixedRate(new Runnable() {
+        exec.scheduleAtFixedRate(() -> {
+            eb.setTitle("Quintuple Self Check Service");
+            eb.addField("Now Status", "Fine", true);
+            eb.addField("JDA Heartbeats", jda.getGatewayPing() + " ms", true);
 
-            @Override
-            public void run() {
-                eb.setTitle("Quintuple Self Check Service");
-                eb.addField("Now Status", "Fine", true);
-                eb.addField("JDA Heartbeats", jda.getGatewayPing() + " ms", true);
-
-                eb.setColor(Color.CYAN);
-                lW.sendEmbed(eb.build());
-            }
-
+            eb.setColor(Color.CYAN);
+            lW.sendEmbed(eb.build());
         }, 0, sleepSec, TimeUnit.SECONDS);
 
         final ScheduledThreadPoolExecutor execR = new ScheduledThreadPoolExecutor(1);
 
         final int[] mode = {0};
 
-        execR.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                switch (mode[0]) {
-                    case 0:
-                        jda.getPresence().setActivity(Activity.playing(jda.getUsers().size() + " 분들과 함께"));
-                        mode[0] = 1;
-                        break;
-                    case 1:
-                        jda.getPresence().setActivity(Activity.watching(jda.getGuilds().size() + " 개의 길드를"));
-                        mode[0] = 2;
-                        break;
-                    case 2:
-                        jda.getPresence().setActivity(Activity.listening("언제든지 '.도움말'을"));
-                        mode[0] = 3;
-                        break;
-                    case 3:
-                        ReadFile r = new ReadFile();
+        execR.scheduleAtFixedRate(() -> {
+            switch (mode[0]) {
+                case 0:
+                    jda.getPresence().setActivity(Activity.playing(jda.getUsers().size() + " 분들과 함께"));
+                    mode[0] = 1;
+                    break;
+                case 1:
+                    jda.getPresence().setActivity(Activity.watching(jda.getGuilds().size() + " 개의 길드를"));
+                    mode[0] = 2;
+                    break;
+                case 2:
+                    jda.getPresence().setActivity(Activity.listening("언제든지 '.도움말'을"));
+                    mode[0] = 3;
+                    break;
+                case 3:
+                    ReadFile r = new ReadFile();
 
-                        File timeLog = new File("D:/Database/StartTime.txt");
-                        long startTime = r.readLong(timeLog.getPath());
+                    File timeLog = new File("D:/Database/StartTime.txt");
+                    long startTime = r.readLong(timeLog.getPath());
 
-                        long af = System.currentTimeMillis() - startTime;
+                    long af = System.currentTimeMillis() - startTime;
 
-                        int seconds = (int) (af / 1000) % 60;
-                        int minutes = (int) ((af / (1000 * 60)) % 60);
-                        int hours = (int) ((af / (1000 * 60 * 60)));
+                    int seconds = (int) (af / 1000) % 60;
+                    int minutes = (int) ((af / (1000 * 60)) % 60);
+                    int hours = (int) ((af / (1000 * 60 * 60)));
 
-                        jda.getPresence().setActivity(Activity.playing(hours + "시간 " + minutes + "분 " + seconds + "초동안 동작"));
-                        mode[0] = 0;
-                        break;
-                }
+                    jda.getPresence().setActivity(Activity.playing(hours + "시간 " + minutes + "분 " + seconds + "초동안 동작"));
+                    mode[0] = 0;
+                    break;
             }
         }, 0, 5, TimeUnit.SECONDS);
 
     }
 
     @Override
-    public void onDisconnect(DisconnectEvent event) {
+    public void onDisconnect(@NotNull DisconnectEvent event) {
 
         EmbedBuilder eb = new EmbedBuilder();
 
@@ -139,7 +129,7 @@ public class DefaultListener extends ListenerAdapter {
     }
 
     @Override
-    public void onReconnect(ReconnectedEvent event) {
+    public void onReconnect(@NotNull ReconnectedEvent event) {
         EmbedBuilder eb = new EmbedBuilder();
 
         eb.setTitle("Quintuple Self Checking");
@@ -163,7 +153,7 @@ public class DefaultListener extends ListenerAdapter {
     }
 
     @Override
-    public void onResume(ResumedEvent event) {
+    public void onResume(@NotNull ResumedEvent event) {
         EmbedBuilder eb = new EmbedBuilder();
 
         eb.setTitle("Quintuple Self Checking");
@@ -188,11 +178,12 @@ public class DefaultListener extends ListenerAdapter {
         eb.setFooter("Quintuple, a part of PROJECT: DECUPLE, made by TEAM DECUPLE.");
         eb.setColor(Color.CYAN);
 
+        if (tc == null) return;
         tc.sendMessage(eb.build()).queue();
     }
 
     @Override
-    public void onMessageReceived(MessageReceivedEvent event) {
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
 
         EmbedBuilder eb = new EmbedBuilder();
 
@@ -209,7 +200,7 @@ public class DefaultListener extends ListenerAdapter {
             // ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ //
 
             DatabaseManager db = new DatabaseManager(user.getId(), tc, jda);
-            if (!db.nowExistsAllDatabase()) db.createAllDatabaseFromId();
+            if (!db.existsBasicFiles()) db.createAllDatabaseFromId();
 
             UserStatus us = new UserStatus(user.getId(), tc);
             us.setEXP(user.getId(), 1, false, true);
@@ -526,7 +517,6 @@ public class DefaultListener extends ListenerAdapter {
                     eb.addField("태그", user.getAsTag(), true);
                     eb.addField("ID", user.getId(), true);
 
-                    DateFormat format = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
                     eb.addField("가입한 날짜", user.getTimeCreated().toString().replace("T", "\n").replace("Z", "") + "", true);
                     eb.addField("봇 여부", user.isBot() ? "맞음" : "아님", true);
                     eb.addBlankField(true);
@@ -535,14 +525,16 @@ public class DefaultListener extends ListenerAdapter {
                     eb.addField(":moneybag: 자금(플)", String.format("%,d", a.getNowMoneyForId()) + "플", true);
                     eb.addField(":bulb: 경험치", "Lv. " + us.getLevel() + " / " + String.format("%.2f", ((double) us.getEXP() / ((double) us.getLevel() * 10D + 5D)) * 100D) + "%", true);
 
-                    String roles = "@everyone";
+                    StringBuilder roles = new StringBuilder("@everyone");
+
+                    if (member == null) return;
 
                     for (int i = 0; i < member.getRoles().size(); i++) {
-                        roles = roles + ", @" + member.getRoles().get(i).getName();
+                        roles.append(", @").append(member.getRoles().get(i).getName());
                     }
 
                     eb.addField("이 서버에 들어온 시각", member.getTimeJoined().toString().replace("T", "\n").replace("Z", ""), false);
-                    eb.addField("이 서버에서의 역할 목록", "```" + roles + "```", false);
+                    eb.addField("이 서버에서의 역할 목록", "```" + roles.toString() + "```", false);
 
 
                     eb.setThumbnail(user.getAvatarUrl());
@@ -558,7 +550,7 @@ public class DefaultListener extends ListenerAdapter {
 
                         eb.addField(":name_badge: 서버 이름", guild.getName(), true);
                         eb.addField(":id: 서버 ID", guild.getId(), true);
-                        eb.addField(":computer: 서버 관리자", guild.getOwner().getAsMention(), true);
+                        eb.addField(":computer: 서버 관리자", Objects.requireNonNull(guild.getOwner()).getAsMention(), true);
                         eb.addField(":flag_kr: 서버 위치", guild.getRegion().getName(), true);
                         eb.addField(":desktop: 서버 채널 개수", ":speech_balloon: " + guild.getTextChannels().size() + "개의 텍스트 채널\n:microphone2: " +
                                 guild.getVoiceChannels().size() + "개의 보이스 채널\n:ballot_box_with_check: " +
@@ -669,7 +661,7 @@ public class DefaultListener extends ListenerAdapter {
                     tc.deleteMessageById(msg.getId()).queue();
                     try {
 
-                        Authority a = new Authority(user.getId());
+                        Authority a = new Authority();
 
                         if (a.getAuthorityForId(user.getId()) >= 3) {
                             if (e.eq(args[1], "부여", "empower", "add")) {
@@ -746,7 +738,8 @@ public class DefaultListener extends ListenerAdapter {
 
                     eb.setDescription(vol);
                     eb.setFooter(user.getAsTag(), user.getAvatarUrl());
-                    eb.setColor(member.getColor());
+
+                    if (member != null) eb.setColor(member.getColor());
 
                     tc.sendMessage(eb.build()).queue();
                 }
@@ -765,7 +758,8 @@ public class DefaultListener extends ListenerAdapter {
                     String value = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
                     eb.setDescription(value);
                     eb.setFooter(user.getAsTag(), user.getAvatarUrl());
-                    eb.setColor(member.getColor());
+
+                    if (member != null) eb.setColor(member.getColor());
 
                     tc.sendMessage(eb.build()).queue();
                 }
@@ -799,7 +793,9 @@ public class DefaultListener extends ListenerAdapter {
 
                                 se.stealEmojiFromMessage(msg.getEmotes().get(0).getId(), args[2]);
 
-                            } catch (IndexOutOfBoundsException ex) {}
+                            } catch (IndexOutOfBoundsException ex) {
+                                // ignored
+                            }
 
                         }
 
@@ -825,7 +821,7 @@ public class DefaultListener extends ListenerAdapter {
                 if (e.eq(args[0], "배송", "택배", "Delivery", "운송장", "배송", "운송장번호", "운송장조회", "배송조회")) {
 
                     tc.deleteMessageById(msg.getId()).queue();
-                    Delivery dv = new Delivery(jda, user, tc, args[1], args[2]);
+                    Delivery dv = new Delivery(tc, args[1], args[2]);
 
                     if (args.length != 3) {
                         eb.setTitle("그 운송장 조회를 못 할 것 같네요.");
@@ -847,9 +843,6 @@ public class DefaultListener extends ListenerAdapter {
 
             }
 
-        } catch (IllegalStateException e) {
-        } catch (FriendlyException e) {
-        } catch (StringIndexOutOfBoundsException e) {
         } catch (Exception e) {
             lW.sendMessage("Exception occurred! \n```" + e.getMessage() + "```");
             e.printStackTrace();

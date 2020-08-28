@@ -9,6 +9,7 @@ public class EasyEqual {
     public boolean eq(String obj1, String obj2) {
         return obj1.equalsIgnoreCase(obj2);
     }
+
     public boolean eq(String ... obj) {
 
         for (int i = 1; i < obj.length; i++) {
@@ -27,9 +28,9 @@ public class EasyEqual {
 
     public boolean eqNull(String ... obj) {
 
-        for (int i = 0; i < obj.length; i++) {
+        for (String s : obj) {
 
-            if (obj[i] == null) {
+            if (s == null) {
 
                 return true;
 

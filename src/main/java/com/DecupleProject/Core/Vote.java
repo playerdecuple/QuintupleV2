@@ -4,17 +4,14 @@ import com.DecupleProject.Listener.DefaultListener;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
-import org.python.indexer.Def;
 
 import java.awt.*;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.IntStream;
 
 public class Vote {
 
-    private TextChannel tc;
-    private User user;
+    private final TextChannel tc;
+    private final User user;
     private static final EmbedBuilder eb = new EmbedBuilder();
 
     public Vote(TextChannel tc, User user) {
@@ -41,7 +38,7 @@ public class Vote {
         }
     }
 
-    public void startVote(String ... obj) throws InterruptedException {
+    public void startVote(String ... obj) {
 
         if (obj.length > 10) {
             eb.setTitle("투표를 시작할 수 없었어요.");
@@ -94,15 +91,16 @@ public class Vote {
         if (value == null || value.length == 0) return 0;
 
         int maxValue = value[0];
-        for (int i = 0; i < value.length; i++) {
 
-            if (maxValue < value[i]) maxValue = value[i];
+        for (int i : value) {
+
+            if (maxValue < i) maxValue = i;
 
         }
 
-        for (int i = 0; i < value.length; i++) {
+        for (int j : value) {
 
-            if (maxValue == value[i]) return i;
+            if (maxValue == j) return j;
 
         }
 

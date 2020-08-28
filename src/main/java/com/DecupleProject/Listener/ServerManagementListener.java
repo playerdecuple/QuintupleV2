@@ -4,11 +4,9 @@ import com.DecupleProject.Contents.RPG.UserStatus;
 import com.DecupleProject.Core.CustomCommand;
 import com.DecupleProject.Core.DatabaseManager;
 import com.DecupleProject.Core.ServerManager.ServerManager;
-import com.DecupleProject.Core.StealEmoji;
 import com.DecupleProject.Core.Util.EasyEqual;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -49,7 +47,7 @@ public class ServerManagementListener extends ListenerAdapter {
             // ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ //
 
             DatabaseManager db = new DatabaseManager(user.getId(), tc, DefaultListener.jda);
-            if (!db.nowExistsAllDatabase()) db.createAllDatabaseFromId();
+            if (!db.existsBasicFiles()) db.createAllDatabaseFromId();
 
             UserStatus us = new UserStatus(user.getId(), tc);
             us.setEXP(user.getId(), 1, false, true);

@@ -10,20 +10,18 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 public class Dictionary {
 
     public Dictionary() {}
 
-    public String getSearchResultFromWord(String word) throws ParserConfigurationException, UnsupportedEncodingException,
-            SAXException, IOException {
+    public String getSearchResultFromWord(String word) throws ParserConfigurationException, SAXException, IOException {
 
         String wordName = "";
         String wordR = "";
 
-        String q = "";
+        String q;
 
         q = URLEncoder.encode(word, "UTF-8");
 
@@ -76,7 +74,7 @@ public class Dictionary {
     private String getTagValue(String tag, Element eElement) {
         NodeList nList = eElement.getElementsByTagName(tag).item(0).getChildNodes();
 
-        Node nValue = (Node) nList.item(0);
+        Node nValue = nList.item(0);
 
         if (nValue == null) {
             return null;
@@ -84,6 +82,8 @@ public class Dictionary {
 
         return nValue.getNodeValue();
     }
+
+    /* Never used code yet.
 
     public String getOnlyWordName(String word) throws ParserConfigurationException, IOException, SAXException {
         String wordName = "";
@@ -117,6 +117,8 @@ public class Dictionary {
 
         return wordName;
     }
+
+     */
 
 
 }

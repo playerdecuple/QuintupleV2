@@ -18,14 +18,14 @@ public class GetJSON {
         uC.setRequestMethod("GET");
         br = new BufferedReader(new InputStreamReader(uC.getInputStream(), "UTF-8"));
 
-        String result = "";
+        StringBuilder result = new StringBuilder();
         String line;
 
         while ((line = br.readLine()) != null) {
-            result = result + line;
+            result.append(line);
         }
 
-        return result;
+        return result.toString();
     }
 
     public String postJsonByUrl(String urlS) throws Exception {
@@ -37,14 +37,14 @@ public class GetJSON {
         uC.setRequestMethod("POST");
         br = new BufferedReader(new InputStreamReader(uC.getInputStream(), "UTF-8"));
 
-        String result = "";
+        StringBuilder result = new StringBuilder();
         String line;
 
         while ((line = br.readLine()) != null) {
-            result = result + line;
+            result.append(line);
         }
 
-        return result;
+        return result.toString();
     }
 
     public String getJsonByUrlForUserMode(String urlS) throws Exception {
@@ -56,14 +56,14 @@ public class GetJSON {
         uC.setRequestProperty("User-Agent", "Mozilla");
         br = new BufferedReader(new InputStreamReader(uC.getInputStream(), "UTF-8"));
 
-        String result = "";
+        StringBuilder result = new StringBuilder();
         String line;
 
         while ((line = br.readLine()) != null) {
-            result = result + line;
+            result.append(line);
         }
 
-        return result;
+        return result.toString();
     }
 
 }

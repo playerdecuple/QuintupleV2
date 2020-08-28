@@ -12,8 +12,7 @@ public class ModeChecker {
 
     public boolean isTestMode() {
         String mode = r.readString("D:/Database/NowMode.txt");
-        if (mode.equalsIgnoreCase("test")) return true;
-        return false;
+        return mode != null && mode.equalsIgnoreCase("test");
     }
 
 }

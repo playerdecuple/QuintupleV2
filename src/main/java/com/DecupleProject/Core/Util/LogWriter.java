@@ -11,7 +11,7 @@ import java.awt.*;
 public class LogWriter {
 
     private final ModeChecker mc = new ModeChecker();
-    private TextChannel log;
+    private final TextChannel log;
 
     EmbedBuilder eb = new EmbedBuilder();
 

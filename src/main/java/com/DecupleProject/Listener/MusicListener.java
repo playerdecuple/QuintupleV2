@@ -10,7 +10,6 @@ import com.DecupleProject.Core.Util.EasyEqual;
 import com.DecupleProject.Core.Util.LinkUtility;
 import com.DecupleProject.Core.Util.LogWriter;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
@@ -18,7 +17,6 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
-import com.sun.org.apache.regexp.internal.RE;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.audio.AudioSendHandler;
 import net.dv8tion.jda.api.entities.*;
@@ -26,21 +24,18 @@ import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.AudioManager;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.io.FileNotFoundException;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class MusicListener extends ListenerAdapter {
 
-    private AudioPlayerManager playerManager;
-    private Map<Long, GuildMusicManager> musicManagers;
+    private final AudioPlayerManager playerManager;
+    private final Map<Long, GuildMusicManager> musicManagers;
 
 
     public MusicListener() {
@@ -56,7 +51,7 @@ public class MusicListener extends ListenerAdapter {
         GuildMusicManager musicManager = musicManagers.get(guildId);
 
         if (musicManager == null) {
-            musicManager = new GuildMusicManager(playerManager, 20);
+            musicManager = new GuildMusicManager(playerManager);
             musicManagers.put(guildId, musicManager);
         }
 
@@ -67,11 +62,11 @@ public class MusicListener extends ListenerAdapter {
 
 
     @Override
-    public void onReady(ReadyEvent event) {
+    public void onReady(@NotNull ReadyEvent event) {
     }
 
     @Override
-    public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+    public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
 
         try {
 
@@ -121,28 +116,34 @@ public class MusicListener extends ListenerAdapter {
 
                         if (!am.isConnected()) {
 
-                            VoiceChannel vc = member.getVoiceState().getChannel();
+                            if (member == null) return;
+                            else {
+                                VoiceChannel vc = Objects.requireNonNull(member.getVoiceState()).getChannel();
 
-                            am.setSendingHandler(new AudioSendHandler() {
-                                @Override
-                                public boolean canProvide() {
-                                    return false;
+                                if (vc == null) return;
+                                else {
+                                    am.setSendingHandler(new AudioSendHandler() {
+                                        @Override
+                                        public boolean canProvide() {
+                                            return false;
+                                        }
+
+                                        @Nullable
+                                        @Override
+                                        public ByteBuffer provide20MsAudio() {
+                                            return null;
+                                        }
+                                    });
+
+                                    am.openAudioConnection(vc);
+                                    setVolume(tc, 20, false);
+
+                                    eb.setDescription("`" + vc.getName() + "` 보이스 채널에 연결했어요!");
+                                    eb.setFooter(user.getAsTag(), user.getAvatarUrl());
+                                    eb.setColor(Color.CYAN);
+                                    tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                                 }
-
-                                @Nullable
-                                @Override
-                                public ByteBuffer provide20MsAudio() {
-                                    return null;
-                                }
-                            });
-
-                            am.openAudioConnection(vc);
-                            setVolume(tc, 20, false);
-
-                            eb.setDescription("`" + vc.getName() + "` 보이스 채널에 연결했어요!");
-                            eb.setFooter(user.getAsTag(), user.getAvatarUrl());
-                            eb.setColor(Color.CYAN);
-                            tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            }
 
                         }
 
@@ -180,29 +181,36 @@ public class MusicListener extends ListenerAdapter {
 
                         if (!am.isConnected()) {
 
-                            VoiceChannel vc = member.getVoiceState().getChannel();
-                            setVolume(tc, 20, false);
+                            if (member == null) return;
+                            else {
+                                VoiceChannel vc = Objects.requireNonNull(member.getVoiceState()).getChannel();
+
+                                if (vc == null) return;
+                                else {
+                                    setVolume(tc, 20, false);
 
 
-                            am.setSendingHandler(new AudioSendHandler() {
-                                @Override
-                                public boolean canProvide() {
-                                    return false;
+                                    am.setSendingHandler(new AudioSendHandler() {
+                                        @Override
+                                        public boolean canProvide() {
+                                            return false;
+                                        }
+
+                                        @Nullable
+                                        @Override
+                                        public ByteBuffer provide20MsAudio() {
+                                            return null;
+                                        }
+                                    });
+
+                                    am.openAudioConnection(vc);
+
+                                    eb.setDescription("`" + vc.getName() + "` 보이스 채널에 연결했어요!");
+                                    eb.setFooter(user.getAsTag(), user.getAvatarUrl());
+                                    eb.setColor(Color.CYAN);
+                                    tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                                 }
-
-                                @Nullable
-                                @Override
-                                public ByteBuffer provide20MsAudio() {
-                                    return null;
-                                }
-                            });
-
-                            am.openAudioConnection(vc);
-
-                            eb.setDescription("`" + vc.getName() + "` 보이스 채널에 연결했어요!");
-                            eb.setFooter(user.getAsTag(), user.getAvatarUrl());
-                            eb.setColor(Color.CYAN);
-                            tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            }
 
                         }
 
@@ -294,37 +302,42 @@ public class MusicListener extends ListenerAdapter {
 
                         if (!am.isConnected()) {
 
-                            VoiceChannel vc = member.getVoiceState().getChannel();
-                            setVolume(tc, 20, false);
+                            if (member == null) return;
+                            else {
+                                VoiceChannel vc = Objects.requireNonNull(member.getVoiceState()).getChannel();
+
+                                if (vc == null) return;
+                                else {
+                                    setVolume(tc, 20, false);
 
 
-                            am.setSendingHandler(new AudioSendHandler() {
-                                @Override
-                                public boolean canProvide() {
-                                    return false;
+                                    am.setSendingHandler(new AudioSendHandler() {
+                                        @Override
+                                        public boolean canProvide() {
+                                            return false;
+                                        }
+
+                                        @Nullable
+                                        @Override
+                                        public ByteBuffer provide20MsAudio() {
+                                            return null;
+                                        }
+                                    });
+
+                                    am.openAudioConnection(vc);
+
+                                    eb.setDescription("`" + vc.getName() + "` 보이스 채널에 연결했어요!");
+                                    eb.setFooter(user.getAsTag(), user.getAvatarUrl());
+                                    eb.setColor(Color.CYAN);
+                                    tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                                 }
-
-                                @Nullable
-                                @Override
-                                public ByteBuffer provide20MsAudio() {
-                                    return null;
-                                }
-                            });
-
-                            am.openAudioConnection(vc);
-
-                            eb.setDescription("`" + vc.getName() + "` 보이스 채널에 연결했어요!");
-                            eb.setFooter(user.getAsTag(), user.getAvatarUrl());
-                            eb.setColor(Color.CYAN);
-                            tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            }
 
                         }
 
                         int range = 10;
 
-                        if (args.length == 1) {
-                            range = 10;
-                        } else {
+                        if (args.length != 1) {
                             range = Integer.parseInt(args[1]);
                         }
 
@@ -422,37 +435,36 @@ public class MusicListener extends ListenerAdapter {
 
                     Queue<AudioTrack> queue = scheduler.queue;
 
-                    synchronized (queue) {
-                        if (queue.isEmpty()) {
+                    if (queue.isEmpty()) {
 
-                            eb.setTitle("음.. 플레이리스트를 어디다 뒀더라?");
-                            eb.setDescription("플레이리스트가 아무리 찾아봐도 없네요... 비어있다면 못 찾을 수도 있어요.");
-                            eb.setColor(Color.RED);
+                        eb.setTitle("음.. 플레이리스트를 어디다 뒀더라?");
+                        eb.setDescription("플레이리스트가 아무리 찾아봐도 없네요... 비어있다면 못 찾을 수도 있어요.");
+                        eb.setColor(Color.RED);
 
-                            tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                        tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
 
-                        } else {
+                    } else {
 
-                            int trackCount = 0;
-                            long queueLength = 0;
-                            StringBuilder sb = new StringBuilder();
+                        int trackCount = 0;
+                        long queueLength = 0;
+                        StringBuilder sb = new StringBuilder();
 
-                            sb.append("```md\n# 현재 플레이리스트에요!\n<개수: " + queue.size() + ">\n\n");
+                        sb.append("```md\n# 현재 플레이리스트에요!\n<개수: ").append(queue.size()).append(">\n\n");
 
-                            for (AudioTrack track : queue) {
-                                queueLength += track.getDuration();
+                        for (AudioTrack track : queue) {
+                            queueLength += track.getDuration();
 
-                                if (trackCount < 20) {
-                                    sb.append((trackCount + 1) + ". " + track.getInfo().title + "\n");
-                                    trackCount++;
-                                }
+                            if (trackCount < 20) {
+                                sb.append(trackCount + 1).append(". ").append(track.getInfo().title).append("\n");
+                                trackCount++;
                             }
-
-                            sb.append("\n전체 재생 길이 : " + getTimeStamp(queueLength, true) + "```");
-                            tc.sendMessage(sb.toString()).queue();
-
                         }
+
+                        sb.append("\n전체 재생 길이 : ").append(getTimeStamp(queueLength, true)).append("```");
+                        tc.sendMessage(sb.toString()).queue();
+
                     }
+
                 }
 
                 if (e.eq(args[0], "pl", "playlist", "플레이리스트", "재생목록")) {
@@ -505,7 +517,7 @@ public class MusicListener extends ListenerAdapter {
                             }
                         }
 
-                        String addedSongs = "";
+                        StringBuilder addedSongs = new StringBuilder();
 
                         for (int i = 0; i < songs.length; i++) {
                             if (!l.isURL(songs[i])) {
@@ -523,7 +535,7 @@ public class MusicListener extends ListenerAdapter {
 
                                     mp.addMusic(user.getId(), ytSearched);
 
-                                    addedSongs = addedSongs + (i + 1) + ". " + y.getTitle(ytSearched) + "\n";
+                                    addedSongs.append(i + 1).append(". ").append(y.getTitle(ytSearched)).append("\n");
 
                                 }
 
@@ -531,7 +543,7 @@ public class MusicListener extends ListenerAdapter {
 
                                 mp.addMusic(user.getId(), songs[i].replace(" ", ""));
 
-                                addedSongs = addedSongs + y.getTitle(songs[i].replace(" ", "")) + "\n";
+                                addedSongs.append(y.getTitle(songs[i].replace(" ", ""))).append("\n");
 
                             }
                         }
@@ -539,7 +551,7 @@ public class MusicListener extends ListenerAdapter {
                         eb.setTitle("커스텀 플레이리스트에 새 곡을 적었습니다!");
                         eb.setDescription("");
 
-                        eb.addField("추가된 곡들", "```md\n" + addedSongs + "```", false);
+                        eb.addField("추가된 곡들", "```md\n" + addedSongs.toString() + "```", false);
                         eb.setColor(Color.GREEN);
 
                         tc.sendMessage(eb.build()).delay(1, TimeUnit.MINUTES).flatMap(Message::delete).queue();
@@ -594,7 +606,7 @@ public class MusicListener extends ListenerAdapter {
                         }
 
 
-                    } else if (msg.getMentionedUsers().get(0).getId() != null) {
+                    } else if (msg.getMentionedUsers().get(0) != null) {
                         try {
                             String Victim = msg.getMentionedUsers().get(0).getId();
                             if (mp.playlistExists(Victim)) {
@@ -627,15 +639,11 @@ public class MusicListener extends ListenerAdapter {
 
             }
 
-        } catch (FriendlyException e) {
         } catch (NumberFormatException e) {
             EmbedBuilder eb = new EmbedBuilder();
 
             eb.setDescription("무언가 잘못 입력한 것 같네요..");
             event.getChannel().sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
-        } catch (IllegalStateException e) {
-        } catch (StringIndexOutOfBoundsException e) {
-        } catch (RuntimeException e) {
         } catch (Exception e) {
             LogWriter lW = new LogWriter(event.getJDA());
             lW.sendMessage("```" + e.getMessage() + "```");
@@ -770,7 +778,7 @@ public class MusicListener extends ListenerAdapter {
         musicManager.scheduler.queue.clear();
         musicManager.pl.destroy();
 
-        musicManagers.remove(guild.getId());
+        musicManagers.remove(guild.getIdLong());
         guild.getAudioManager().setSendingHandler(null);
 
         if (showMessage) {
@@ -851,13 +859,13 @@ public class MusicListener extends ListenerAdapter {
         if (korean) {
             return nh + "시간 " + nm + "분 " + ns + "초";
         } else {
-            return String.format("%02d:%02d:$02d", nh, nm, ns);
+            return nh + ":" + nm + ":" + ns + ":";
         }
 
     }
 
     public static void connectToFirstVoiceChannel(AudioManager audioManager) {
-        if (!audioManager.isConnected() && !audioManager.isAttemptingToConnect()) {
+        if (!audioManager.isConnected()) { // 'audioManager.isAttemptingConnect()' was deprecated
             for (VoiceChannel vc : audioManager.getGuild().getVoiceChannels()) {
                 audioManager.openAudioConnection(vc);
                 break;

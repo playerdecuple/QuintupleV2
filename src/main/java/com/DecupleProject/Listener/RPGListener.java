@@ -3,31 +3,25 @@ package com.DecupleProject.Listener;
 import com.DecupleProject.Contents.RPG.Account;
 import com.DecupleProject.Core.CustomCommand;
 import com.DecupleProject.Core.Util.EasyEqual;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.managers.AudioManager;
+import org.jetbrains.annotations.NotNull;
 
 public class RPGListener extends ListenerAdapter {
 
     @Override
-    public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
 
         try {
 
             // TODO : If playing game, return.
 
-            EmbedBuilder eb = new EmbedBuilder();
             EasyEqual e = new EasyEqual();
 
             User user = event.getAuthor();
-            Guild guild = event.getGuild();
-            TextChannel tc = event.getChannel();
-            Member member = event.getMember();
+            TextChannel tc = event.getTextChannel();
             Message msg = event.getMessage();
-
-            AudioManager am = guild.getAudioManager();
 
             // ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ //
 

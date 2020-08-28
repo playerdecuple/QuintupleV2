@@ -3,20 +3,14 @@ package com.DecupleProject.Core.Music;
 import com.DecupleProject.Core.DeleteFile;
 import com.DecupleProject.Core.ReadFile;
 import com.DecupleProject.Core.WriteFile;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 
-import java.awt.*;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 public class MusicPlaylist {
@@ -33,8 +27,7 @@ public class MusicPlaylist {
         File f = new File("D:/Database/MusicPlayList/" + id + "/" + musicId + ".txt");
 
         if (f.exists()) {
-            String musicUrl = r.readString(f);
-            return musicUrl;
+            return r.readString(f);
         } else {
             return null;
         }
@@ -45,45 +38,43 @@ public class MusicPlaylist {
 
         File f = new File("D:/Database/MusicPlayList/" + id + "/" + musicId + ".txt");
 
-        if (f.exists()) {
-            return true;
-        } else {
-            return false;
-        }
+        return f.exists();
 
     }
 
-    public boolean addMusic(String id, String... urls) {
+    public void addMusic(String id, String... urls) {
 
         int musicId = getUserPlaylistLength(id) + 1;
 
-        for (int i = 0; i < urls.length; i++) {
+        for (String url : urls) {
 
             File musicFolder = new File("D:/Database/MusicPlayList/" + id);
             File musicFile = new File("D:/Database/MusicPlayList/" + id + "/" + musicId + ".txt");
 
             if (musicFile.exists() && musicFolder.exists()) {
-                return false;
+                return;
             } else {
                 if (!musicFolder.exists()) {
-                    musicFolder.mkdir();
+                    boolean directoryMade = musicFolder.mkdir();
+
+                    if (!directoryMade) {
+                        return;
+                    }
                 }
 
-                if (urls[i] != null) {
-                    w.writeString(musicFile.getPath(), urls[i]);
-                    return true;
+                if (url != null) {
+                    w.writeString(musicFile.getPath(), url);
+                    return;
                 }
             }
 
         }
-
-        return false;
 
     }
 
     public void addMusic(String id, int musicId, String... urls) {
 
-        for (int i = 0; i < urls.length; i++) {
+        for (String url : urls) {
 
             File musicFolder = new File("D:/Database/MusicPlayList/" + id);
             File musicFile = new File("D:/Database/MusicPlayList/" + id + "/" + musicId + ".txt");
@@ -92,11 +83,15 @@ public class MusicPlaylist {
                 return;
             } else {
                 if (!musicFolder.exists()) {
-                    musicFolder.mkdir();
+                    boolean directoryMade = musicFolder.mkdir();
+
+                    if (!directoryMade) {
+                        return;
+                    }
                 }
 
-                if (urls[i] != null) {
-                    w.writeString(musicFile.getPath(), urls[i]);
+                if (url != null) {
+                    w.writeString(musicFile.getPath(), url);
                     musicId++;
                 }
             }
@@ -104,12 +99,14 @@ public class MusicPlaylist {
         }
 
     }
+
+    /* Never used code yet.
 
     public void addMusicAr(String id, String[] urls) {
 
         int musicId = getUserPlaylistLength(id) + 1;
 
-        for (int i = 0; i < urls.length; i++) {
+        for (String url : urls) {
 
             File musicFolder = new File("D:/Database/MusicPlayList/" + id);
             File musicFile = new File("D:/Database/MusicPlayList/" + id + "/" + musicId + ".txt");
@@ -118,11 +115,15 @@ public class MusicPlaylist {
                 return;
             } else {
                 if (!musicFolder.exists()) {
-                    musicFolder.mkdir();
+                    boolean directoryMade = musicFolder.mkdir();
+
+                    if (!directoryMade) {
+                        return;
+                    }
                 }
 
-                if (urls[i] != null) {
-                    w.writeString(musicFile.getPath(), urls[i]);
+                if (url != null) {
+                    w.writeString(musicFile.getPath(), url);
                     musicId++;
                 }
             }
@@ -130,6 +131,8 @@ public class MusicPlaylist {
         }
 
     }
+
+     */
 
     public void resetMusicPlaylist(String id) {
         File musicPlaylistFile = new File("D:/Database/MusicPlayList/" + id);
@@ -137,8 +140,8 @@ public class MusicPlaylist {
         if (musicPlaylistFile.exists()) {
             File[] musicPlaylistFolderLists = musicPlaylistFile.listFiles();
 
-            for (int i = 0; i < musicPlaylistFolderLists.length; i++) {
-                d.deleteFile(musicPlaylistFolderLists[i]);
+            for (File musicPlaylistFolderList : musicPlaylistFolderLists) {
+                d.deleteFile(musicPlaylistFolderList);
             }
 
             d.deleteFile(musicPlaylistFile);
@@ -149,11 +152,7 @@ public class MusicPlaylist {
 
         File f = new File("D:/Database/MusicPlayList/" + id);
 
-        if (f.exists()) {
-            return true;
-        } else {
-            return false;
-        }
+        return f.exists();
 
     }
 
@@ -189,33 +188,26 @@ public class MusicPlaylist {
     }
 
     public void sendAllMusicPlaylistFromId(String id, TextChannel tc) {
-        String allMusicPlaylistURL = "";
-        String oneLineMusicURL = "";
+        StringBuilder allMusicPlaylistURL = new StringBuilder();
+        String oneLineMusicURL;
 
         for (int i = 1; i <= getUserPlaylistLength(id); i++) {
             oneLineMusicURL = i + ". " + getTitle(getNextMusicUrl(id, i)) + "<" + getNextMusicUrl(id, i) + ">\n";
             if (allMusicPlaylistURL.length() + oneLineMusicURL.length() >= 2000) {
                 tc.sendMessage("```md\n" + allMusicPlaylistURL + "```").delay(3, TimeUnit.MINUTES).flatMap(Message::delete).queue();
-                allMusicPlaylistURL = "";
+                allMusicPlaylistURL = new StringBuilder();
             }
-            allMusicPlaylistURL = allMusicPlaylistURL + oneLineMusicURL;
+            allMusicPlaylistURL.append(oneLineMusicURL);
         }
 
-        tc.sendMessage("```md\n" + allMusicPlaylistURL + "```").delay(3, TimeUnit.MINUTES).flatMap(Message::delete).queue();
+        tc.sendMessage("```md\n" + allMusicPlaylistURL.toString() + "```").delay(3, TimeUnit.MINUTES).flatMap(Message::delete).queue();
     }
 
     public String getTitle(String youtubeUrl) {
         try {
             if (youtubeUrl != null) {
                 URL url = new URL("http://www.youtube.com/oembed?url=" + youtubeUrl + "&format=json");
-
-                String result = IOUtils.toString(url, "UTF-8");
-
-                JsonParser jp = new JsonParser();
-                JsonObject object = (JsonObject) jp.parse(result);
-
-                String title = new JSONObject(IOUtils.toString(url)).getString("title");
-                return title;
+                return new JSONObject(IOUtils.toString(url, StandardCharsets.UTF_8)).getString("title");
             } else {
                 return null;
             }
@@ -242,7 +234,7 @@ public class MusicPlaylist {
                     addMusic(id, i, nextMusicUrl);
                 }
 
-                if (getNextMusicPlaylistExists(id, i + 1) == false) {
+                if (!getNextMusicPlaylistExists(id, i + 1)) {
                     break;
                 }
             }
@@ -254,13 +246,16 @@ public class MusicPlaylist {
         }
     }
 
+    /* Never used codes yet.
     public void editPlayCount(String id, String url) {
 
         if (isCoolTime(id)) return;
         File f = new File("D:/Database/MusicPlayCount/");
 
         if (!f.exists()) {
-            f.mkdir();
+            boolean couldMadeDirectory = f.mkdir();
+
+            if (!couldMadeDirectory) return;
             editPlayCount(id, url);
         }
 
@@ -282,7 +277,9 @@ public class MusicPlaylist {
         File f = new File("D:/Database/MusicPlayCount/");
 
         if (!f.exists()) {
-            f.mkdir();
+            boolean couldMadeDirectory = f.mkdir();
+
+            if (!couldMadeDirectory) return 0;
             getPlayCount(url);
         }
 
@@ -305,20 +302,11 @@ public class MusicPlaylist {
             long coolTimeL = r.readLong(f.getPath());
             long realTime = System.currentTimeMillis();
 
-            if (realTime - coolTimeL < 30000) {
-                return true;
-            } else {
-                return false;
-            }
+            return realTime - coolTimeL < 30000;
         } else {
             w.writeInt(f.getPath(), 0);
             return false;
         }
-    }
-
-    public void setCoolTime(String id) {
-        File f = new File("D:/Database/Time/" + id + "M.txt");
-        w.writeLong(f.getPath(), System.currentTimeMillis());
     }
 
     public void resetPlayCounts() {
@@ -348,6 +336,13 @@ public class MusicPlaylist {
         String m1 = format1.format(date);
 
         w.writeString(td.getPath(), m1);
+    }
+
+     */
+
+    public void setCoolTime(String id) {
+        File f = new File("D:/Database/Time/" + id + "M.txt");
+        w.writeLong(f.getPath(), System.currentTimeMillis());
     }
 
 }

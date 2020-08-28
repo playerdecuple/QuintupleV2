@@ -5,26 +5,24 @@ import com.DecupleProject.API.Game.Osu;
 import com.DecupleProject.Contents.RPG.UserStatus;
 import com.DecupleProject.Core.CustomCommand;
 import com.DecupleProject.Core.DatabaseManager;
-import com.DecupleProject.Core.StealEmoji;
 import com.DecupleProject.Core.Util.EasyEqual;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
 public class OnlineGameListener extends ListenerAdapter {
 
     @Override
-    public void onMessageReceived(MessageReceivedEvent event) {
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         try {
 
             User user = event.getAuthor();
-            Guild guild = event.getGuild();
             Message msg = event.getMessage();
             TextChannel tc = event.getTextChannel();
             JDA jda = event.getJDA();
@@ -32,7 +30,7 @@ public class OnlineGameListener extends ListenerAdapter {
             EasyEqual e = new EasyEqual();
 
             DatabaseManager db = new DatabaseManager(user.getId(), tc, jda);
-            if (!db.nowExistsAllDatabase()) db.createAllDatabaseFromId();
+            if (!db.existsBasicFiles()) db.createAllDatabaseFromId();
 
             UserStatus us = new UserStatus(user.getId(), tc);
             us.setEXP(user.getId(), 1, false, true);

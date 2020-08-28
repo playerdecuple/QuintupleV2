@@ -4,10 +4,8 @@ import com.DecupleProject.Contents.RPG.Account;
 import com.DecupleProject.Contents.RPG.UserStatus;
 import com.DecupleProject.Core.ReadFile;
 import com.DecupleProject.Core.WriteFile;
-import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.ResumedEvent;
 
 import java.awt.*;
 import java.io.File;
@@ -15,9 +13,9 @@ import java.text.SimpleDateFormat;
 
 public class AttendanceCheck {
     
-    private String id;
-    private String name;
-    private TextChannel tc;
+    private final String id;
+    private final String name;
+    private final TextChannel tc;
     private final ReadFile r = new ReadFile();
     private final WriteFile w = new WriteFile();
     
@@ -40,11 +38,13 @@ public class AttendanceCheck {
         long giveMoney = 100000;
 
         try {
+            if (lastDate == null) return;
+
             yS = lastDate.substring(0, 4);
             mS = lastDate.substring(4, 6);
             dS = lastDate.substring(6, 8);
         } catch (NullPointerException e) {
-
+            // ignore
         }
 
         int year = Integer.parseInt(yS);
@@ -62,7 +62,11 @@ public class AttendanceCheck {
         EmbedBuilder eb = new EmbedBuilder();
 
         File rankFolder = new File("D:/Database/AttendanceCheck/Rank");
-        if (!rankFolder.exists()) rankFolder.mkdir();
+        if (!rankFolder.exists()) {
+            boolean couldMadeDirectory = rankFolder.mkdir();
+
+            if (!couldMadeDirectory) return;
+        }
 
         File rankFile = new File("D:/Database/AttendanceCheck/Rank/" + id + ".txt");
 
@@ -152,7 +156,6 @@ public class AttendanceCheck {
             giveMoney = 0;
             tc.sendMessage(eb.build()).queue();
         } else {
-            giveMoney = 100000;
 
             if (rankFile.exists()) {
                 if ((yearN == year && monthN == month && dayN == day + 1) || result) { // 'result == true' added in 'Beta v1.2.286r4'.
@@ -160,8 +163,6 @@ public class AttendanceCheck {
                     giveMoney = giveMoney + r.readInt(rankFile.getPath()) * 10000;
                     eb.setTitle(r.readInt(rankFile.getPath()) + "일째 출석 중!");
                     eb.addField("보너스 금액",  r.readInt(rankFile.getPath()) * 10000 + "플", false);
-                } else if (year == yearN && month == monthN && day == dayN) {
-                    return;
                 } else {
                     w.writeInt(rankFile.getPath(), 0);
                 }

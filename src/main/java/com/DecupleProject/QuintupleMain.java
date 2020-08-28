@@ -14,15 +14,13 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Scanner;
-import java.util.logging.Logger;
 
 public class QuintupleMain {
 
     public static final String version = "Alpha 2.0";
 
-    public static void main(String args[]) throws LoginException {
+    public static void main(String[] args) throws LoginException {
 
         // - 초기 설정 - //
         System.out.print("[QUINTUPLE] Input Quintuple Activate Mode : "); // GET QUINTUPLE ACTIVATE MODE;

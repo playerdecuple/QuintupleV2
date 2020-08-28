@@ -1,7 +1,6 @@
 package com.DecupleProject.API;
 
 import com.DecupleProject.Core.Util.EasyEqual;
-import com.DecupleProject.Core.Util.GetJSON;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -10,7 +9,6 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import java.awt.*;
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -18,11 +16,7 @@ import java.util.Map;
 
 public class Translator {
 
-    GetJSON j = new GetJSON();
     EasyEqual eq = new EasyEqual();
-
-    private final String clientId = "XMIUubZqhsElf34bZqwQ";
-    private final String clientSecret = "sF5mkwexWf";
 
     public String getLangCode(String str) {
 
@@ -56,7 +50,7 @@ public class Translator {
         }
 
         String baseUrl = "https://openapi.naver.com/v1/papago/n2mt";
-        String text = "";
+        String text;
 
         try {
             text = URLEncoder.encode(body, "UTF-8");
@@ -69,7 +63,9 @@ public class Translator {
         }
 
         Map<String, String> requestHeaders = new HashMap<>();
+        String clientId = "XMIUubZqhsElf34bZqwQ";
         requestHeaders.put("X-Naver-Client-Id", clientId);
+        String clientSecret = "sF5mkwexWf";
         requestHeaders.put("X-Naver-Client-Secret", clientSecret);
 
         String responseBody = post(baseUrl, requestHeaders, text, l1, l2);

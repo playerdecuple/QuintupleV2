@@ -9,17 +9,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 
 import java.awt.*;
+import java.util.concurrent.TimeUnit;
 
 public class Delivery {
 
-    private JDA jda;
-    private User user;
-    private TextChannel tc;
+    private final TextChannel tc;
 
     protected WriteFile w = new WriteFile();
     protected ReadFile r = new ReadFile();
@@ -31,22 +29,17 @@ public class Delivery {
     protected String carrier;
 
 
-    public Delivery(JDA jda, User user, TextChannel tc, String code, String id) {
+    public Delivery(TextChannel tc, String code, String id) {
 
-        this.jda = jda;
-        this.user = user;
         this.tc = tc;
         this.code = code.replace("택배", "").replace("편의점", "").replace("-", "");
         this.id = id;
 
         this.carrier = getCarrier();
-
-        if (carrier == null) return;
     }
 
     public boolean eq(String anotherString) {
-        if (anotherString.equalsIgnoreCase(code)) return true;
-        else return false;
+        return anotherString.equalsIgnoreCase(code);
     }
 
     public String getCarrier() {
@@ -86,6 +79,11 @@ public class Delivery {
         try {
             EmbedBuilder eb = new EmbedBuilder();
 
+            if (carrier == null) {
+                eb.setDescription("잘못된 택배 회사를 입력하셨나 보네요.");
+                tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+            }
+
             eb.setTitle("여기, 유저님의 배송 현황입니다!");
             eb.addField("택배 회사", code, true);
             eb.addBlankField(true);
@@ -103,7 +101,6 @@ public class Delivery {
             JsonObject fromObj = obj_1.getAsJsonObject("from");
 
             String fromName = fromObj.getAsJsonPrimitive("name").getAsString();
-            String fromTime = fromObj.getAsJsonPrimitive("time").getAsString().replace("T", " ").replace("+09:00", "");
 
             eb.addField("보내는 분", fromName, true);
 
@@ -125,10 +122,8 @@ public class Delivery {
                 String status = e.getAsJsonObject().get("status").getAsJsonObject().get("text").getAsString();
                 String description = e.getAsJsonObject().get("description").getAsString();
 
-                String emoticon = "";
+                String emoticon;
                 if (status.equals("배송완료")) emoticon = ":white_check_mark: ";
-                else if (status.equals("배송출발")) emoticon = ":truck: ";
-                else if (status.equals("이동중")) emoticon = ":truck: ";
                 else emoticon = ":truck: ";
 
                 String inf = ":timer: " + t[1] + ": " + emoticon + e.getAsJsonObject().get("location").getAsJsonObject().get("name").getAsString() + ", (" + status + ")";
@@ -143,10 +138,8 @@ public class Delivery {
                     String status1 = e1.getAsJsonObject().get("status").getAsJsonObject().get("text").getAsString();
                     String description1 = e1.getAsJsonObject().get("description").getAsString();
 
-                    String emoticonR = "";
+                    String emoticonR;
                     if (status1.equals("배송완료")) emoticonR = ":white_check_mark: ";
-                    else if (status1.equals("배송출발")) emoticonR = ":truck: ";
-                    else if (status1.equals("이동중")) emoticonR = ":truck: ";
                     else emoticonR = ":truck: ";
 
                     if (t1[0].equalsIgnoreCase(t[0])) {
