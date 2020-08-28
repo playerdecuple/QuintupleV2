@@ -83,6 +83,13 @@ public class RPGListener extends ListenerAdapter {
 
                 }
 
+                if (e.eq(args[0], "계좌")) {
+
+                    if (args.length != 1) return;
+                    ac.sendAccountMessage(tc);
+
+                }
+
             }
 
         } catch (Exception e) {
