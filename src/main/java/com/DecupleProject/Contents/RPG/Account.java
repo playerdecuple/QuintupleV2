@@ -52,57 +52,37 @@ public class Account {
         }
     }
 
-    /* Never used code yet.
-
     public void sendAccountMessage(TextChannel tc) {
         EmbedBuilder eb = new EmbedBuilder();
 
-        if (accountExists()) {
-            long nowMoney = getNowMoneyForId();
-            String result = "";
+        long nowMoney = getNowMoneyForId();
+        StringBuilder result = new StringBuilder();
 
-            String moneyValue = String.moneyValueOf(nowMoney);
+        String moneyValue = String.valueOf(nowMoney);
 
-            char c[] = new char[moneyValue.length()];
-            for (int i = moneyValue.length() - 1; i >= 0; i--) {
-                c[i] = moneyValue.charAt(i);
-                result = c[i] + result;
+        char[] c = new char[moneyValue.length()];
+        for (int i = moneyValue.length() - 1; i >= 0; i--) {
+            c[i] = moneyValue.charAt(i);
+            result.insert(0, c[i]);
 
-                if (i == moneyValue.length() - 4 && i != 0) {
-                    result = "만 " + result;
-                } else if (i == moneyValue.length() - 8 && i != 0) {
-                    result = "억 " + result;
-                } else if (i == moneyValue.length() - 12 && i != 0) {
-                    result = "조 " + result;
-                } else if (i == moneyValue.length() - 16 && i != 0) {
-                    result = "경 " + result;
-                }
-            }
-
-            result = result.replace("0000경 ", "").replace("0000조 ", "").replace("0000억 ", "").replace( "0000만 ", "").replace(" 0000", "");
-
-            eb.setTitle(name + "님의 계좌!");
-            eb.setDescription(name + "님의 계좌에는 " + result + "플이 있어요!");
-
-            tc.sendMessage(eb.build()).queue();
-        } else {
-            createAccount();
-
-            if (accountExists()) {
-                eb.setDescription("성공적으로 " + name + "님의 계좌를 만들었습니다!");
-
-                tc.sendMessage(eb.build()).queue();
-                return;
-            } else {
-                eb.setDescription("성공적으로 " + name + "님의 계좌를 만들었습니다!");
-
-                tc.sendMessage(eb.build()).queue();
-                return;
+            if (i == moneyValue.length() - 4 && i != 0) {
+                result.insert(0, "만 ");
+            } else if (i == moneyValue.length() - 8 && i != 0) {
+                result.insert(0, "억 ");
+            } else if (i == moneyValue.length() - 12 && i != 0) {
+                result.insert(0, "조 ");
+            } else if (i == moneyValue.length() - 16 && i != 0) {
+                result.insert(0, "경 ");
             }
         }
-    }
 
-     */
+        result = new StringBuilder(result.toString().replace("0000경 ", "").replace("0000조 ", "").replace("0000억 ", "").replace("0000만 ", "").replace(" 0000", ""));
+
+        eb.setTitle(name + "님의 계좌!");
+        eb.setDescription(name + "님의 계좌에는 " + result + "플이 있어요!");
+
+        tc.sendMessage(eb.build()).queue();
+    }
 
     public void giveMoney(String targetId, long moneyAmount, boolean randomMode, boolean sendText) {
 
@@ -125,14 +105,14 @@ public class Account {
                         eb.setDescription("돈을 더 받으려면, " + (10 - dTime) + "초만 기다려 주세요.");
 
                         tc.sendMessage(eb.build()).delay(5, TimeUnit.SECONDS)
-                            .flatMap(Message::delete).queue();
-                        
+                                .flatMap(Message::delete).queue();
+
                         return;
                     } else {
                         Random random = new Random();
                         moneyAmount = random.nextInt(14500) + 500;
                     }
-                    
+
                     w.writeLong(timeFile, nowTime);
                 }
 
@@ -140,13 +120,17 @@ public class Account {
                     int ability = r.readInt(abilityFile);
 
                     switch (ability) {
-                        case 1: moneyAmount = moneyAmount + 1000;
+                        case 1:
+                            moneyAmount = moneyAmount + 1000;
                             break;
-                        case 11: moneyAmount = moneyAmount + (int) (moneyAmount * 0.1);
+                        case 11:
+                            moneyAmount = moneyAmount + (int) (moneyAmount * 0.1);
                             break;
-                        case 21: moneyAmount = moneyAmount + (int) (moneyAmount * 0.25);
+                        case 21:
+                            moneyAmount = moneyAmount + (int) (moneyAmount * 0.25);
                             break;
-                        case 31: moneyAmount = moneyAmount * 2;
+                        case 31:
+                            moneyAmount = moneyAmount * 2;
                             break;
                         default:
                             break;
@@ -154,16 +138,16 @@ public class Account {
                 }
 
                 long finalMoney = nowMoney + moneyAmount;
-                
+
                 if (finalMoney < 0) {
                     finalMoney = 0;
                 }
-                
+
                 w.writeLong(moneyFile, finalMoney);
-                
+
                 if (randomMode) {
                     System.out.println(targetId + "(" + name + "): 자신의 계좌에 " + moneyAmount + "플 입금받음.");
-                    
+
                     eb.setTitle("계좌에 입금하였습니다.");
                     eb.addField("TargetName", name, true);
                     eb.addField("TargetId", targetId, true);
@@ -175,7 +159,7 @@ public class Account {
 
                     eb = new EmbedBuilder();
                 }
-                
+
                 eb.setTitle("소량의 금액을 지급해 드렸어요!");
                 eb.addField("받으신 분", "<@" + targetId + ">", true);
                 eb.addField("입금받은 금액", String.format("%,d", moneyAmount) + "플", true);
@@ -185,7 +169,7 @@ public class Account {
                 if (sendText) {
                     tc.sendMessage(eb.build()).queue();
                 }
-                
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -258,7 +242,7 @@ public class Account {
                     .replace("0000경 ", "")
                     .replace("0000조 ", "")
                     .replace("0000억 ", "")
-                    .replace( "0000만 ", "")
+                    .replace("0000만 ", "")
                     .replace(" 0000", "");
 
             rankingInfo.append(count + 1).append(". [").append(tag).append("](").append(moneyFormat).append("플)\n");
@@ -270,5 +254,5 @@ public class Account {
         tc.sendMessage(rankingInfo.toString()).delay(3, TimeUnit.MINUTES).flatMap(Message::delete).queue();
 
     }
-    
+
 }
