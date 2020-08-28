@@ -21,6 +21,7 @@ public class RPGListener extends ListenerAdapter {
 
             User user = event.getAuthor();
             TextChannel tc = event.getTextChannel();
+            Guild guild = event.getGuild();
             Message msg = event.getMessage();
 
             // ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ //
@@ -50,7 +51,15 @@ public class RPGListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "아르바이트", "알바", "돈")) {
 
-                    ac.giveMoney(user.getId(), 0, true, true);
+                    if (args.length == 1) {
+                        ac.giveMoney(user.getId(), 0, true, true);
+                    } else if (e.eq(args[1], "랭킹", "랭크", "ranking", "rank")) {
+                        if (args.length == 2) {
+                            ac.sendMoneyRanking(null);
+                        } else if (args.length == 3 && e.eq(args[2], "서버", "server", "우리", "이곳")) {
+                            ac.sendMoneyRanking(guild);
+                        }
+                    }
 
                 }
 

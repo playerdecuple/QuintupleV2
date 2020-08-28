@@ -5,12 +5,15 @@ import com.DecupleProject.Core.Util.LogWriter;
 import com.DecupleProject.Core.WriteFile;
 import com.DecupleProject.Listener.DefaultListener;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.awt.*;
 import java.io.File;
-import java.util.Random;
+import java.util.*;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Account {
@@ -58,20 +61,20 @@ public class Account {
             long nowMoney = getNowMoneyForId();
             String result = "";
 
-            String value = String.valueOf(nowMoney);
+            String moneyValue = String.moneyValueOf(nowMoney);
 
-            char c[] = new char[value.length()];
-            for (int i = value.length() - 1; i >= 0; i--) {
-                c[i] = value.charAt(i);
+            char c[] = new char[moneyValue.length()];
+            for (int i = moneyValue.length() - 1; i >= 0; i--) {
+                c[i] = moneyValue.charAt(i);
                 result = c[i] + result;
 
-                if (i == value.length() - 4 && i != 0) {
+                if (i == moneyValue.length() - 4 && i != 0) {
                     result = "만 " + result;
-                } else if (i == value.length() - 8 && i != 0) {
+                } else if (i == moneyValue.length() - 8 && i != 0) {
                     result = "억 " + result;
-                } else if (i == value.length() - 12 && i != 0) {
+                } else if (i == moneyValue.length() - 12 && i != 0) {
                     result = "조 " + result;
-                } else if (i == value.length() - 16 && i != 0) {
+                } else if (i == moneyValue.length() - 16 && i != 0) {
                     result = "경 " + result;
                 }
             }
@@ -190,6 +193,82 @@ public class Account {
 
             lW.sendMessage("```" + e.getMessage() + "```");
         }
+    }
+
+    public void sendMoneyRanking(Guild guild) {
+
+        EmbedBuilder eb = new EmbedBuilder();
+        Map<String, Long> ranking = new HashMap<>();
+        JDA jda = DefaultListener.jda;
+
+        File moneyFile = new File("D:/Database/Money/");
+        File[] accountList = moneyFile.listFiles();
+
+        for (File account : accountList) {
+
+            String rankId = account.getName().replace(".txt", "");
+            long money = r.readLong(account);
+
+            if (guild == null) {
+                ranking.put(rankId, money);
+            } else {
+                if (guild.isMember(jda.retrieveUserById(rankId).complete()))
+                    ranking.put(rankId, money);
+            }
+
+        }
+
+        if (ranking.size() == 0) {
+            eb.setDescription("서버 내에 계좌를 생성하신 유저분이 하나도 없나 보네요.");
+            tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        }
+
+        List<String> keySetList = new ArrayList<>(ranking.keySet());
+        keySetList.sort((r1, r2) -> (ranking.get(r2).compareTo(ranking.get(r1))));
+
+        StringBuilder rankingInfo = new StringBuilder("```md\n# 돈 랭킹\n\n");
+        int count = 0;
+
+        for (String id : keySetList) {
+
+            long moneyValue = ranking.get(id);
+            String tag = jda.retrieveUserById(id).complete().getAsTag().replace("_", "").replace("*", "");
+
+            if (moneyValue == 0L || count > 9) break;
+
+            StringBuilder result = new StringBuilder();
+
+            char[] c = new char[String.valueOf(moneyValue).length()];
+            for (int i = String.valueOf(moneyValue).length() - 1; i >= 0; i--) {
+                c[i] = String.valueOf(moneyValue).charAt(i);
+                result.insert(0, c[i]);
+
+                if (i == String.valueOf(moneyValue).length() - 4 && i != 0) {
+                    result.insert(0, "만 ");
+                } else if (i == String.valueOf(moneyValue).length() - 8 && i != 0) {
+                    result.insert(0, "억 ");
+                } else if (i == String.valueOf(moneyValue).length() - 12 && i != 0) {
+                    result.insert(0, "조 ");
+                } else if (i == String.valueOf(moneyValue).length() - 16 && i != 0) {
+                    result.insert(0, "경 ");
+                }
+            }
+
+            String moneyFormat = result.toString()
+                    .replace("0000경 ", "")
+                    .replace("0000조 ", "")
+                    .replace("0000억 ", "")
+                    .replace( "0000만 ", "")
+                    .replace(" 0000", "");
+
+            rankingInfo.append(count + 1).append(". [").append(tag).append("](").append(moneyFormat).append("플)\n");
+            count++;
+
+        }
+
+        rankingInfo.append("```");
+        tc.sendMessage(rankingInfo.toString()).delay(3, TimeUnit.MINUTES).flatMap(Message::delete).queue();
+
     }
     
 }
