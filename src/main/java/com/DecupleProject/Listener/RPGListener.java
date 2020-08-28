@@ -3,10 +3,13 @@ package com.DecupleProject.Listener;
 import com.DecupleProject.Contents.RPG.Account;
 import com.DecupleProject.Core.CustomCommand;
 import com.DecupleProject.Core.Util.EasyEqual;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.concurrent.TimeUnit;
 
 public class RPGListener extends ListenerAdapter {
 
@@ -23,6 +26,8 @@ public class RPGListener extends ListenerAdapter {
             TextChannel tc = event.getTextChannel();
             Guild guild = event.getGuild();
             Message msg = event.getMessage();
+
+            EmbedBuilder eb = new EmbedBuilder();
 
             // ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ //
 
@@ -62,6 +67,19 @@ public class RPGListener extends ListenerAdapter {
                             ac.sendMoneyRanking(guild);
                         }
                     }
+
+                }
+
+                if (e.eq(args[0], "파산", "삭제", "초기화")) {
+
+                    if (args.length != 1) {
+                        return;
+                    }
+
+                    ac.giveMoney(user.getId(), ac.getNowMoneyForId() * -1L, false, false);
+
+                    eb.setDescription("성공적으로 파산했어요.");
+                    tc.sendMessage(eb.build()).delay(1, TimeUnit.MINUTES).flatMap(Message::delete).queue();
 
                 }
 
