@@ -47,6 +47,8 @@ public class RPGListener extends ListenerAdapter {
 
                 if (args.length < 1) return;
 
+                tc.deleteMessageById(msg.getId()).queue();
+
                 Account ac = new Account(user.getId(), user.getName(), tc);
 
                 if (e.eq(args[0], "아르바이트", "알바", "돈")) {

@@ -58,6 +58,7 @@ public class OnlineGameListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "LL", "LOL", "롤", "LeagueOfLegends", "리그오브레전드")) {
 
+                    tc.deleteMessageById(msg.getId()).queue();
 
                     if (e.eq(args[1], "np")) {
                         String inputted = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
@@ -74,6 +75,8 @@ public class OnlineGameListener extends ListenerAdapter {
                 }
 
                 if (e.eq(args[0], "Osu", "오스", "Osu!", "오스!")) {
+
+                    tc.deleteMessageById(msg.getId()).queue();
 
                     String n = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
                     new Osu(n, tc);

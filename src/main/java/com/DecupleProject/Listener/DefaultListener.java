@@ -836,6 +836,8 @@ public class DefaultListener extends ListenerAdapter {
                 }
 
                 if (e.eq(args[0], "날씨", "weather", "웨더")) {
+
+                    tc.deleteMessageById(msg.getId()).queue();
                     Weather w = new Weather();
 
                     w.sendWeatherInformation(args[1], tc);
