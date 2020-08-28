@@ -3,10 +3,13 @@ package com.DecupleProject.Listener;
 import com.DecupleProject.Contents.RPG.Account;
 import com.DecupleProject.Core.CustomCommand;
 import com.DecupleProject.Core.Util.EasyEqual;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.concurrent.TimeUnit;
 
 public class RPGListener extends ListenerAdapter {
 
@@ -23,6 +26,8 @@ public class RPGListener extends ListenerAdapter {
             TextChannel tc = event.getTextChannel();
             Guild guild = event.getGuild();
             Message msg = event.getMessage();
+
+            EmbedBuilder eb = new EmbedBuilder();
 
             // ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ //
 
