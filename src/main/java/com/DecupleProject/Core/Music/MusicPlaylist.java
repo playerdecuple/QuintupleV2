@@ -22,7 +22,7 @@ public class MusicPlaylist {
     public MusicPlaylist() {
     }
 
-    public String getNextMusicUrl(String id, int musicId) {
+    public String getMusicUrl(String id, int musicId) {
 
         File f = new File("D:/Database/MusicPlayList/" + id + "/" + musicId + ".txt");
 
@@ -34,7 +34,8 @@ public class MusicPlaylist {
 
     }
 
-    public boolean getNextMusicPlaylistExists(String id, int musicId) {
+
+    public boolean exists(String id, int musicId) {
 
         File f = new File("D:/Database/MusicPlayList/" + id + "/" + musicId + ".txt");
 
@@ -187,17 +188,23 @@ public class MusicPlaylist {
 
     }
 
-    public void sendAllMusicPlaylistFromId(String id, TextChannel tc) {
+    public void sendAllPlaylist(String id, TextChannel tc) {
         StringBuilder allMusicPlaylistURL = new StringBuilder();
         String oneLineMusicURL;
 
-        for (int i = 1; i <= getUserPlaylistLength(id); i++) {
-            oneLineMusicURL = i + ". " + getTitle(getNextMusicUrl(id, i)) + "<" + getNextMusicUrl(id, i) + ">\n";
+        int i = 1;
+
+        while (exists(id, i)) {
+
+            oneLineMusicURL = i + ". " + getTitle(getMusicUrl(id, i)) + "<" + getMusicUrl(id, i) + ">\n";
+
             if (allMusicPlaylistURL.length() + oneLineMusicURL.length() >= 2000) {
                 tc.sendMessage("```md\n" + allMusicPlaylistURL + "```").delay(3, TimeUnit.MINUTES).flatMap(Message::delete).queue();
                 allMusicPlaylistURL = new StringBuilder();
             }
+
             allMusicPlaylistURL.append(oneLineMusicURL);
+
         }
 
         tc.sendMessage("```md\n" + allMusicPlaylistURL.toString() + "```").delay(3, TimeUnit.MINUTES).flatMap(Message::delete).queue();
@@ -223,10 +230,10 @@ public class MusicPlaylist {
             File[] fs = f.listFiles();
 
             for (int i = deleteMusic; i < fs.length; i++) {
-                boolean musicExists = getNextMusicPlaylistExists(id, i);
+                boolean musicExists = exists(id, i);
 
                 if (musicExists) {
-                    String nextMusicUrl = getNextMusicUrl(id, i + 1);
+                    String nextMusicUrl = getMusicUrl(id, i + 1);
 
                     File musicFile = new File(f.getPath() + "/" + i + ".txt");
                     d.deleteFile(musicFile);
@@ -234,7 +241,7 @@ public class MusicPlaylist {
                     addMusic(id, i, nextMusicUrl);
                 }
 
-                if (!getNextMusicPlaylistExists(id, i + 1)) {
+                if (!exists(id, i + 1)) {
                     break;
                 }
             }

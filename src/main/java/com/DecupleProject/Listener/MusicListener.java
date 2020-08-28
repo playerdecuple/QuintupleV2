@@ -476,12 +476,13 @@ public class MusicListener extends ListenerAdapter {
 
                         if (mp.playlistExists(user.getId())) {
 
-                            for (int i = 1; i < mp.getUserPlaylistLength(user.getId()); i++) {
-                                loadAndPlay(tc, mp.getNextMusicUrl(user.getId(), i), false, user);
+                            int i = 1;
 
-                                if (!mp.getNextMusicPlaylistExists(user.getId(), i + 1)) {
-                                    break;
-                                }
+                            while (mp.exists(user.getId(), i)) {
+                                loadAndPlay(tc, mp.getMusicUrl(user.getId(), i), false, user);
+
+                                if (!mp.exists(user.getId(), i + 1)) break;
+                                i++;
                             }
 
                             eb.setTitle("커스텀 플레이리스트 목록을 적어둘게요!");
@@ -558,7 +559,7 @@ public class MusicListener extends ListenerAdapter {
 
                     } else if (e.eq(args[1], "리스트", "list", "l", "목록")) {
 
-                        mp.sendAllMusicPlaylistFromId(user.getId(), tc);
+                        mp.sendAllPlaylist(user.getId(), tc);
 
                     } else if (e.eq(args[1], "리셋", "reset", "r")) {
 
@@ -593,7 +594,7 @@ public class MusicListener extends ListenerAdapter {
 
                     } else if (e.eq(args[1], "replace", "바꾸기", "순서바꾸기", "리플레이스", "rp")) {
 
-                        if (args.length == 4 && mp.playlistExists(user.getId()) && mp.getNextMusicPlaylistExists(user.getId(), Integer.parseInt(args[2])) && mp.getNextMusicPlaylistExists(user.getId(), Integer.parseInt(args[3]))) {
+                        if (args.length == 4 && mp.playlistExists(user.getId()) && mp.exists(user.getId(), Integer.parseInt(args[2])) && mp.exists(user.getId(), Integer.parseInt(args[3]))) {
                             mp.replaceMusic(user.getId(), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
 
                             eb.setDescription(Integer.parseInt(args[2]) + "번 음악과 " + Integer.parseInt(args[3]) + "번 음악의 순서를 서로 바꾸었어요.");
@@ -614,9 +615,9 @@ public class MusicListener extends ListenerAdapter {
                                 int v = 0;
 
                                 for (int i = 0; i < mp.getUserPlaylistLength(Victim); i++) {
-                                    loadAndPlay(tc, mp.getNextMusicUrl(Victim, i), false, user);
+                                    loadAndPlay(tc, mp.getMusicUrl(Victim, i), false, user);
                                     v++;
-                                    if (!mp.getNextMusicPlaylistExists(Victim, i + 1)) {
+                                    if (!mp.exists(Victim, i + 1)) {
                                         break;
                                     }
                                 }
