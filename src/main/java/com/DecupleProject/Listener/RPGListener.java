@@ -70,6 +70,19 @@ public class RPGListener extends ListenerAdapter {
 
                 }
 
+                if (e.eq(args[0], "파산", "삭제", "초기화")) {
+
+                    if (args.length != 1) {
+                        return;
+                    }
+
+                    ac.giveMoney(user.getId(), ac.getNowMoneyForId() * -1L, false, false);
+
+                    eb.setDescription("성공적으로 파산했어요.");
+                    tc.sendMessage(eb.build()).delay(1, TimeUnit.MINUTES).flatMap(Message::delete).queue();
+
+                }
+
             }
 
         } catch (Exception e) {
