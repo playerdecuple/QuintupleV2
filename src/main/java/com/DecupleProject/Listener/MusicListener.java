@@ -40,10 +40,8 @@ import java.util.concurrent.TimeUnit;
 public class MusicListener extends ListenerAdapter {
 
     private AudioPlayerManager playerManager;
-    private AudioPlayer audioPlayer;
     private Map<Long, GuildMusicManager> musicManagers;
 
-    private String hpInput;
 
     public MusicListener() {
         this.musicManagers = new HashMap();
@@ -222,8 +220,6 @@ public class MusicListener extends ListenerAdapter {
 
                         input = youtubeSearched;
                         loadAndPlay(event.getChannel(), input, true, user);
-
-                        hpInput = input;
 
 
                     } catch (NullPointerException ex) {
