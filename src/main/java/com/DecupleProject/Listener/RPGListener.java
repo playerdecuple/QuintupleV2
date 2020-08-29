@@ -52,11 +52,11 @@ public class RPGListener extends ListenerAdapter {
 
                 if (args.length < 1) return;
 
-                tc.deleteMessageById(msg.getId()).queue();
-
                 Account ac = new Account(user.getId(), user.getName(), tc);
 
                 if (e.eq(args[0], "아르바이트", "알바", "돈")) {
+
+                    tc.deleteMessageById(msg.getId()).queue();
 
                     if (args.length == 1) {
                         ac.giveMoney(user.getId(), 0, true, true);
@@ -72,6 +72,8 @@ public class RPGListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "파산", "삭제", "초기화")) {
 
+                    tc.deleteMessageById(msg.getId()).queue();
+
                     if (args.length != 1) {
                         return;
                     }
@@ -84,6 +86,8 @@ public class RPGListener extends ListenerAdapter {
                 }
 
                 if (e.eq(args[0], "계좌")) {
+
+                    tc.deleteMessageById(msg.getId()).queue();
 
                     if (args.length != 1) return;
                     ac.sendAccountMessage(tc);
