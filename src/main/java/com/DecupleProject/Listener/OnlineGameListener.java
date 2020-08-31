@@ -64,12 +64,12 @@ public class OnlineGameListener extends ListenerAdapter {
                         String inputted = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
                         LeagueOfLegends lol = new LeagueOfLegends(inputted);
 
-                        lol.sendNowPlayInfo(tc, inputted);
+                        lol.sendInfo(tc, true);
                     } else {
                         String inputted = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
                         LeagueOfLegends lol = new LeagueOfLegends(inputted);
 
-                        lol.sendInfo(tc);
+                        lol.sendInfo(tc, false);
                     }
 
                 }

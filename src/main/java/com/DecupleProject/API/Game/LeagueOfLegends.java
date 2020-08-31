@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.awt.*;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -26,137 +27,151 @@ public class LeagueOfLegends {
     private final String apiKey = "RGAPI-968258bf-9891-49e0-a09e-93d8a08fa5fc";
     private final GetJSON g = new GetJSON();
     private final String summonerName;
+    private final String summonerId;
 
     private final String LOL_VERSION = "10.16.1";
 
-    public LeagueOfLegends(String summonerName) {
+    public LeagueOfLegends(String summonerName) throws Exception {
 
         this.summonerName = summonerName;
+        this.summonerId = getSummonerId(summonerName);
 
     }
 
-    public void sendInfo(TextChannel tc) throws Exception {
+    public void sendInfo(TextChannel tc, boolean nowPlaying) throws Exception {
 
-        EmbedBuilder eb = new EmbedBuilder();
+        if (!nowPlaying) {
+            EmbedBuilder eb = new EmbedBuilder();
 
-        String encodedSummonerName = URLEncoder.encode(summonerName, "UTF-8");
+            String encodedSummonerName = URLEncoder.encode(summonerName, "UTF-8");
 
-        String summonerInfoUrl = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + encodedSummonerName + "?api_key=" + apiKey;
-        String summonerInfoBody = g.getJsonByUrl(summonerInfoUrl);
+            String summonerInfoUrl = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + encodedSummonerName + "?api_key=" + apiKey;
+            String summonerInfoBody = g.getJsonByUrl(summonerInfoUrl);
 
-        JsonParser j = new JsonParser();
-        JsonObject body = (JsonObject) j.parse(summonerInfoBody);
+            JsonParser j = new JsonParser();
+            JsonObject body = (JsonObject) j.parse(summonerInfoBody);
 
-        String summonerName = body.get("name").getAsString();
-        String summonerNameUTF = URLEncoder.encode(summonerName, "UTF-8");
-        int summonerLevel = body.get("summonerLevel").getAsInt();
-        int profileNumber = body.get("profileIconId").getAsInt();
+            String summonerName = body.get("name").getAsString();
+            String summonerNameUTF = URLEncoder.encode(summonerName, "UTF-8");
+            int summonerLevel = body.get("summonerLevel").getAsInt();
+            int profileNumber = body.get("profileIconId").getAsInt();
 
-        eb.setTitle("리그 오브 레전드 : " + summonerName, "https://www.op.gg/summoner/userName=" + summonerNameUTF);
+            eb.setTitle("리그 오브 레전드 : " + summonerName, "https://www.op.gg/summoner/userName=" + summonerNameUTF);
 
-        // Ln 1
+            // Ln 1
 
-        eb.addField("소환사 레벨", String.valueOf(summonerLevel), false);
+            eb.addField("소환사 레벨", String.valueOf(summonerLevel), false);
 
-        // Ln 2
+            // Ln 2
 
-        eb.addField("모스트 챔피언", "```" + getMostChampInfo(getSummonerId(summonerName)) + "```", false);
+            eb.addField("모스트 챔피언", "```" + getMostChampInfo(summonerId) + "```", false);
 
-        // Ln 3
+            // Ln 3
 
-        eb.addField("솔로 랭크", "```" + getTier(getSummonerId(summonerName), 0) + "```", false);
-        eb.addField("자유 랭크", "```" + getTier(getSummonerId(summonerName), 1) + "```", false);
-        eb.addField("TFT 랭크", "```" + getTier(getSummonerId(summonerName), 2) + "```", false);
+            eb.addField("솔로 랭크", "```" + getTier(summonerId, 0) + "```", false);
+            eb.addField("자유 랭크", "```" + getTier(summonerId, 1) + "```", false);
+            eb.addField("TFT 랭크", "```" + getTier(summonerId, 2) + "```", false);
 
-        // Image and other information
+            // Image and other information
 
-        eb.setThumbnail(getThumbnail(summonerName));
-        eb.setColor(Color.CYAN);
+            eb.setThumbnail(getThumbnail(summonerId));
+            eb.setColor(Color.CYAN);
 
-        eb.setFooter("아이콘", "http://ddragon.leagueoflegends.com/cdn/" + LOL_VERSION + "/img/profileicon/" + profileNumber + ".png");
+            eb.setFooter("아이콘", "http://ddragon.leagueoflegends.com/cdn/" + LOL_VERSION + "/img/profileicon/" + profileNumber + ".png");
 
-        tc.sendMessage(eb.build()).delay(3, TimeUnit.MINUTES).flatMap(Message::delete).queue();
+            tc.sendMessage(eb.build()).delay(3, TimeUnit.MINUTES).flatMap(Message::delete).queue();
+        } else {
+            sendNowPlayInfo(tc, summonerId);
+        }
 
     }
 
-    public void sendNowPlayInfo(TextChannel tc, String summonerName) throws Exception {
+    public void sendNowPlayInfo(TextChannel tc, String summonerId) throws Exception {
 
-        String summonerId = getSummonerId(summonerName);
+        try {
+            String spectateUrl = "https://kr.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/" + summonerId + "?api_key=" + apiKey;
+            String spectateBody = g.getJsonByUrl(spectateUrl);
 
-        String spectateUrl = "https://kr.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/" + summonerId + "?api_key=" + apiKey;
-        String spectateBody = g.getJsonByUrl(spectateUrl);
+            JsonParser parser = new JsonParser();
+            JsonObject object = (JsonObject) parser.parse(spectateBody);
 
-        JsonParser parser = new JsonParser();
-        JsonObject object = (JsonObject) parser.parse(spectateBody);
+            JsonArray participants = object.getAsJsonArray("participants");
+            JsonArray bannedChampions = object.getAsJsonArray("bannedChampions");
 
-        JsonArray participants = object.getAsJsonArray("participants");
-        JsonArray bannedChampions = object.getAsJsonArray("bannedChampions");
+            for (int i = 0; i < participants.size(); i++) {
+                JsonElement element = participants.get(i);
 
-        for (int i = 0; i < participants.size(); i++) {
-            JsonElement element = participants.get(i);
+                String summonerName = element.getAsJsonObject().get("summonerName").getAsString();
 
-            summonerName = element.getAsJsonObject().get("summonerName").getAsString();
+                int summonerChamp = element.getAsJsonObject().get("championId").getAsInt();
+                int summonerTeam = element.getAsJsonObject().get("teamId").getAsInt() / 100;
 
-            int summonerChamp = element.getAsJsonObject().get("championId").getAsInt();
-            int summonerTeam = element.getAsJsonObject().get("teamId").getAsInt() / 100;
+                Color teamColor = Color.WHITE;
 
-            Color teamColor = Color.WHITE;
+                if (summonerTeam == 1) teamColor = Color.CYAN;
+                if (summonerTeam == 2) teamColor = Color.RED;
 
-            if (summonerTeam == 1) teamColor = Color.CYAN;
-            if (summonerTeam == 2) teamColor = Color.RED;
+                String summonerSpell1 = getSpellById(element.getAsJsonObject().get("spell1Id").getAsInt());
+                String summonerSpell2 = getSpellById(element.getAsJsonObject().get("spell2Id").getAsInt());
 
-            String summonerSpell1 = getSpellById(element.getAsJsonObject().get("spell1Id").getAsInt());
-            String summonerSpell2 = getSpellById(element.getAsJsonObject().get("spell2Id").getAsInt());
+                JsonObject perks = element.getAsJsonObject().get("perks").getAsJsonObject();
+                JsonArray perksId = perks.getAsJsonArray("perkIds");
 
-            JsonObject perks = element.getAsJsonObject().get("perks").getAsJsonObject();
-            JsonArray perksId = perks.getAsJsonArray("perkIds");
+                StringBuilder perksStr = new StringBuilder("<주 룬> : ");
 
-            StringBuilder perksStr = new StringBuilder("<주 룬> : ");
+                for (int j = 0; j <= 7; j++) {
+                    JsonElement perksIdElement = perksId.get(j);
+                    perksStr.append(getRuneNameById(perksIdElement.getAsInt())).append(" / ");
 
-            for (int j = 0; j <= 7; j++) {
-                JsonElement perksIdElement = perksId.get(j);
-                perksStr.append(getRuneNameById(perksIdElement.getAsInt())).append(" / ");
+                    if (j == 2) {
+                        perksStr.append("\n<보조 룬> : ");
+                    }
 
-                if (j == 2) {
-                    perksStr.append("\n<보조 룬> : ");
+                    if (j == 4) {
+                        perksStr.append("\n<보너스 룬> : ");
+                    }
                 }
 
-                if (j == 4) {
-                    perksStr.append("\n<보너스 룬> : ");
+                String perksResult = perksStr.toString();
+
+                sendInfo(tc, teamColor, summonerName, summonerSpell1, summonerSpell2, perksResult, summonerChamp);
+
+                Thread.sleep(1000);
+
+
+            }
+
+            StringBuilder bannedStr = new StringBuilder(":no_entry_sign: **밴 당한 챔피언들**\n");
+
+            for (int i = 0; i < bannedChampions.size(); i++) {
+                JsonElement e = bannedChampions.get(i);
+
+                try {
+                    bannedStr.append(getChampionNameById(e.getAsJsonObject().get("championId").getAsInt()));
+                } catch (IndexOutOfBoundsException ex) {
+                    bannedStr.append("없음");
                 }
+
+                if (i != bannedChampions.size() - 1) {
+                    bannedStr.append(", ");
+                }
+
+                if (i == 4) bannedStr.append("\n");
             }
 
-            String perksResult = perksStr.toString();
+            int playTime = object.get("gameLength").getAsInt();
 
-            sendInfo(tc, teamColor, summonerName, summonerSpell1, summonerSpell2, perksResult, summonerChamp);
+            int playSec = playTime % 60;
+            int playMin = playTime / 60;
 
-            Thread.sleep(1000);
+            bannedStr.append("\n\n:watch: **게임 진행 시간**\n").append(playMin).append("분 ").append(playSec).append("초");
+            tc.sendMessage(bannedStr.toString()).delay(3, TimeUnit.MINUTES).flatMap(Message::delete).queue();
+        } catch (FileNotFoundException e) {
+            EmbedBuilder eb = new EmbedBuilder();
 
-
+            eb.setDescription(summonerName + "님은 게임을 하고 계시지 않은 것 같네요. 챔피언 선택 화면일 수도 있어요.");
+            tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
         }
-
-        StringBuilder bannedStr = new StringBuilder("```밴 당한 챔피언들 : ");
-
-        for (int i = 0; i < bannedChampions.size(); i++) {
-            JsonElement e = bannedChampions.get(i);
-
-            try {
-                bannedStr.append(getChampionNameById(e.getAsJsonObject().get("championId").getAsInt())).append(" | ");
-            } catch (IndexOutOfBoundsException ex) {
-                bannedStr.append("없음 | ");
-            }
-        }
-
-        long gameStartTime = object.get("gameStartTime").getAsLong();
-
-        long nowTime = System.currentTimeMillis();
-        long playTime = nowTime - gameStartTime;
-
-        int playSec = (int) (playTime / 1000) % 60;
-        int playMin = (int) (playTime / (1000 * 60));
-
-        bannedStr.append("\n\n게임 진행 시간 : ").append(playSec).append(" : ").append(playMin).append("```");
-        tc.sendMessage(bannedStr.toString()).delay(3, TimeUnit.MINUTES).flatMap(Message::delete).queue();
     }
 
     public void sendInfo(TextChannel tc, Color color, String summonerName, String spell1, String spell2, String runes, int championId) throws Exception {
@@ -252,7 +267,7 @@ public class LeagueOfLegends {
 
         // Image and other information
 
-        eb.setThumbnail(getThumbnail(summonerNameR));
+        eb.setThumbnail(getThumbnail(summonerId));
         eb.setColor(color);
 
         eb.setFooter("아이콘", "http://ddragon.leagueoflegends.com/cdn/" + LOL_VERSION + "/img/profileicon/" + profileNumber + ".png");
@@ -336,6 +351,7 @@ public class LeagueOfLegends {
         }
 
         try {
+
             String apiKey = "RGAPI-0c9074f3-2e70-43f2-a92c-b13f5f24c51a";
             URL url = new URL("https://kr.api.riotgames.com/tft/summoner/v1/summoners/by-name/" + summonerName + "?api_key=" + apiKey);
 
@@ -384,6 +400,7 @@ public class LeagueOfLegends {
             int tftLose = lg_obj.get("losses").getAsInt();
 
             tft_RankTier = tftTir + " " + tftDiv + " " + tftLP + " LP, 승률 " + String.format("%.2f", ((double) tftWin / ((double) tftWin + (double) tftLose)) * 100D) + "%(" + tftWin + "승 " + tftLose + "패)";
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (IndexOutOfBoundsException | NullPointerException e) {
@@ -401,8 +418,8 @@ public class LeagueOfLegends {
 
     }
 
-    public String getThumbnail(String summonerName) throws Exception {
-        String leagueURL = "https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/" + getSummonerId(summonerName) + "?api_key=" + apiKey;
+    public String getThumbnail(String summonerId) throws Exception {
+        String leagueURL = "https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/" + summonerId + "?api_key=" + apiKey;
         String jsonMain = g.getJsonByUrl(leagueURL);
 
         JsonParser parser = new JsonParser();
@@ -452,46 +469,47 @@ public class LeagueOfLegends {
 
     public String getPlayedChampInfo(String id, int championId) throws Exception {
 
-        String mostChampUrl = "https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/" + id + "?api_key=" + apiKey;
-        String mostChampBody = g.getJsonByUrl(mostChampUrl);
-
-        JsonParser parser = new JsonParser();
-        JsonArray array = (JsonArray) parser.parse(mostChampBody);
-        JsonElement element = null;
-
-        for (int i = 0; i < array.size(); i++) {
-            element = array.get(i);
-
-            if (element.getAsJsonObject().get("championId").getAsInt() == championId) {
-                break;
-            }
-
-            if (element.getAsJsonObject().get("championId").getAsInt() != championId && i < array.size() - 1) {
-                element = null;
-                break;
-            }
-        }
-
         try {
-            if (element != null) {
-                String championName = getChampionNameById(championId);
-                int masteryLevel = element.getAsJsonObject().get("championLevel").getAsInt();
-                int masteryPoint = element.getAsJsonObject().get("championPoints").getAsInt();
-                long lastPlayed = element.getAsJsonObject().get("lastPlayTime").getAsLong();
 
-                long calDate = System.currentTimeMillis() - lastPlayed;
-                long calDateDays = calDate / (24 * 60 * 60 * 1000);
+            String mostChampUrl = "https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/" + id + "?api_key=" + apiKey;
+            String mostChampBody = g.getJsonByUrl(mostChampUrl);
 
-                calDateDays = Math.abs(calDateDays);
+            JsonParser parser = new JsonParser();
+            JsonArray array = (JsonArray) parser.parse(mostChampBody);
+            JsonElement element = null;
 
-                SimpleDateFormat df = new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss");
+            for (int i = 0; i < array.size(); i++) {
+                element = array.get(i);
 
-                return championName + ", " + masteryLevel + "레벨 (" + String.format("%,d", masteryPoint) + "점)\n" +
-                        "최근 플레이 : " + df.format(lastPlayed) + "(" + calDateDays + "일 지남)";
-            } else {
+                if (element.getAsJsonObject().get("championId").getAsInt() == championId) {
+                    break;
+                }
+            }
+
+            try {
+                if (element != null) {
+                    String championName = getChampionNameById(championId);
+                    int masteryLevel = element.getAsJsonObject().get("championLevel").getAsInt();
+                    int masteryPoint = element.getAsJsonObject().get("championPoints").getAsInt();
+                    long lastPlayed = element.getAsJsonObject().get("lastPlayTime").getAsLong();
+
+                    long calDate = System.currentTimeMillis() - lastPlayed;
+                    long calDateDays = calDate / (24 * 60 * 60 * 1000);
+
+                    calDateDays = Math.abs(calDateDays);
+
+                    SimpleDateFormat df = new SimpleDateFormat("yyyy. MM. dd. HH:mm:ss");
+
+                    return championName + ", " + masteryLevel + "레벨 (" + String.format("%,d", masteryPoint) + "점)\n" +
+                            "최근 플레이 : " + df.format(lastPlayed) + "(" + calDateDays + "일 지남)";
+                } else {
+                    return getChampionNameById(championId) + ", 첫 판입니다.";
+                }
+            } catch (NullPointerException ex) {
                 return getChampionNameById(championId) + ", 첫 판입니다.";
             }
-        } catch (NullPointerException ex) {
+
+        } catch (IOException e) {
             return getChampionNameById(championId) + ", 첫 판입니다.";
         }
 
