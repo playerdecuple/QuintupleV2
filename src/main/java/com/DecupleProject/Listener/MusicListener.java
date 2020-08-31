@@ -3,9 +3,11 @@ package com.DecupleProject.Listener;
 import com.DecupleProject.API.Melon;
 import com.DecupleProject.API.Youtube;
 import com.DecupleProject.Core.CustomCommand;
+import com.DecupleProject.Core.Music.AudioInfo;
 import com.DecupleProject.Core.Music.GuildMusicManager;
 import com.DecupleProject.Core.Music.MusicPlaylist;
 import com.DecupleProject.Core.Music.TrackScheduler;
+import com.DecupleProject.Core.ReadFile;
 import com.DecupleProject.Core.Util.EasyEqual;
 import com.DecupleProject.Core.Util.LinkUtility;
 import com.DecupleProject.Core.Util.LogWriter;
@@ -28,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -227,7 +230,7 @@ public class MusicListener extends ListenerAdapter {
                         }
 
                         input = youtubeSearched;
-                        loadAndPlay(event.getChannel(), input, true, user);
+                        loadAndPlay(event.getChannel(), input, true, member);
 
 
                     } catch (NullPointerException ex) {
@@ -258,16 +261,7 @@ public class MusicListener extends ListenerAdapter {
 
                             tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                         } else {
-                            for (int i = 0; i < skipTrack; i++) {
-
-                                skipTrack(tc, false);
-
-                            }
-
-                            eb.setDescription(skipTrack + "개의 곡을 건너뛸게요!");
-                            eb.setColor(Color.CYAN);
-
-                            tc.sendMessage(eb.build()).delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            skipTrack(tc, Integer.parseInt(args[1]), true);
                         }
                     }
                 }
@@ -370,7 +364,7 @@ public class MusicListener extends ListenerAdapter {
                             }
 
                             input = youtubeSearched;
-                            loadAndPlay(event.getChannel(), input, false, user);
+                            loadAndPlay(event.getChannel(), input, false, member);
 
                         }
 
@@ -433,7 +427,7 @@ public class MusicListener extends ListenerAdapter {
                     GuildMusicManager musicManager = getGuildAudioPlayer(tc.getGuild());
                     TrackScheduler scheduler = musicManager.scheduler;
 
-                    Queue<AudioTrack> queue = scheduler.queue;
+                    Queue<AudioInfo> queue = scheduler.queue;
 
                     if (queue.isEmpty()) {
 
@@ -451,11 +445,11 @@ public class MusicListener extends ListenerAdapter {
 
                         sb.append("```md\n# 현재 플레이리스트에요!\n<개수: ").append(queue.size()).append(">\n\n");
 
-                        for (AudioTrack track : queue) {
-                            queueLength += track.getDuration();
+                        for (AudioInfo info : queue) {
+                            queueLength += info.getTrack().getDuration();
 
                             if (trackCount < 20) {
-                                sb.append(trackCount + 1).append(". ").append(track.getInfo().title).append("\n");
+                                sb.append(trackCount + 1).append(". ").append(info.getTrack().getInfo().title).append("\n");
                                 trackCount++;
                             }
                         }
@@ -479,7 +473,7 @@ public class MusicListener extends ListenerAdapter {
                             int i = 1;
 
                             while (mp.exists(user.getId(), i)) {
-                                loadAndPlay(tc, mp.getMusicUrl(user.getId(), i), false, user);
+                                loadAndPlay(tc, mp.getMusicUrl(user.getId(), i), false, member);
 
                                 if (!mp.exists(user.getId(), i + 1)) break;
                                 i++;
@@ -615,7 +609,7 @@ public class MusicListener extends ListenerAdapter {
                                 int v = 0;
 
                                 for (int i = 0; i < mp.getUserPlaylistLength(Victim); i++) {
-                                    loadAndPlay(tc, mp.getMusicUrl(Victim, i), false, user);
+                                    loadAndPlay(tc, mp.getMusicUrl(Victim, i), false, member);
                                     v++;
                                     if (!mp.exists(Victim, i + 1)) {
                                         break;
@@ -654,7 +648,7 @@ public class MusicListener extends ListenerAdapter {
 
     }
 
-    public void loadAndPlay(final TextChannel tc, String url, boolean showMessage, User user) {
+    public void loadAndPlay(final TextChannel tc, String url, boolean showMessage, Member user) {
 
         GuildMusicManager musicManager = getGuildAudioPlayer(tc.getGuild());
 
@@ -690,13 +684,13 @@ public class MusicListener extends ListenerAdapter {
                 Youtube y = new Youtube();
                 eb.setImage(y.getThumbnail(trackUrl));
 
-                eb.setFooter(user.getAsTag(), user.getAvatarUrl());
+                eb.setFooter(user.getUser().getAsTag(), user.getUser().getAvatarUrl());
 
                 if (showMessage) {
                     tc.sendMessage(eb.build()).delay(1, TimeUnit.MINUTES).flatMap(Message::delete).queue();
                 }
 
-                play(tc.getGuild(), musicManager, audioTrack);
+                play(tc.getGuild(), musicManager, audioTrack, user, tc);
 
             }
 
@@ -719,7 +713,7 @@ public class MusicListener extends ListenerAdapter {
                 }
 
                 setVolume(tc, 20, false);
-                play(tc.getGuild(), musicManager, firstTrack);
+                play(tc.getGuild(), musicManager, firstTrack, user, tc);
             }
 
             @Override
@@ -751,9 +745,9 @@ public class MusicListener extends ListenerAdapter {
 
     }
 
-    public void play(Guild guild, GuildMusicManager musicManager, AudioTrack track) {
+    public void play(Guild guild, GuildMusicManager musicManager, AudioTrack track, Member member, TextChannel tc) {
         connectToFirstVoiceChannel(guild.getAudioManager());
-        musicManager.scheduler.queue(track);
+        musicManager.scheduler.queue(track, member, tc);
     }
 
     public void skipTrack(TextChannel tc, boolean showMessage) {
@@ -772,8 +766,31 @@ public class MusicListener extends ListenerAdapter {
 
     }
 
+    public void skipTrack(TextChannel tc, int value, boolean showMessage) {
+
+        GuildMusicManager musicManager = getGuildAudioPlayer(tc.getGuild());
+        musicManager.scheduler.nextTrack(value);
+
+        if (showMessage) {
+            EmbedBuilder eb = new EmbedBuilder();
+
+            eb.setDescription(value + "곡을 건너 뛸게요!");
+            eb.setColor(Color.CYAN);
+
+            tc.sendMessage(eb.build()).delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        }
+
+    }
+
     public void skipAllTrack(TextChannel tc, boolean showMessage, Guild guild) {
         GuildMusicManager musicManager = getGuildAudioPlayer(tc.getGuild());
+
+        File serverDirectory = new File("D:/Database/Servers/" + tc.getGuild().getId());
+        File topicFile = new File(serverDirectory.getPath() + "/Topic" + tc.getId() + ".txt");
+
+        ReadFile r = new ReadFile();
+
+        tc.getManager().setTopic(r.readString(topicFile)).queue();
 
         musicManager.pl.stopTrack();
         musicManager.scheduler.queue.clear();
