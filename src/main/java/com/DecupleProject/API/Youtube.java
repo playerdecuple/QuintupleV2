@@ -35,7 +35,8 @@ public class Youtube {
                     .setQ(search)
                     .setMaxResults(1L)
                     .setType("video")
-                    .setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/default/url)")
+                   // .setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/default/url)")
+                    .setFields("items(id/videoId)")
                     .setKey("AIzaSyDM1sK9iC6EywCHgzBYtbgDxapWTXlzvIU")
                     .execute()
                     .getItems();
