@@ -3,6 +3,7 @@ package com.DecupleProject.Listener;
 import com.DecupleProject.API.Melon;
 import com.DecupleProject.API.Youtube;
 import com.DecupleProject.Core.CustomCommand;
+import com.DecupleProject.Core.GuildInfo;
 import com.DecupleProject.Core.Music.AudioInfo;
 import com.DecupleProject.Core.Music.GuildMusicManager;
 import com.DecupleProject.Core.Music.MusicPlaylist;
@@ -110,11 +111,22 @@ public class MusicListener extends ListenerAdapter {
                 if (args.length <= 0) return;
                 if (user.isBot()) return;
 
+                GuildInfo guildInfo = new GuildInfo(guild);
+
                 if (e.eq(args[0], "C", "Enter", "입장", "들어와", "연결")) {
 
                     // if (args[0].equalsIgnoreCase("C")) {
 
                     msg.delete().queue();
+
+                    if (guildInfo.getMusicChannel() != null) {
+                        if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
+                            tc.sendMessage("이 곳에서는 **음악 명령어**를 사용할 수 없습니다! 대신, " + guildInfo.getMusicChannel().getAsMention() + " 채널에서 써 주세요.")
+                                    .delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
+                    }
+
                     try {
 
                         if (!am.isConnected()) {
@@ -166,6 +178,14 @@ public class MusicListener extends ListenerAdapter {
 
                     tc.deleteMessageById(msg.getId()).queue();
 
+                    if (guildInfo.getMusicChannel() != null) {
+                        if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
+                            tc.sendMessage("이 곳에서는 **음악 명령어**를 사용할 수 없습니다! 대신, " + guildInfo.getMusicChannel().getAsMention() + " 채널에서 써 주세요.")
+                                    .delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
+                    }
+
                     am.closeAudioConnection();
                     skipAllTrack(tc, false, guild);
 
@@ -177,7 +197,17 @@ public class MusicListener extends ListenerAdapter {
                 }
 
                 if (e.eq(args[0], "P", "Play", "Queue", "재생", "틀어")) {
+
                     tc.deleteMessageById(msg.getId()).queue();
+
+                    if (guildInfo.getMusicChannel() != null) {
+                        if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
+                            tc.sendMessage("이 곳에서는 **음악 명령어**를 사용할 수 없습니다! 대신, " + guildInfo.getMusicChannel().getAsMention() + " 채널에서 써 주세요.")
+                                    .delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
+                    }
+
                     String input = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
 
                     try {
@@ -245,7 +275,17 @@ public class MusicListener extends ListenerAdapter {
                 }
 
                 if (e.eq(args[0], "S", "skip", "넘겨", "스킵", "다음")) {
+
                     tc.deleteMessageById(msg.getId()).queue();
+
+                    if (guildInfo.getMusicChannel() != null) {
+                        if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
+                            tc.sendMessage("이 곳에서는 **음악 명령어**를 사용할 수 없습니다! 대신, " + guildInfo.getMusicChannel().getAsMention() + " 채널에서 써 주세요.")
+                                    .delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
+                    }
+
                     if (args.length == 1) {
                         skipTrack(tc, true);
                         return;
@@ -270,6 +310,14 @@ public class MusicListener extends ListenerAdapter {
 
                     tc.deleteMessageById(msg.getId()).queue();
 
+                    if (guildInfo.getMusicChannel() != null) {
+                        if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
+                            tc.sendMessage("이 곳에서는 **음악 명령어**를 사용할 수 없습니다! 대신, " + guildInfo.getMusicChannel().getAsMention() + " 채널에서 써 주세요.")
+                                    .delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
+                    }
+
                     if (args.length == 1) {
 
                         eb.setTitle("볼륨을 몇으로 조절해 드릴까요?");
@@ -288,9 +336,17 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "멜론", "멜론차트", "Melon", "Chart", "Chats")) {
 
-                    Melon melon = new Melon();
-
                     tc.deleteMessageById(msg.getId()).queue();
+
+                    if (guildInfo.getMusicChannel() != null) {
+                        if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
+                            tc.sendMessage("이 곳에서는 **음악 명령어**를 사용할 수 없습니다! 대신, " + guildInfo.getMusicChannel().getAsMention() + " 채널에서 써 주세요.")
+                                    .delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
+                    }
+
+                    Melon melon = new Melon();
 
                     try {
 
@@ -394,6 +450,14 @@ public class MusicListener extends ListenerAdapter {
 
                     tc.deleteMessageById(msg.getId()).queue();
 
+                    if (guildInfo.getMusicChannel() != null) {
+                        if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
+                            tc.sendMessage("이 곳에서는 **음악 명령어**를 사용할 수 없습니다! 대신, " + guildInfo.getMusicChannel().getAsMention() + " 채널에서 써 주세요.")
+                                    .delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
+                    }
+
                     GuildMusicManager musicManager = getGuildAudioPlayer(tc.getGuild());
 
                     musicManager.scheduler.shuffle();
@@ -410,6 +474,14 @@ public class MusicListener extends ListenerAdapter {
 
                     tc.deleteMessageById(msg.getId()).queue();
 
+                    if (guildInfo.getMusicChannel() != null) {
+                        if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
+                            tc.sendMessage("이 곳에서는 **음악 명령어**를 사용할 수 없습니다! 대신, " + guildInfo.getMusicChannel().getAsMention() + " 채널에서 써 주세요.")
+                                    .delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
+                    }
+
                     GuildMusicManager musicManager = getGuildAudioPlayer(tc.getGuild());
                     musicManager.scheduler.setRepeating(!musicManager.scheduler.isRepeating());
 
@@ -423,6 +495,14 @@ public class MusicListener extends ListenerAdapter {
                 if (e.eq(args[0], "리스트", "list", "목록", "플레이리스트")) {
 
                     tc.deleteMessageById(msg.getId()).queue();
+
+                    if (guildInfo.getMusicChannel() != null) {
+                        if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
+                            tc.sendMessage("이 곳에서는 **음악 명령어**를 사용할 수 없습니다! 대신, " + guildInfo.getMusicChannel().getAsMention() + " 채널에서 써 주세요.")
+                                    .delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
+                    }
 
                     GuildMusicManager musicManager = getGuildAudioPlayer(tc.getGuild());
                     TrackScheduler scheduler = musicManager.scheduler;
@@ -463,8 +543,17 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "pl", "playlist", "플레이리스트", "재생목록")) {
 
-                    MusicPlaylist mp = new MusicPlaylist();
                     tc.deleteMessageById(msg.getId()).queue();
+
+                    if (guildInfo.getMusicChannel() != null) {
+                        if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
+                            tc.sendMessage("이 곳에서는 **음악 명령어**를 사용할 수 없습니다! 대신, " + guildInfo.getMusicChannel().getAsMention() + " 채널에서 써 주세요.")
+                                    .delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
+                    }
+
+                    MusicPlaylist mp = new MusicPlaylist();
 
                     if (args.length < 2) {
 
@@ -790,7 +879,8 @@ public class MusicListener extends ListenerAdapter {
 
         ReadFile r = new ReadFile();
 
-        tc.getManager().setTopic(r.readString(topicFile)).queue();
+        if (topicFile.exists())
+            tc.getManager().setTopic(r.readString(topicFile)).queue();
 
         musicManager.pl.stopTrack();
         musicManager.scheduler.queue.clear();

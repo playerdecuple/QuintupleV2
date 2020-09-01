@@ -3,6 +3,7 @@ package com.DecupleProject.Listener;
 import com.DecupleProject.Contents.RPG.UserStatus;
 import com.DecupleProject.Core.CustomCommand;
 import com.DecupleProject.Core.DatabaseManager;
+import com.DecupleProject.Core.GuildInfo;
 import com.DecupleProject.Core.ServerManager.ServerManager;
 import com.DecupleProject.Core.Util.EasyEqual;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class ServerManagementListener extends ListenerAdapter {
@@ -93,13 +95,23 @@ public class ServerManagementListener extends ListenerAdapter {
                 if (e.eq(args[0], "서버", "server")) {
                     tc.deleteMessageById(msg.getId()).queue();
                     if (args.length == 1) {
-                        eb.setTitle("서버 관리하기!");
+                        eb.setTitle("서버 : " + guild.getName());
 
-                        eb.addField("서버 환영 메시지 추가하기", "```.서버 환영메시지\n>[제목]\n*[설명]\n=[필드제목],[필드설명]\n#[이미지URL]\n^[썸네일URL]\n_[푸터설명],[푸터URL]\n" +
-                                "R[R],[G],[B]```", false);
+                        eb.addField(":name_badge: 서버 이름", guild.getName(), true);
+                        eb.addField(":id: 서버 ID", guild.getId(), true);
+                        eb.addField(":computer: 서버 관리자", Objects.requireNonNull(guild.getOwner()).getAsMention(), true);
+                        eb.addField(":flag_kr: 서버 위치", guild.getRegion().getName(), true);
+                        eb.addField(":desktop: 서버 채널 개수", ":speech_balloon: " + guild.getTextChannels().size() + "개의 텍스트 채널\n:microphone2: " +
+                                guild.getVoiceChannels().size() + "개의 보이스 채널\n:ballot_box_with_check: " +
+                                guild.getChannels().size() + "개의 모든 채널", true);
+                        eb.addBlankField(true);
+                        eb.addField(":people_holding_hands: 서버 멤버", guild.getMembers().size() + "명", true);
+                        eb.addField(":compass: 서버 역할", guild.getRoles().size() + "개", true);
+                        eb.addField(":date: 서버 생성 날짜", guild.getTimeCreated().toString().replace("T", "\n").replace("Z", ""), true);
 
+                        eb.setThumbnail(guild.getIconUrl());
                         eb.setColor(Color.CYAN);
-                        tc.sendMessage(eb.build()).delay(1, TimeUnit.MINUTES).flatMap(Message::delete).queue();
+                        tc.sendMessage(eb.build()).queue();
                     }
 
                     if (e.eq(args[1], "환영메시지", "welcomeMessage", "환영", "인사")) {
@@ -131,10 +143,46 @@ public class ServerManagementListener extends ListenerAdapter {
 
                         manager.banMember(tc, target, info, Integer.parseInt(args[2]));
                     }
+
+                    if (e.eq(args[1], "용도", "채널")) {
+
+                        GuildInfo guildInfo = new GuildInfo(guild);
+
+                        if (args.length == 2) {
+                            String message =
+                                    "**채널의 용도를 정하는 명령어입니다.**\n\n" +
+                                            ":one: __.서버 [용도 또는 채널] [음악]__\n" +
+                                            "해당 텍스트 채널을 서버의 **음악 텍스트 채널**로 지정합니다.\n" +
+                                            "__.서버 [용도 또는 채널] [음악] 제거__로 입력할 경우 지정된 음악 텍스트 채널을 제거합니다.";
+                            tc.sendMessage(message).delay(3, TimeUnit.MINUTES).flatMap(Message::delete).queue();
+                        }
+
+                        if (e.eq(args[2], "음악")) {
+
+                            if (args.length == 3) {
+
+                                String message = "`" + tc.getName() + "` 채널의 용도를 **음악 채널**로 설정했습니다!";
+                                tc.sendMessage(message).delay(1, TimeUnit.MINUTES).flatMap(Message::delete).queue();
+
+                                guildInfo.setMusicChannel(tc.getId());
+
+                            } else if (e.eq(args[3], "제거", "삭제", "리셋")) {
+
+                                String message = "`" + tc.getGuild().getName() + "` 서버의 **음악 채널** 용도를 제거했습니다!";
+                                tc.sendMessage(message).delay(1, TimeUnit.MINUTES).flatMap(Message::delete).queue();
+
+                                guildInfo.setMusicChannel("0");
+
+                            }
+
+                        }
+                    }
                 }
 
             }
 
+        } catch (ArrayIndexOutOfBoundsException e) {
+            // ignore
         } catch (Exception e) {
             e.printStackTrace();
         }
