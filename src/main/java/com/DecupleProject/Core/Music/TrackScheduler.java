@@ -89,6 +89,16 @@ public class TrackScheduler extends AudioEventAdapter {
             if (repeating) {
                 pl.startTrack(lastTrack.makeClone(), false);
             } else {
+
+                if (queue.isEmpty()) {
+                    tc.getGuild().getAudioManager().closeAudioConnection();
+
+                    EmbedBuilder eb = new EmbedBuilder();
+                    eb.setDescription("모든 곡을 재생했습니다. 자원을 아끼기 위해서 연결을 끊을게요.");
+
+                    tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                }
+
                 nextTrack();
             }
         }
