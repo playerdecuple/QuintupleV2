@@ -14,7 +14,6 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
-import java.util.Scanner;
 
 public class QuintupleMain {
 
@@ -22,15 +21,14 @@ public class QuintupleMain {
 
     public static void main(String[] args) throws LoginException {
 
-        // - 초기 설정 - //
-        System.out.print("[QUINTUPLE] Input Quintuple Activate Mode : "); // GET QUINTUPLE ACTIVATE MODE;
-        /*
-         * If MODE = "test": Quintuple will be activated test mode.
-         * If MODE = "real": Quintuple will be activated real mode.
-         */
+        boolean test = true;
 
-        Scanner sc = new Scanner(System.in);
-        String v = sc.next();
+        String v;
+
+        if (test)
+            v = "test";
+        else
+            v = "real";
 
         File f = new File("D:/Database/NowMode.txt");
         File t = new File("D:/Database/StartTime.txt");
