@@ -10,6 +10,7 @@ import com.DecupleProject.Contents.RPG.UserStatus;
 import com.DecupleProject.Core.*;
 import com.DecupleProject.Core.Util.EasyEqual;
 import com.DecupleProject.Core.Util.LogWriter;
+import com.DecupleProject.QuintupleMain;
 import com.gikk.twirk.Twirk;
 import com.gikk.twirk.TwirkBuilder;
 import com.sun.management.OperatingSystemMXBean;
@@ -543,29 +544,6 @@ public class DefaultListener extends ListenerAdapter {
                     tc.sendMessage(eb.build()).queue();
                 }
 
-                if (e.eq(args[0], "서버", "여기", "이곳", "server")) {
-                    tc.deleteMessageById(msg.getId()).queue();
-                    if (args.length == 1) {
-                        eb.setTitle("서버 : " + guild.getName());
-
-                        eb.addField(":name_badge: 서버 이름", guild.getName(), true);
-                        eb.addField(":id: 서버 ID", guild.getId(), true);
-                        eb.addField(":computer: 서버 관리자", Objects.requireNonNull(guild.getOwner()).getAsMention(), true);
-                        eb.addField(":flag_kr: 서버 위치", guild.getRegion().getName(), true);
-                        eb.addField(":desktop: 서버 채널 개수", ":speech_balloon: " + guild.getTextChannels().size() + "개의 텍스트 채널\n:microphone2: " +
-                                guild.getVoiceChannels().size() + "개의 보이스 채널\n:ballot_box_with_check: " +
-                                guild.getChannels().size() + "개의 모든 채널", true);
-                        eb.addBlankField(true);
-                        eb.addField(":people_holding_hands: 서버 멤버", guild.getMembers().size() + "명", true);
-                        eb.addField(":compass: 서버 역할", guild.getRoles().size() + "개", true);
-                        eb.addField(":date: 서버 생성 날짜", guild.getTimeCreated().toString().replace("T", "\n").replace("Z", ""), true);
-
-                        eb.setThumbnail(guild.getIconUrl());
-                        eb.setColor(Color.CYAN);
-                        tc.sendMessage(eb.build()).queue();
-                    }
-                }
-
                 if (e.eq(args[0], "보고", "report", "리폿", "버그", "이슈", "issue", "bug")) {
                     tc.deleteMessageById(msg.getId()).queue();
                     try {
@@ -835,12 +813,35 @@ public class DefaultListener extends ListenerAdapter {
 
                 }
 
-                if (e.eq(args[0], "날씨", "weather", "웨더")) {
+                if (e.eq(args[0], "UT")) {
+                    tc.sendMessage("OK").queue();
+                }
 
+                if (e.eq(args[0], "날씨", "weather", "웨더")) {
                     tc.deleteMessageById(msg.getId()).queue();
                     Weather w = new Weather();
 
                     w.sendWeatherInformation(args[1], tc);
+                }
+
+                if (e.eq(args[0], "reload", "restart", "apply")) {
+                    Authority a = new Authority();
+
+                    if (a.getAuthorityForId(user.getId()) == 4) {
+                        sendPrivateMessage(owner, "\"**Bot will restart myself!** __Please don't turn off computer.__\"");
+                        restartQuintuple();
+                    }
+                }
+
+                if (e.eq(args[0], "end", "shutdown", "exit")) {
+
+                    Authority a = new Authority();
+
+                    if (a.getAuthorityForId(user.getId()) == 4) {
+                        sendPrivateMessage(owner, "**Bot is shutting down!**");
+                        shutdownQuintuple();
+                    }
+
                 }
 
             }
@@ -858,6 +859,15 @@ public class DefaultListener extends ListenerAdapter {
 
     public void sendPrivateMessage(User target, MessageEmbed eb) {
         target.openPrivateChannel().complete().sendMessage(eb).queue();
+    }
+
+    public void restartQuintuple() throws IOException {
+        Runtime.getRuntime().exec("\"C:\\Program Files\\Java\\jdk1.8.0_241\\bin\\java.exe\" \"-javaagent:C:\\Program Files\\JetBrains\\IntelliJ IDEA Community Edition 2019.3.4\\lib\\idea_rt.jar=54509:C:\\Program Files\\JetBrains\\IntelliJ IDEA Community Edition 2019.3.4\\bin\" -Dfile.encoding=UTF-8 -classpath \"C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\charsets.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\deploy.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\ext\\access-bridge-64.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\ext\\cldrdata.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\ext\\dnsns.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\ext\\jaccess.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\ext\\jfxrt.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\ext\\localedata.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\ext\\nashorn.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\ext\\sunec.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\ext\\sunjce_provider.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\ext\\sunmscapi.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\ext\\sunpkcs11.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\ext\\zipfs.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\javaws.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\jce.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\jfr.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\jfxswt.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\jsse.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\management-agent.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\plugin.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\resources.jar;C:\\Program Files\\Java\\jdk1.8.0_241\\jre\\lib\\rt.jar;D:\\QuintupleV2\\target\\classes;C:\\Users\\elred\\.m2\\repository\\net\\dv8tion\\JDA\\4.2.0_199\\JDA-4.2.0_199.jar;C:\\Users\\elred\\.m2\\repository\\com\\google\\code\\findbugs\\jsr305\\3.0.2\\jsr305-3.0.2.jar;C:\\Users\\elred\\.m2\\repository\\org\\jetbrains\\annotations\\16.0.1\\annotations-16.0.1.jar;C:\\Users\\elred\\.m2\\repository\\org\\slf4j\\slf4j-api\\1.7.25\\slf4j-api-1.7.25.jar;C:\\Users\\elred\\.m2\\repository\\com\\neovisionaries\\nv-websocket-client\\2.10\\nv-websocket-client-2.10.jar;C:\\Users\\elred\\.m2\\repository\\com\\squareup\\okhttp3\\okhttp\\3.13.0\\okhttp-3.13.0.jar;C:\\Users\\elred\\.m2\\repository\\club\\minnced\\opus-java-api\\1.0.4\\opus-java-api-1.0.4.jar;C:\\Users\\elred\\.m2\\repository\\net\\java\\dev\\jna\\jna\\4.4.0\\jna-4.4.0.jar;C:\\Users\\elred\\.m2\\repository\\club\\minnced\\opus-java-natives\\1.0.4\\opus-java-natives-1.0.4.jar;C:\\Users\\elred\\.m2\\repository\\org\\apache\\commons\\commons-collections4\\4.1\\commons-collections4-4.1.jar;C:\\Users\\elred\\.m2\\repository\\net\\sf\\trove4j\\trove4j\\3.0.3\\trove4j-3.0.3.jar;C:\\Users\\elred\\.m2\\repository\\com\\fasterxml\\jackson\\core\\jackson-databind\\2.10.1\\jackson-databind-2.10.1.jar;C:\\Users\\elred\\.m2\\repository\\com\\fasterxml\\jackson\\core\\jackson-annotations\\2.10.1\\jackson-annotations-2.10.1.jar;C:\\Users\\elred\\.m2\\repository\\com\\sedmelluq\\lavaplayer\\1.3.50\\lavaplayer-1.3.50.jar;C:\\Users\\elred\\.m2\\repository\\com\\sedmelluq\\lava-common\\1.1.0\\lava-common-1.1.0.jar;C:\\Users\\elred\\.m2\\repository\\com\\sedmelluq\\lavaplayer-natives\\1.3.13\\lavaplayer-natives-1.3.13.jar;C:\\Users\\elred\\.m2\\repository\\org\\apache\\httpcomponents\\httpclient\\4.5.10\\httpclient-4.5.10.jar;C:\\Users\\elred\\.m2\\repository\\org\\apache\\httpcomponents\\httpcore\\4.4.12\\httpcore-4.4.12.jar;C:\\Users\\elred\\.m2\\repository\\commons-logging\\commons-logging\\1.2\\commons-logging-1.2.jar;C:\\Users\\elred\\.m2\\repository\\commons-codec\\commons-codec\\1.11\\commons-codec-1.11.jar;C:\\Users\\elred\\.m2\\repository\\commons-io\\commons-io\\2.6\\commons-io-2.6.jar;C:\\Users\\elred\\.m2\\repository\\com\\fasterxml\\jackson\\core\\jackson-core\\2.10.0\\jackson-core-2.10.0.jar;C:\\Users\\elred\\.m2\\repository\\net\\iharder\\base64\\2.3.9\\base64-2.3.9.jar;C:\\Users\\elred\\.m2\\repository\\com\\google\\apis\\google-api-services-youtube\\v3-rev222-1.25.0\\google-api-services-youtube-v3-rev222-1.25.0.jar;C:\\Users\\elred\\.m2\\repository\\com\\google\\api-client\\google-api-client\\1.25.0\\google-api-client-1.25.0.jar;C:\\Users\\elred\\.m2\\repository\\com\\google\\oauth-client\\google-oauth-client\\1.25.0\\google-oauth-client-1.25.0.jar;C:\\Users\\elred\\.m2\\repository\\com\\google\\http-client\\google-http-client\\1.25.0\\google-http-client-1.25.0.jar;C:\\Users\\elred\\.m2\\repository\\com\\google\\j2objc\\j2objc-annotations\\1.1\\j2objc-annotations-1.1.jar;C:\\Users\\elred\\.m2\\repository\\com\\google\\http-client\\google-http-client-jackson2\\1.25.0\\google-http-client-jackson2-1.25.0.jar;C:\\Users\\elred\\.m2\\repository\\com\\google\\guava\\guava\\20.0\\guava-20.0.jar;C:\\Users\\elred\\.m2\\repository\\com\\github\\taycaldwell\\riot-api-java\\4.3.0\\riot-api-java-4.3.0.jar;C:\\Users\\elred\\.m2\\repository\\com\\google\\code\\gson\\gson\\2.5\\gson-2.5.jar;C:\\Users\\elred\\.m2\\repository\\org\\json\\json\\20190722\\json-20190722.jar;C:\\Users\\elred\\.m2\\repository\\com\\github\\Bumbleboss\\osu_api\\1.1\\osu_api-1.1.jar;C:\\Users\\elred\\.m2\\repository\\com\\squareup\\okio\\okio\\1.14.1\\okio-1.14.1.jar;C:\\Users\\elred\\.m2\\repository\\com\\github\\mautini\\pubg-java\\1.0-SNAPSHOT\\pubg-java-1.0-20181229.163403-14.jar;C:\\Users\\elred\\.m2\\repository\\com\\squareup\\retrofit2\\retrofit\\2.5.0\\retrofit-2.5.0.jar;C:\\Users\\elred\\.m2\\repository\\com\\squareup\\retrofit2\\converter-gson\\2.5.0\\converter-gson-2.5.0.jar;C:\\Users\\elred\\.m2\\repository\\com\\typesafe\\config\\1.3.3\\config-1.3.3.jar;C:\\Users\\elred\\.m2\\repository\\com\\github\\mautini\\pubg-java-utils\\1.0-SNAPSHOT\\pubg-java-utils-1.0-20181229.163408-14.jar;C:\\Users\\elred\\.m2\\repository\\com\\github\\Gikkman\\Java-Twirk\\0.6.2\\Java-Twirk-0.6.2.jar;C:\\Users\\elred\\.m2\\repository\\org\\slf4j\\slf4j-simple\\1.6.1\\slf4j-simple-1.6.1.jar;C:\\Users\\elred\\.m2\\repository\\org\\jsoup\\jsoup\\1.10.3\\jsoup-1.10.3.jar;C:\\Users\\elred\\.m2\\repository\\org\\python\\jython-standalone\\2.7.2\\jython-standalone-2.7.2.jar\" com.DecupleProject.QuintupleMain");
+        System.exit(-1);
+    }
+
+    public void shutdownQuintuple() {
+        System.exit(-1);
     }
 
 }
