@@ -37,8 +37,6 @@ public class DeleteFile {
 
     }
 
-    /* Never used codes yet.
-
     public void deleteFile(String p) {
 
         System.gc();
@@ -71,6 +69,8 @@ public class DeleteFile {
         }
 
     }
+
+    /* Never used codes yet.
 
     public void deleteFile(File ... fs) {
 
