@@ -7,6 +7,7 @@ import com.DecupleProject.Core.GuildInfo;
 import com.DecupleProject.Core.ServerManager.ServerManager;
 import com.DecupleProject.Core.Util.EasyEqual;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -94,6 +95,7 @@ public class ServerManagementListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "서버", "server")) {
                     tc.deleteMessageById(msg.getId()).queue();
+
                     if (args.length == 1) {
                         eb.setTitle("서버 : " + guild.getName());
 
@@ -115,20 +117,45 @@ public class ServerManagementListener extends ListenerAdapter {
                     }
 
                     if (e.eq(args[1], "환영메시지", "welcomeMessage", "환영", "인사")) {
+
+                        if (member != null) {
+                            if (!member.hasPermission(Permission.MANAGE_SERVER)) {
+                                tc.sendMessage(":no_entry_sign: 이 명령어는 서버의 `서버 관리` 권한을 받은 사람만 사용할 수 있어요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                                return;
+                            }
+                        }
+
                         String r = msg.getContentRaw();
                         r = r.replace(prefix + args[0] + " " + args[1] + "\n", "");
                         manager.setWelcomeMessage(tc, r);
                     }
 
                     if (e.eq(args[1], "경고", "Attention", "경고하기")) {
+
+                        if (member != null) {
+                            if (!member.hasPermission(Permission.MANAGE_SERVER)) {
+                                tc.sendMessage(":no_entry_sign: 이 명령어는 서버의 `서버 관리` 권한을 받은 사람만 사용할 수 있어요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                                return;
+                            }
+                        }
+
                         User target = msg.getMentionedMembers().get(0).getUser();
 
                         String info = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
 
                         manager.attention(tc, target, info);
+
                     }
 
                     if (e.eq(args[1], "킥", "kick", "추방", "강퇴")) {
+
+                        if (member != null) {
+                            if (!member.hasPermission(Permission.KICK_MEMBERS)) {
+                                tc.sendMessage(":no_entry_sign: 이 명령어는 서버의 `멤버 추방` 권한을 받은 사람만 사용할 수 있어요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                                return;
+                            }
+                        }
+
                         Member target = msg.getMentionedMembers().get(0);
 
                         String info = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
@@ -137,6 +164,14 @@ public class ServerManagementListener extends ListenerAdapter {
                     }
 
                     if (e.eq(args[1], "밴", "ban", "차단")) {
+
+                        if (member != null) {
+                            if (!member.hasPermission(Permission.BAN_MEMBERS)) {
+                                tc.sendMessage(":no_entry_sign: 이 명령어는 서버의 `멤버 차단` 권한을 받은 사람만 사용할 수 있어요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                                return;
+                            }
+                        }
+
                         Member target = msg.getMentionedMembers().get(0);
 
                         String info = String.join(" ", Arrays.copyOfRange(args, 3, args.length));
@@ -147,6 +182,13 @@ public class ServerManagementListener extends ListenerAdapter {
                     if (e.eq(args[1], "용도", "채널")) {
 
                         GuildInfo guildInfo = new GuildInfo(guild);
+
+                        if (member != null) {
+                            if (!member.hasPermission(Permission.MANAGE_SERVER)) {
+                                tc.sendMessage(":no_entry_sign: 이 명령어는 서버의 `서버 관리` 권한을 받은 사람만 사용할 수 있어요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                                return;
+                            }
+                        }
 
                         if (args.length == 2) {
                             String message =
