@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 
 import java.awt.*;
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 public class Vote {
@@ -40,6 +41,13 @@ public class Vote {
 
     public void startVote(String ... obj) {
 
+        File guildVoteFile = new File("D:/Database/Vote/" + tc.getGuild().getId() + ".txt");
+
+        if (guildVoteFile.exists()) {
+            tc.sendMessage(":no_entry_sign: 투표가 진행 중입니다..! 어서 **다른 투표에 투표**해 주세요..!").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+            return;
+        }
+
         if (obj.length > 10) {
             eb.setTitle("투표를 시작할 수 없었어요.");
             eb.setDescription("투표 목록 개수는 10개까지만 만들 수 있기 때문이죠.");
@@ -51,6 +59,10 @@ public class Vote {
         eb.setTitle(user.getAsTag() + "님이 투표를 시작했습니다!");
         eb.setDescription("투표는 3분 뒤에 자동으로 종료됩니다! 반응으로 투표해 주세요!");
         eb.setColor(Color.CYAN);
+
+        eb.clearFields();
+
+        new WriteFile().writeString(guildVoteFile, "이이이잉 앗살라말라이쿰~");
 
         for (int i = 0; i < obj.length; i++) {
             eb.addField((i + 1) + "번 투표 시", obj[i], true);
@@ -82,6 +94,7 @@ public class Vote {
                         tc.sendMessage(eb2.build()).queue();
 
                         msg.delete().queue();
+                        new DeleteFile().deleteFile(guildVoteFile);
                     }
                 );
 
