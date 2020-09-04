@@ -2,6 +2,7 @@ package com.DecupleProject.Listener;
 
 import com.DecupleProject.API.Game.LeagueOfLegends;
 import com.DecupleProject.API.Game.Osu;
+import com.DecupleProject.API.Game.Overwatch;
 import com.DecupleProject.Contents.RPG.UserStatus;
 import com.DecupleProject.Core.CustomCommand;
 import com.DecupleProject.Core.DatabaseManager;
@@ -83,7 +84,16 @@ public class OnlineGameListener extends ListenerAdapter {
 
                 }
 
+                if (e.eq(args[0], "오버워치", "Overwatch")) {
 
+                    tc.deleteMessageById(msg.getId()).queue();
+
+                    String tag = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+                    Overwatch overwatch = new Overwatch(tag);
+
+                    overwatch.sendOverwatchStats(tc);
+
+                }
 
             }
 
