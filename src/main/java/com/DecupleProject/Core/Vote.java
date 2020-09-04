@@ -24,22 +24,35 @@ public class Vote {
         JDA jda = DefaultListener.jda;
 
         switch (type) {
-            case 1: return jda.getEmoteById("746085443497623665");
-            case 2: return jda.getEmoteById("746085443094970461");
-            case 3: return jda.getEmoteById("746085443438641312");
-            case 4: return jda.getEmoteById("746085443463807067");
-            case 5: return jda.getEmoteById("746085443334045816");
-            case 6: return jda.getEmoteById("746085443577315492");
-            case 7: return jda.getEmoteById("746085443464069120");
-            case 8: return jda.getEmoteById("746085443434578111");
-            case 9: return jda.getEmoteById("746085443208085675");
-            case 10: return jda.getEmoteById("746085443157884999");
+            case 1:
+                return jda.getEmoteById("746085443497623665");
+            case 2:
+                return jda.getEmoteById("746085443094970461");
+            case 3:
+                return jda.getEmoteById("746085443438641312");
+            case 4:
+                return jda.getEmoteById("746085443463807067");
+            case 5:
+                return jda.getEmoteById("746085443334045816");
+            case 6:
+                return jda.getEmoteById("746085443577315492");
+            case 7:
+                return jda.getEmoteById("746085443464069120");
+            case 8:
+                return jda.getEmoteById("746085443434578111");
+            case 9:
+                return jda.getEmoteById("746085443208085675");
+            case 10:
+                return jda.getEmoteById("746085443157884999");
             default:
                 return null;
         }
     }
 
-    public void startVote(String ... obj) {
+    public void startVote(String... obj) {
+
+        System.gc();
+        System.runFinalization();
 
         File guildVoteFile = new File("D:/Database/Vote/" + tc.getGuild().getId() + ".txt");
 
@@ -78,24 +91,25 @@ public class Vote {
 
         msg.editMessage(eb.build()).delay(3, TimeUnit.MINUTES)
                 .queue((it) -> {
-                        for (int i = 0; i < obj.length; i++) {
-                            votes[i] = msg.retrieveReactionUsers(getEmojiCode(i + 1)).complete().size() - 1;
+                            for (int i = 0; i < obj.length; i++) {
+                                votes[i] = msg.retrieveReactionUsers(getEmojiCode(i + 1)).complete().size() - 1;
+                            }
+
+                            EmbedBuilder eb2 = new EmbedBuilder();
+                            eb2.setTitle("투표가 끝났습니다!");
+
+                            for (int i = 0; i < votes.length; i++) {
+                                eb2.addField((i + 1) + "(" + obj[i] + ")에 투표하신 분", votes[i] + "분", true);
+                            }
+
+                            eb2.setColor(Color.CYAN);
+                            eb2.setThumbnail(getEmojiCode(getMaxValueOfArray(votes) + 1).getImageUrl());
+                            tc.sendMessage(eb2.build()).queue();
+
+                            guildVoteFile.delete();
+
+                            msg.delete().queue();
                         }
-
-                        EmbedBuilder eb2 = new EmbedBuilder();
-                        eb2.setTitle("투표가 끝났습니다!");
-
-                        for (int i = 0; i < votes.length; i++) {
-                            eb2.addField((i + 1) + "(" + obj[i] + ")에 투표하신 분", votes[i] + "분", true);
-                        }
-
-                        eb2.setColor(Color.CYAN);
-                        eb2.setThumbnail(getEmojiCode(getMaxValueOfArray(votes) + 1).getImageUrl());
-                        tc.sendMessage(eb2.build()).queue();
-
-                        msg.delete().queue();
-                        new DeleteFile().deleteFile(guildVoteFile);
-                    }
                 );
 
     }
