@@ -6,10 +6,12 @@ import com.DecupleProject.Core.WriteFile;
 import com.DecupleProject.Listener.DefaultListener;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.awt.*;
 import java.io.File;
+import java.util.Objects;
 
 public class UserStatus {
 
@@ -100,7 +102,7 @@ public class UserStatus {
                 w.writeLong(expFile, finalEXP);
                 w.writeInt(levelFile, finalLevel);
 
-                if (showMessage || showLvUpMessage) {
+                if (showMessage || showLvUpMessage && Objects.requireNonNull(tc.getGuild().getMember(jda.getSelfUser())).hasPermission(Permission.MESSAGE_WRITE)) {
                     tc.sendMessage(eb.build()).queue();
                 }
             }
