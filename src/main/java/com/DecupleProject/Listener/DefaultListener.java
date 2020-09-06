@@ -511,6 +511,9 @@ public class DefaultListener extends ListenerAdapter {
                 }
 
                 if (e.eq(args[0], "내정보", "나", "")) {
+
+                    if (args.length != 1) return;
+
                     tc.deleteMessageById(msg.getId()).queue();
                     eb.setTitle("유저 : " + user.getAsTag());
 
@@ -542,6 +545,7 @@ public class DefaultListener extends ListenerAdapter {
                     eb.setColor(member.getColor());
 
                     tc.sendMessage(eb.build()).queue();
+
                 }
 
                 if (e.eq(args[0], "보고", "report", "리폿", "버그", "이슈", "issue", "bug")) {
