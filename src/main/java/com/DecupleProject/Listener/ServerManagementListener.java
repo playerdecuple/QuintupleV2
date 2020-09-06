@@ -223,7 +223,7 @@ public class ServerManagementListener extends ListenerAdapter {
 
             }
 
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException | StringIndexOutOfBoundsException e) {
             // ignore
         } catch (Exception e) {
             e.printStackTrace();

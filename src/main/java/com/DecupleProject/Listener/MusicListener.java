@@ -723,6 +723,8 @@ public class MusicListener extends ListenerAdapter {
 
             }
 
+        } catch (StringIndexOutOfBoundsException e) {
+            // ignore
         } catch (NumberFormatException e) {
             EmbedBuilder eb = new EmbedBuilder();
 

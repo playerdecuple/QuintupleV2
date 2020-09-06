@@ -846,6 +846,8 @@ public class DefaultListener extends ListenerAdapter {
 
             }
 
+        } catch (StringIndexOutOfBoundsException e) {
+            // ignore
         } catch (Exception e) {
             lW.sendMessage("Exception occurred! \n```" + e.getMessage() + "```");
             e.printStackTrace();

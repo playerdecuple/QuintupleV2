@@ -97,6 +97,8 @@ public class OnlineGameListener extends ListenerAdapter {
 
             }
 
+        } catch (StringIndexOutOfBoundsException e) {
+            // ignore
         } catch (Exception e) {
             e.printStackTrace();
         }

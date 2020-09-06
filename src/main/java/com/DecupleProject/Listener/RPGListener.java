@@ -96,6 +96,8 @@ public class RPGListener extends ListenerAdapter {
 
             }
 
+        } catch (StringIndexOutOfBoundsException e) {
+            // ignore
         } catch (Exception e) {
             e.printStackTrace();
         }
