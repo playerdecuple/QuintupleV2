@@ -1,16 +1,20 @@
 package com.DecupleProject.Core.Music;
 
+import com.DecupleProject.Core.CopyFile;
 import com.DecupleProject.Core.DeleteFile;
 import com.DecupleProject.Core.ReadFile;
 import com.DecupleProject.Core.WriteFile;
+import com.DecupleProject.Listener.DefaultListener;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class MusicPlaylist {
@@ -252,6 +256,178 @@ public class MusicPlaylist {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public void setTitle(String id, String title) {
+        try {
+            File f = new File("D:/Database/MusicPlayList/" + id + "/title.txt");
+            File g = new File("D:/Database/MusicPlayList/" + id + "/share.txt");
+            File h = new File("D:/Database/MusicPlayList/" + id + "/owner.txt");
+
+            if (title.equals("")) {
+                System.gc();
+                System.runFinalization();
+
+                f.delete();
+                g.delete();
+                h.delete();
+
+                setShare(id, false);
+                return;
+            }
+
+            setShare(id, true);
+
+            w.writeString(f, title);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setShare(String id, boolean share) {
+        try {
+            File f = new File("D:/Database/MusicPlayList/" + id + "/share.txt");
+            File g = new File("D:/Database/MusicPlayList/" + id + "/owner.txt");
+
+            if (share) {
+                w.writeString(f, "true");
+                w.writeString(g, id);
+            } else {
+                if (f.exists()) f.delete();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getPlaylistTitle(String id) {
+
+        File baseFile = new File("D:/Database/MusicPlayList/" + id + "/title.txt");
+
+        if (baseFile.exists()) {
+            return r.readString(baseFile);
+        }
+
+        return null;
+
+    }
+
+    public User getOwner(String id) {
+        File g = new File("D:/Database/MusicPlayList/" + id + "/owner.txt");
+
+        if (g.exists()) {
+            return DefaultListener.jda.retrieveUserById(Objects.requireNonNull(r.readString(g))).complete();
+        }
+
+        return null;
+    }
+
+    public String searchPlayLists(String word) {
+
+        File baseFile = new File("D:/Database/MusicPlayList/");
+        File[] playlistFiles = baseFile.listFiles();
+
+        List<String> playlists = new ArrayList<>();
+
+        for (File playlistFile : playlistFiles) {
+
+            if (playlistFile.isDirectory()) {
+
+                File shareFile = new File(playlistFile.getPath() + "/share.txt");
+                File titleFile = new File(playlistFile.getPath() + "/title.txt");
+
+                if (shareFile.exists() && titleFile.exists()) {
+
+                    if (Objects.equals(r.readString(shareFile), "true")
+                            && Objects.requireNonNull(r.readString(titleFile)).contains(word.replace(" ", ""))) {
+
+                        playlists.add(playlistFile.getName());
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        if (playlists.size() == 0) {
+
+            return "검색 결과가 없습니다.";
+
+        }
+
+        StringBuilder returnValue = new StringBuilder();
+
+        for (int i = 0; i < playlists.size(); i++) {
+
+            returnValue.append(i + 1)
+                    .append(". ")
+                    .append(getPlaylistTitle(playlists.get(i)).replace("*", "").replace("_", ""))
+                    .append(" - ")
+                    .append(getOwner(playlists.get(i)).getAsTag())
+                    .append("(코드 : ")
+                    .append(playlists.get(i))
+                    .append(")")
+                    .append("\n");
+
+        }
+
+        return returnValue.toString();
+
+    }
+
+    public boolean exportPlaylist(String id) {
+
+        try {
+
+            CopyFile cf = new CopyFile();
+
+            File fromFile = new File("D:/Database/MusicPlayList/" + id);
+            File[] fs = fromFile.listFiles();
+
+            File toFile = new File("D:/Database/MusicPlayList/" + getRandomCode());
+
+            cf.copyTo(toFile, fs);
+            return true;
+
+        } catch (Exception e) {
+            // ignore
+        }
+
+        return false;
+
+    }
+
+    public String getRandomCode() {
+
+        Random r = new Random();
+        String[] charset = {
+                "A", "B", "C", "D", "E", "F", "G", "H", "I",
+                "J", "K", "L", "M", "N", "O", "P", "Q", "R",
+                "S", "T", "U", "V", "W", "X", "Y", "Z",
+                "a", "b", "c", "d", "e", "f", "g", "h", "i",
+                "j", "k", "l", "m", "n", "o", "p", "q", "r",
+                "s", "t", "u", "v", "w", "x", "y", "z"
+        };
+
+        StringBuilder returnValue = new StringBuilder();
+
+        for (int i = 0; i < 5; i++) {
+
+            int v = r.nextInt(charset.length);
+            returnValue.append(charset[v]);
+
+        }
+
+        File f = new File("D:/Database/MusicPlayList/" + returnValue.toString());
+
+        if (f.exists()) {
+            return getRandomCode();
+        }
+
+        return returnValue.toString();
+
     }
 
     /* Never used codes yet.

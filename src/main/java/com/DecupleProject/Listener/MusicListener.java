@@ -380,6 +380,7 @@ public class MusicListener extends ListenerAdapter {
                                     eb.setFooter(user.getAsTag(), user.getAvatarUrl());
                                     eb.setColor(Color.CYAN);
                                     tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+
                                 }
                             }
 
@@ -689,33 +690,135 @@ public class MusicListener extends ListenerAdapter {
                             tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                         }
 
+                    } else if (e.eq(args[1], "제목", "title", "제목설정", "공개")) {
 
-                    } else if (msg.getMentionedUsers().get(0) != null) {
+                        if (args.length == 2) {
+                            eb.setTitle("플레이리스트의 제목을 설정합니다.");
+                            eb.setDescription("플레이리스트의 제목을 설정하게 되면 다른 디스코드 및 퀸튜플 이용자가 귀하의 플레이리스트를 볼 수 있게 됩니다. (즉, 공개하게 됩니다.)");
+                            eb.addField("공개해도 괜찮다면!", "`.pl 제목 [제목]` 형식으로 써 주세요.", false);
+                            eb.addField("공개를 끌래요.", "`.pl 제목 ` 형식으로 써 주세요. 저 공백까지 포함해야 합니다.", false);
+                            eb.setColor(Color.ORANGE);
+
+                            tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
+
+                        String title = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+
+                        if (e.eq(title.replace(" ", ""), "")) {
+                            mp.setTitle(user.getId(), "");
+                            tc.sendMessage(user.getAsMention() + "님의 플레이리스트를 **비공개** 상태로 바꾸었습니다..!").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                        } else {
+                            mp.setTitle(user.getId(), title);
+                            tc.sendMessage(user.getAsMention() + "님의 플레이리스트를 **공개** 상태로 바꾸었습니다..!\n이 플레이리스트의 제목을 **" + title + "**로 설정했습니다!").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                        }
+
+                    } else if (e.eq(args[1], "검색", "search")) {
+
+                        if (args.length == 2) {
+                            eb.setTitle("플레이리스트를 검색합니다.");
+                            eb.setDescription("`.pl 검색 [검색어]`로 검색해 주세요!");
+                            eb.setColor(Color.ORANGE);
+
+                            tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
+
+                        String word = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+
+                        tc.sendMessage("**" + word + "**에 대한 검색 결과입니다!:\n```md\n" + mp.searchPlayLists(word) + "```").delay(3, TimeUnit.MINUTES).flatMap(Message::delete).queue();
+
+                    } else {
+                        
                         try {
-                            String Victim = msg.getMentionedUsers().get(0).getId();
-                            if (mp.playlistExists(Victim)) {
+                            String victim = msg.getMentionedUsers().get(0).getId();
+                            if (mp.playlistExists(victim)) {
 
                                 int v = 0;
 
-                                for (int i = 0; i < mp.getUserPlaylistLength(Victim); i++) {
-                                    loadAndPlay(tc, mp.getMusicUrl(Victim, i), false, member);
+                                for (int i = 0; i < mp.getUserPlaylistLength(victim); i++) {
+                                    loadAndPlay(tc, mp.getMusicUrl(victim, i), false, member);
                                     v++;
-                                    if (!mp.exists(Victim, i + 1)) {
+                                    if (!mp.exists(victim, i + 1)) {
                                         break;
                                     }
                                 }
 
                                 eb.setTitle("커스텀 플레이리스트를 재생합니다!");
-                                eb.setDescription(event.getJDA().retrieveUserById(Victim).complete().getName() + "님의 커스텀 플레이리스트에 있는 " + v + "개의 곡을 모두 재생합니다.");
+                                eb.setDescription(event.getJDA().retrieveUserById(victim).complete().getName() + "님의 커스텀 플레이리스트에 있는 " + v + "개의 곡을 모두 재생합니다.");
                                 eb.setColor(Color.CYAN);
 
-                                tc.sendMessage(eb.build()).queue();
+                                tc.sendMessage(eb.build()).delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                             } else {
-                                tc.sendMessage("<@" + Victim + ">님은 갖고 계신 플레이리스트가 없습니다.").queue();
+                                tc.sendMessage("<@" + victim + ">님은 갖고 계신 플레이리스트가 없습니다.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                             }
                         } catch (IndexOutOfBoundsException ex) {
-                            tc.sendMessage("멘션 (@데큐플)으로 호출해 주세요.").queue();
+                            
+                            String targetId = args[1];
+                            User targetUser = DefaultListener.jda.retrieveUserById(targetId).complete();
+
+                            if (targetUser != null) {
+
+                                if (mp.playlistExists(targetId)) {
+
+                                    int v = 0;
+
+                                    for (int i = 0; i < mp.getUserPlaylistLength(targetId); i++) {
+                                        loadAndPlay(tc, mp.getMusicUrl(targetId, i), false, member);
+                                        v++;
+                                        if (!mp.exists(targetId, i + 1)) {
+                                            break;
+                                        }
+                                    }
+
+                                    eb.setTitle("커스텀 플레이리스트를 재생합니다!");
+                                    eb.setDescription(event.getJDA().retrieveUserById(targetId).complete().getName() + "님의 커스텀 플레이리스트에 있는 " + v + "개의 곡을 모두 재생합니다.");
+                                    eb.setColor(Color.CYAN);
+
+                                    tc.sendMessage(eb.build()).delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+
+                                } else {
+
+                                    tc.sendMessage("<@" + targetId + ">님은 갖고 계신 플레이리스트가 없습니다.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+
+                                }
+
+                            } else {
+                                
+                                File codeFile = new File("D:/Database/MusicPlayList/" + args[1]);
+                                if (codeFile.exists()) {
+                                    
+                                    ReadFile r = new ReadFile();
+                                    User playlistOwner = DefaultListener
+                                            .jda.retrieveUserById(Objects.requireNonNull(r.readString(new File(codeFile.getPath() + "/owner.txt")))).complete();
+                                    
+                                    if (mp.playlistExists(args[1])) {
+
+                                        int v = 0;
+
+                                        for (int i = 0; i < mp.getUserPlaylistLength(args[1]); i++) {
+                                            loadAndPlay(tc, mp.getMusicUrl(args[1], i), false, member);
+                                            v++;
+                                            if (!mp.exists(args[1], i + 1)) {
+                                                break;
+                                            }
+                                        }
+
+                                        eb.setTitle("커스텀 플레이리스트를 재생합니다!");
+                                        eb.setDescription(playlistOwner.getName() + "님의 커스텀 플레이리스트에 있는 " + v + "개의 곡을 모두 재생합니다.");
+                                        eb.setColor(Color.CYAN);
+
+                                        tc.sendMessage(eb.build()).delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                                        return;
+                                    }
+                                }
+
+                                tc.sendMessage("디스코드 데이터베이스를 훑어봤는데요, 아무리 찾아봐도 그런 ID는 없더라구요.\n**AXSDG**와 같은 5자리 코드나 **멘션, 유저 ID**를 입력해 주세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+
+                            }
+                            
                         }
+                        
                     }
 
                 }
