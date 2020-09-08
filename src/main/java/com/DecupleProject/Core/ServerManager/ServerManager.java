@@ -66,10 +66,15 @@ public class ServerManager {
 
             MessageHistory messageHistory = tc.getHistory();
             List<Message> messagesList = messageHistory.retrievePast(value).complete();
-            tc.deleteMessages(messagesList).queue();
 
-            eb.setDescription(value + "개의 메시지를 삭제했어요.");
-            tc.sendMessage(eb.build()).delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+            try {
+                tc.deleteMessages(messagesList).queue();
+
+                eb.setDescription(value + "개의 메시지를 삭제했어요.");
+                tc.sendMessage(eb.build()).delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+            } catch (IllegalArgumentException e) {
+                tc.sendMessage("2주가 지난 메시지가 포함되어 있어 삭제할 수 없어요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+            }
 
         } else {
 
