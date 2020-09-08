@@ -10,12 +10,13 @@ import com.DecupleProject.Contents.RPG.UserStatus;
 import com.DecupleProject.Core.*;
 import com.DecupleProject.Core.Util.EasyEqual;
 import com.DecupleProject.Core.Util.LogWriter;
-import com.DecupleProject.QuintupleMain;
+
 import com.gikk.twirk.Twirk;
 import com.gikk.twirk.TwirkBuilder;
 import com.sun.management.OperatingSystemMXBean;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.*;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
@@ -348,7 +349,7 @@ public class DefaultListener extends ListenerAdapter {
                             mbsc, ManagementFactory.OPERATING_SYSTEM_MXBEAN_NAME, OperatingSystemMXBean.class);
 
 
-                    eb.addField("사용 CPU", // "모델 : " + cpuModel + "\n" +
+                    eb.addField("사용 CPU",
                             "사용률 : " + String.format("%.2f", ops.getSystemCpuLoad() * 100D) + "%\n" +
                                     "사용 가능 코어 개수 : " + Runtime.getRuntime().availableProcessors() + "개", false);
 
@@ -512,39 +513,79 @@ public class DefaultListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "내정보", "나", "")) {
 
-                    if (args.length != 1) return;
+                    if (args.length == 1) {
+                        if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                            tc.deleteMessageById(msg.getId()).queue();
+                        eb.setTitle("유저 : " + user.getAsTag());
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
-                    eb.setTitle("유저 : " + user.getAsTag());
+                        eb.addField("닉네임", user.getName(), true);
+                        eb.addField("태그", user.getAsTag(), true);
+                        eb.addField("ID", user.getId(), true);
 
-                    eb.addField("닉네임", user.getName(), true);
-                    eb.addField("태그", user.getAsTag(), true);
-                    eb.addField("ID", user.getId(), true);
+                        eb.addField("가입한 날짜", user.getTimeCreated().toString().replace("T", "\n").replace("Z", "") + "", true);
+                        eb.addField("봇 여부", user.isBot() ? "맞음" : "아님", true);
+                        eb.addBlankField(true);
 
-                    eb.addField("가입한 날짜", user.getTimeCreated().toString().replace("T", "\n").replace("Z", "") + "", true);
-                    eb.addField("봇 여부", user.isBot() ? "맞음" : "아님", true);
-                    eb.addBlankField(true);
+                        Account a = new Account(user.getId(), user.getName(), tc);
+                        eb.addField(":moneybag: 자금(플)", String.format("%,d", a.getNowMoneyForId()) + "플", true);
+                        eb.addField(":bulb: 경험치", "Lv. " + us.getLevel() + " / " + String.format("%.2f", ((double) us.getEXP() / ((double) us.getLevel() * 10D + 5D)) * 100D) + "%", true);
 
-                    Account a = new Account(user.getId(), user.getName(), tc);
-                    eb.addField(":moneybag: 자금(플)", String.format("%,d", a.getNowMoneyForId()) + "플", true);
-                    eb.addField(":bulb: 경험치", "Lv. " + us.getLevel() + " / " + String.format("%.2f", ((double) us.getEXP() / ((double) us.getLevel() * 10D + 5D)) * 100D) + "%", true);
+                        StringBuilder roles = new StringBuilder("@everyone");
 
-                    StringBuilder roles = new StringBuilder("@everyone");
+                        if (member == null) return;
 
-                    if (member == null) return;
+                        for (int i = 0; i < member.getRoles().size(); i++) {
+                            roles.append(", @").append(member.getRoles().get(i).getName());
+                        }
 
-                    for (int i = 0; i < member.getRoles().size(); i++) {
-                        roles.append(", @").append(member.getRoles().get(i).getName());
+                        eb.addField("이 서버에 들어온 시각", member.getTimeJoined().toString().replace("T", "\n").replace("Z", ""), false);
+                        eb.addField("이 서버에서의 역할 목록", "```" + roles.toString() + "```", false);
+
+
+                        eb.setThumbnail(user.getAvatarUrl());
+                        eb.setColor(member.getColor());
+
+                        tc.sendMessage(eb.build()).queue();
+                    } else {
+                        try {
+                            if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                                tc.deleteMessageById(msg.getId()).queue();
+                            
+                            User targetUser = msg.getMentionedUsers().get(0);
+                            eb.setTitle("유저 : " + targetUser.getAsTag());
+
+                            eb.addField("닉네임", targetUser.getName(), true);
+                            eb.addField("태그", targetUser.getAsTag(), true);
+                            eb.addField("ID", targetUser.getId(), true);
+
+                            eb.addField("가입한 날짜", targetUser.getTimeCreated().toString().replace("T", "\n").replace("Z", "") + "", true);
+                            eb.addField("봇 여부", targetUser.isBot() ? "맞음" : "아님", true);
+                            eb.addBlankField(true);
+
+                            Account a = new Account(targetUser.getId(), targetUser.getName(), tc);
+                            eb.addField(":moneybag: 자금(플)", String.format("%,d", a.getNowMoneyForId()) + "플", true);
+                            eb.addField(":bulb: 경험치", "Lv. " + us.getLevel() + " / " + String.format("%.2f", ((double) us.getEXP() / ((double) us.getLevel() * 10D + 5D)) * 100D) + "%", true);
+
+                            StringBuilder roles = new StringBuilder("@everyone");
+
+                            if (member == null) return;
+
+                            for (int i = 0; i < member.getRoles().size(); i++) {
+                                roles.append(", @").append(member.getRoles().get(i).getName());
+                            }
+
+                            eb.addField("이 서버에 들어온 시각", member.getTimeJoined().toString().replace("T", "\n").replace("Z", ""), false);
+                            eb.addField("이 서버에서의 역할 목록", "```" + roles.toString() + "```", false);
+
+
+                            eb.setThumbnail(targetUser.getAvatarUrl());
+                            eb.setColor(member.getColor());
+
+                            tc.sendMessage(eb.build()).queue();
+                        } catch (NullPointerException ex) {
+                            // ignore
+                        }
                     }
-
-                    eb.addField("이 서버에 들어온 시각", member.getTimeJoined().toString().replace("T", "\n").replace("Z", ""), false);
-                    eb.addField("이 서버에서의 역할 목록", "```" + roles.toString() + "```", false);
-
-
-                    eb.setThumbnail(user.getAvatarUrl());
-                    eb.setColor(member.getColor());
-
-                    tc.sendMessage(eb.build()).queue();
 
                 }
 
