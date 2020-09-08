@@ -1,6 +1,8 @@
 package com.DecupleProject.Listener;
 
 import com.DecupleProject.Contents.RPG.Account;
+import com.DecupleProject.Contents.RPG.Proficiency;
+import com.DecupleProject.Contents.RPG.Work;
 import com.DecupleProject.Core.CustomCommand;
 import com.DecupleProject.Core.Util.EasyEqual;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -48,6 +50,8 @@ public class RPGListener extends ListenerAdapter {
                 args = msg.getContentRaw().substring(1).split(" ");
             }
 
+            Work work = new Work(tc, user);
+
             // ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ //
 
             if (msg.getContentRaw().charAt(0) == 'Q' | msg.getContentRaw().charAt(0) == 'q' | msg.getContentRaw().charAt(0) == '.' | prefixCheck) {
@@ -94,6 +98,38 @@ public class RPGListener extends ListenerAdapter {
                     if (args.length != 1) return;
                     ac.sendAccountMessage(tc);
 
+                }
+
+                if (e.eq(args[0], "벌목", "나무", "woodcut", "woodcutting")) {
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    work.woodCutting();
+                }
+
+                if (e.eq(args[0], "낚시", "물고기", "fishing", "낚싯대", "횟감수획")) {
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    work.fishing();
+                }
+
+                if (e.eq(args[0], "농사", "농작물", "수확물", "farming", "farm")) {
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    work.farming();
+                }
+
+                if (e.eq(args[0], "사냥", "사냥감", "hunt", "hunting")) {
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    work.hunting();
+                }
+
+                if (e.eq(args[0], "제작", "제조", "produce")) {
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    work.producing();
+                }
+
+                if (e.eq(args[0], "숙련도", "숙련", "일")) {
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    Proficiency p = new Proficiency(user);
+
+                    p.sendProficiencyInformation(tc);
                 }
 
             }
