@@ -20,6 +20,19 @@ public class WriteFile {
         }
     }
 
+    public void writeStringToFiles(String value, File ... f) {
+        try {
+            for (File file : f) {
+                FileWriter fW = new FileWriter(file.getPath());
+                fW.write(value);
+                fW.flush();
+                fW.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void writeLong(File f, Long value) {
         try {
             FileWriter fW = new FileWriter(f.getPath());
