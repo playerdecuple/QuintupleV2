@@ -4,11 +4,14 @@ import com.DecupleProject.Contents.RPG.Account;
 import com.DecupleProject.Core.CustomCommand;
 import com.DecupleProject.Core.Util.EasyEqual;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.exceptions.ContextException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class RPGListener extends ListenerAdapter {
@@ -56,7 +59,7 @@ public class RPGListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "아르바이트", "알바", "돈")) {
 
-                    tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
 
                     if (args.length == 1) {
                         ac.giveMoney(user.getId(), 0, true, true);
@@ -72,7 +75,7 @@ public class RPGListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "파산", "삭제", "초기화")) {
 
-                    tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
 
                     if (args.length != 1) {
                         return;
@@ -87,7 +90,7 @@ public class RPGListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "계좌")) {
 
-                    tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
 
                     if (args.length != 1) return;
                     ac.sendAccountMessage(tc);

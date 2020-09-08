@@ -176,7 +176,7 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "E", "Exit", "Quit", "퇴장", "나가")) {
 
-                    tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
 
                     if (guildInfo.getMusicChannel() != null) {
                         if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
@@ -198,7 +198,7 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "P", "Play", "Queue", "재생", "틀어")) {
 
-                    tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
 
                     if (guildInfo.getMusicChannel() != null) {
                         if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
@@ -276,7 +276,7 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "S", "skip", "넘겨", "스킵", "다음")) {
 
-                    tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
 
                     if (guildInfo.getMusicChannel() != null) {
                         if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
@@ -308,7 +308,7 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "vol", "volume", "볼륨", "음량")) {
 
-                    tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
 
                     if (guildInfo.getMusicChannel() != null) {
                         if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
@@ -336,7 +336,7 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "멜론", "멜론차트", "Melon", "Chart", "Chats")) {
 
-                    tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
 
                     if (guildInfo.getMusicChannel() != null) {
                         if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
@@ -442,14 +442,14 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "np", "nowPlaying", "재생중", "곡")) {
 
-                    tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
                     getNowPlaying(tc);
 
                 }
 
                 if (e.eq(args[0], "sf", "shuffle", "셔플", "섞어", "섞기")) {
 
-                    tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
 
                     if (guildInfo.getMusicChannel() != null) {
                         if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
@@ -473,7 +473,7 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "반복", "rp", "repeat", "rep", "반복해", "계속")) {
 
-                    tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
 
                     if (guildInfo.getMusicChannel() != null) {
                         if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
@@ -495,7 +495,7 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "리스트", "list", "목록", "플레이리스트")) {
 
-                    tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
 
                     if (guildInfo.getMusicChannel() != null) {
                         if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
@@ -544,7 +544,7 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "pl", "playlist", "플레이리스트", "재생목록")) {
 
-                    tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
 
                     if (guildInfo.getMusicChannel() != null) {
                         if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
