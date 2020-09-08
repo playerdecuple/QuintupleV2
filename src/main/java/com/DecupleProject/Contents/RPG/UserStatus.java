@@ -102,7 +102,7 @@ public class UserStatus {
                 w.writeLong(expFile, finalEXP);
                 w.writeInt(levelFile, finalLevel);
 
-                if (showMessage || showLvUpMessage && Objects.requireNonNull(tc.getGuild().getMember(jda.getSelfUser())).hasPermission(Permission.MESSAGE_WRITE)) {
+                if ((showMessage || showLvUpMessage) && Objects.requireNonNull(tc.getGuild().getMember(jda.getSelfUser())).hasPermission(Permission.MESSAGE_WRITE)) {
                     tc.sendMessage(eb.build()).queue();
                 }
             }
