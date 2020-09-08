@@ -2,6 +2,7 @@ package com.DecupleProject.Listener;
 
 import com.DecupleProject.API.Melon;
 import com.DecupleProject.API.Youtube;
+import com.DecupleProject.Contents.RPG.Proficiency;
 import com.DecupleProject.Core.CustomCommand;
 import com.DecupleProject.Core.GuildInfo;
 import com.DecupleProject.Core.Music.AudioInfo;
@@ -845,7 +846,10 @@ public class MusicListener extends ListenerAdapter {
 
     public void loadAndPlay(final TextChannel tc, String url, boolean showMessage, Member user) {
 
+        if (user == null) return;
+
         GuildMusicManager musicManager = getGuildAudioPlayer(tc.getGuild());
+        Proficiency p = new Proficiency(user.getUser());
 
         final String trackUrl;
 
@@ -860,6 +864,7 @@ public class MusicListener extends ListenerAdapter {
             public void trackLoaded(AudioTrack audioTrack) {
 
                 EmbedBuilder eb = new EmbedBuilder();
+                p.addValue(203, 1);
 
                 eb.setTitle("새로운 곡을 적었습니다!");
 
