@@ -74,6 +74,8 @@ public class ServerManager {
                 tc.sendMessage(eb.build()).delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
             } catch (IllegalArgumentException e) {
                 tc.sendMessage("2주가 지난 메시지가 포함되어 있어 삭제할 수 없어요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+            } catch (Exception e) {
+                // ignore
             }
 
         } else {
