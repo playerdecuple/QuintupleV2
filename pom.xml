@@ -6,7 +6,7 @@
 
     <groupId>com.projectdecule</groupId>
     <artifactId>QuintupleV2</artifactId>
-    <version>2.0.72</version>
+    <version>2.0.73.8</version>
 
     <build>
         <plugins>
