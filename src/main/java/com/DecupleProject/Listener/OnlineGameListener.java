@@ -7,6 +7,7 @@ import com.DecupleProject.Contents.RPG.UserStatus;
 import com.DecupleProject.Core.CustomCommand;
 import com.DecupleProject.Core.DatabaseManager;
 import com.DecupleProject.Core.Util.EasyEqual;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -19,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public class OnlineGameListener extends ListenerAdapter {
 
@@ -65,16 +67,23 @@ public class OnlineGameListener extends ListenerAdapter {
 
                     if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
 
-                    if (e.eq(args[1], "np")) {
-                        String inputted = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
-                        LeagueOfLegends lol = new LeagueOfLegends(inputted);
+                    try {
+                        if (e.eq(args[1], "np")) {
+                            String inputted = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+                            LeagueOfLegends lol = new LeagueOfLegends(inputted);
 
-                        lol.sendInfo(tc, true);
-                    } else {
-                        String inputted = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
-                        LeagueOfLegends lol = new LeagueOfLegends(inputted);
+                            lol.sendInfo(tc, true);
+                        } else {
+                            String inputted = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+                            LeagueOfLegends lol = new LeagueOfLegends(inputted);
 
-                        lol.sendInfo(tc, false);
+                            lol.sendInfo(tc, false);
+                        }
+                    } catch (ArrayIndexOutOfBoundsException ex) {
+                        EmbedBuilder eb = new EmbedBuilder();
+
+                        eb.setDescription("`.ll [이름]` 형식으로 입력해 주세요.");
+                        tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                     }
 
                 }
