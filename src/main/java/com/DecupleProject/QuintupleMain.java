@@ -61,12 +61,12 @@ public class QuintupleMain {
             token = realToken;
 
             System.out.println("[QUINTUPLE] Now Quintuple version : " + version);
-            System.out.println("[QUINTUPLE] Quintuple, a part of PROJECT: DECUPLE, made by DECUPLE(데큐플#6056)");
+            System.out.println("[QUINTUPLE] Quintuple, a part of PROJECT: DECUPLE, made by DECUPLE(데큐플#9999)");
         } else if (v.equalsIgnoreCase("test")) {
             token = testToken;
 
             System.out.println("[QUINTUPLE] Now Quintuple version : TEST " + version);
-            System.out.println("[QUINTUPLE] Quintuple, a part of PROJECT: DECUPLE, made by DECUPLE(데큐플#6056#)");
+            System.out.println("[QUINTUPLE] Quintuple, a part of PROJECT: DECUPLE, made by DECUPLE(데큐플#9999)");
         } else {
             main(args); // 재귀
         }
@@ -91,7 +91,7 @@ public class QuintupleMain {
         JDA jda = jdaBuilder.build();
         jda.getPresence().setActivity(Activity.playing(jda.getUsers().size() + " 분들과 함께"));
 
-        LogWriter lW = new LogWriter(jda);
+        LogWriter lW = new LogWriter();
         lW.sendStartingLog();
 
     }
