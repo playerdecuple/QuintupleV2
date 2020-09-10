@@ -910,10 +910,6 @@ public class DefaultListener extends ListenerAdapter {
 
                 }
 
-                if (e.eq(args[0], "exception") && e.eq(user.getId(), owner.getId())) {
-                    throw new NullPointerException("Owner send NullPointerException Trigger Command.");
-                }
-
             }
 
         } catch (StringIndexOutOfBoundsException | IllegalStateException e) {
