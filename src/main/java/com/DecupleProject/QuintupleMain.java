@@ -91,9 +91,6 @@ public class QuintupleMain {
         JDA jda = jdaBuilder.build();
         jda.getPresence().setActivity(Activity.playing(jda.getUsers().size() + " 분들과 함께"));
 
-        LogWriter lW = new LogWriter();
-        lW.sendStartingLog();
-
     }
 
 }

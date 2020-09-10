@@ -4,6 +4,7 @@ import com.DecupleProject.Contents.RPG.Account;
 import com.DecupleProject.Contents.RPG.Proficiency;
 import com.DecupleProject.Contents.RPG.Work;
 import com.DecupleProject.Core.CustomCommand;
+import com.DecupleProject.Core.ExceptionReport;
 import com.DecupleProject.Core.Util.EasyEqual;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -134,9 +135,10 @@ public class RPGListener extends ListenerAdapter {
 
             }
 
-        } catch (StringIndexOutOfBoundsException e) {
+        } catch (StringIndexOutOfBoundsException | IllegalStateException e) {
             // ignore
         } catch (Exception e) {
+            new ExceptionReport(e);
             e.printStackTrace();
         }
 

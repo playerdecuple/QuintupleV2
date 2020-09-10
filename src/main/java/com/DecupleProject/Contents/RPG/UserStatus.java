@@ -1,5 +1,6 @@
 package com.DecupleProject.Contents.RPG;
 
+import com.DecupleProject.Core.ExceptionReport;
 import com.DecupleProject.Core.ReadFile;
 import com.DecupleProject.Core.Util.LogWriter;
 import com.DecupleProject.Core.WriteFile;
@@ -109,9 +110,7 @@ public class UserStatus {
             }
         } catch (Exception e) {
             e.printStackTrace();
-
-            LogWriter lw = new LogWriter(DefaultListener.jda);
-            lw.sendMessage("```" + e.getMessage() + "```");
+new ExceptionReport(e);
         }
     }
 

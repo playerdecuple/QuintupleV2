@@ -3,6 +3,7 @@ package com.DecupleProject.Listener;
 import com.DecupleProject.Contents.RPG.UserStatus;
 import com.DecupleProject.Core.CustomCommand;
 import com.DecupleProject.Core.DatabaseManager;
+import com.DecupleProject.Core.ExceptionReport;
 import com.DecupleProject.Core.GuildInfo;
 import com.DecupleProject.Core.ServerManager.ServerManager;
 import com.DecupleProject.Core.Util.EasyEqual;
@@ -84,7 +85,8 @@ public class ServerManagementListener extends ListenerAdapter {
                 ServerManager manager = new ServerManager(guild, member);
 
                 if (e.eq(args[0], "청소", "cl", "cls", "clean", "삭제")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     if (args.length == 1) {
                         eb.setDescription("몇 개의 메시지를 삭제하고 싶으신지 말해주세요.");
                         tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
@@ -94,7 +96,8 @@ public class ServerManagementListener extends ListenerAdapter {
                 }
 
                 if (e.eq(args[0], "서버", "server")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
 
                     if (args.length == 1) {
                         eb.setTitle("서버 : " + guild.getName());
@@ -223,9 +226,10 @@ public class ServerManagementListener extends ListenerAdapter {
 
             }
 
-        } catch (ArrayIndexOutOfBoundsException | StringIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException | StringIndexOutOfBoundsException | IllegalStateException e) {
             // ignore
         } catch (Exception e) {
+            new ExceptionReport(e);
             e.printStackTrace();
         }
 

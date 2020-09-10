@@ -1,5 +1,6 @@
 package com.DecupleProject.API;
 
+import com.DecupleProject.Core.ExceptionReport;
 import com.DecupleProject.Core.Util.EasyEqual;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -55,6 +56,7 @@ public class Translator {
         try {
             text = URLEncoder.encode(body, "UTF-8");
         } catch (UnsupportedEncodingException e) {
+            new ExceptionReport(e);
             eb.setTitle("인코딩에 실패했어요.");
             eb.setColor(Color.RED);
 
@@ -120,6 +122,7 @@ public class Translator {
             }
 
         } catch (IOException e) {
+            new ExceptionReport(e);
             e.printStackTrace();
         } finally {
             con.disconnect();
@@ -146,6 +149,7 @@ public class Translator {
             return responseBody.toString();
 
         } catch (IOException e) {
+            new ExceptionReport(e);
             e.printStackTrace();
             throw new RuntimeException();
         }

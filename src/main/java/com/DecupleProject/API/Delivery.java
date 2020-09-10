@@ -1,5 +1,6 @@
 package com.DecupleProject.API;
 
+import com.DecupleProject.Core.ExceptionReport;
 import com.DecupleProject.Core.ReadFile;
 import com.DecupleProject.Core.Util.GetJSON;
 import com.DecupleProject.Core.WriteFile;
@@ -162,6 +163,7 @@ public class Delivery {
             tc.sendMessage(eb.build()).queue();
 
         } catch (Exception e) {
+            new ExceptionReport(e);
             e.printStackTrace();
         }
     }

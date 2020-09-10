@@ -67,6 +67,7 @@ public class StealEmoji {
             }
 
         } catch (NullPointerException ex) {
+            new ExceptionReport(ex);
             EmbedBuilder eb = new EmbedBuilder();
 
             eb.setTitle("이모티콘이 없는데요..?");

@@ -7,9 +7,10 @@ import java.io.IOException;
 
 public class CopyFile {
 
-    public CopyFile() {}
+    public CopyFile() {
+    }
 
-    public boolean copyTo(File to, File ... from) {
+    public boolean copyTo(File to, File... from) {
 
         if (!to.isDirectory()) return false;
 
@@ -28,12 +29,13 @@ public class CopyFile {
 
                 byte[] bytes = new byte[4096];
 
-                while(is.read(bytes) != -1) {
+                while (is.read(bytes) != -1) {
                     os.write(bytes, 0, is.read(bytes));
                 }
 
                 return true;
             } catch (Exception e) {
+                new ExceptionReport(e);
                 e.printStackTrace();
             } finally {
                 try {
@@ -41,6 +43,7 @@ public class CopyFile {
                     is.close();
                     os.close();
                 } catch (IOException e) {
+                    new ExceptionReport(e);
                     e.printStackTrace();
                 }
             }
@@ -51,7 +54,7 @@ public class CopyFile {
 
     }
 
-    public boolean copyTo(String toPath, String ... fromPath) {
+    public boolean copyTo(String toPath, String... fromPath) {
 
         File to = new File(toPath);
         File[] from = new File[fromPath.length];
@@ -77,7 +80,7 @@ public class CopyFile {
 
                 byte[] bytes = new byte[4096];
 
-                while(is.read(bytes) != -1) {
+                while (is.read(bytes) != -1) {
                     os.write(bytes, 0, is.read(bytes));
                 }
 
@@ -90,6 +93,7 @@ public class CopyFile {
                     is.close();
                     os.close();
                 } catch (IOException e) {
+                    new ExceptionReport(e);
                     e.printStackTrace();
                 }
             }

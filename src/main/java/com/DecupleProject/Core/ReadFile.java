@@ -14,10 +14,12 @@ public class ReadFile {
         try {
             FileInputStream fs = new FileInputStream(filePath);
             byte[] rB = new byte[fs.available()];
-            while (fs.read(rB) != -1) {}
+            while (fs.read(rB) != -1) {
+            }
 
             return Long.parseLong(new String(rB));
         } catch (Exception e) {
+            new ExceptionReport(e);
             e.printStackTrace();
             return 0;
         }
@@ -27,10 +29,12 @@ public class ReadFile {
         try {
             FileInputStream fs = new FileInputStream(file.getPath());
             byte[] rB = new byte[fs.available()];
-            while (fs.read(rB) != -1) {}
+            while (fs.read(rB) != -1) {
+            }
 
             return Long.parseLong(new String(rB));
         } catch (Exception e) {
+            new ExceptionReport(e);
             e.printStackTrace();
             return 0;
         }
@@ -40,10 +44,12 @@ public class ReadFile {
         try {
             FileInputStream fs = new FileInputStream(path);
             byte[] rB = new byte[fs.available()];
-            while (fs.read(rB) != -1) {}
+            while (fs.read(rB) != -1) {
+            }
 
             return Integer.parseInt(new String(rB));
         } catch (Exception e) {
+            new ExceptionReport(e);
             e.printStackTrace();
             return 0;
         }
@@ -53,10 +59,12 @@ public class ReadFile {
         try {
             FileInputStream fs = new FileInputStream(f.getPath());
             byte[] rB = new byte[fs.available()];
-            while (fs.read(rB) != -1) {}
+            while (fs.read(rB) != -1) {
+            }
 
             return Integer.parseInt(new String(rB));
         } catch (Exception e) {
+            new ExceptionReport(e);
             e.printStackTrace();
             return 0;
         }
@@ -67,10 +75,12 @@ public class ReadFile {
         try {
             FileInputStream fs = new FileInputStream(path);
             byte[] rB = new byte[fs.available()];
-            while (fs.read(rB) != -1) {}
+            while (fs.read(rB) != -1) {
+            }
 
             return new String(rB);
         } catch (Exception e) {
+            new ExceptionReport(e);
             e.printStackTrace();
             return null;
         }
@@ -81,10 +91,12 @@ public class ReadFile {
         try {
             FileInputStream fs = new FileInputStream(f.getPath());
             byte[] rB = new byte[fs.available()];
-            while (fs.read(rB) != -1) {}
+            while (fs.read(rB) != -1) {
+            }
 
             return new String(rB);
         } catch (Exception e) {
+            new ExceptionReport(e);
             e.printStackTrace();
             return null;
         }

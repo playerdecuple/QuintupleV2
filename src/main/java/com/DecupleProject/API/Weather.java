@@ -1,8 +1,6 @@
 package com.DecupleProject.API;
 
-import com.DecupleProject.Core.Util.EasyEqual;
 import com.DecupleProject.Core.Util.GetJSON;
-import com.google.api.client.json.Json;
 import com.google.gson.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -16,7 +14,8 @@ public class Weather {
 
     private final GetJSON j = new GetJSON();
 
-    public Weather() {}
+    public Weather() {
+    }
 
     public String getCityCode(String cityName) {
 
@@ -105,27 +104,31 @@ public class Weather {
 
         double cloud = clouds.get("all").getAsDouble();
 
-        eb.addField("구름", "구름 " +String.format("%.1f", cloud) + "%", true);
+        eb.addField("구름", "구름 " + String.format("%.1f", cloud) + "%", true);
         eb.addField("일출과 일몰", "일출 " + sunriseTime + "\n일몰 " + sunsetTime, true);
 
         try {
             JsonObject rain = obj.getAsJsonObject("rain");
             double rainVol1h = rain.get("1h").getAsDouble();
             eb.addField("강우량", rainVol1h + "mm/h", true);
-        } catch (NullPointerException e) {}
+        } catch (NullPointerException e) {
+            // ignore
+        }
 
         try {
             JsonObject snow = obj.getAsJsonObject("snow");
             double snowVol1h = snow.get("1h").getAsDouble();
             eb.addField("직설량", snowVol1h + "mm/h", true);
-        } catch (NullPointerException e) {}
+        } catch (NullPointerException e) {
+            // ignore
+        }
 
         eb.setColor(Color.CYAN);
         tc.sendMessage(eb.build()).delay(3, TimeUnit.MINUTES).flatMap(Message::delete).queue();
 
     }
 
-    public boolean c(String first, String ... obj) {
+    public boolean c(String first, String... obj) {
         for (int i = 0; i < obj.length; i++) {
             if (first.toLowerCase().contains(obj[i].toLowerCase())) {
                 return true;

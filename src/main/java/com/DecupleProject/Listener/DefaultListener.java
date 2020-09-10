@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit;
 public class DefaultListener extends ListenerAdapter {
 
     public static JDA jda;
-    private User owner;
+    public static User owner;
 
     LogWriter lW;
 
@@ -53,12 +53,13 @@ public class DefaultListener extends ListenerAdapter {
 
         jda = event.getJDA();
         this.lW = new LogWriter(jda);
-        this.owner = jda.retrieveUserById("419116887469981708").complete();
+        owner = jda.retrieveUserById("419116887469981708").complete();
 
         try {
             Twirk twirk = new TwirkBuilder("#playerdecuple", "oauth:rhhsunhtgg4hlyr1cfkfkl939u6wfk", "oauth:rhhsunhtgg4hlyr1cfkfkl939u6wfk").build();
             twirk.addIrcListener(new TwitchListener());
         } catch (IOException e) {
+            new ExceptionReport(e);
             e.printStackTrace();
         }
 
@@ -237,7 +238,8 @@ public class DefaultListener extends ListenerAdapter {
 
                 if (se.hasEmoji(name) && msg.getContentRaw().contains(code)) {
                     se.sendStealEmoji(name);
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                 }
             }
 
@@ -250,7 +252,8 @@ public class DefaultListener extends ListenerAdapter {
                 if (e.eq(args[0], "도움말") | e.eq(args[0], "도움") | e.eq(args[0], "help")) {
 
                     if (user.isBot()) return;
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     eb.setTitle("도움말을 보여드릴게요!");
                     eb.setDescription("아쉽지만, 명령어가 너무 많아서 정리를 해놓은 인터넷 사이트로 이동시켜 드리겠습니다!");
                     eb.addField("링크", "https://decupleproject.fandom.com/ko/wiki/%EB%8D%B0%ED%81%90%ED%94%8C%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8:%EB%94%94%EC%8A%A4%EC%BD%94%EB%93%9C%ED%80%B8%ED%8A%9C%ED%94%8C", true);
@@ -263,7 +266,8 @@ public class DefaultListener extends ListenerAdapter {
                 if (e.eq(args[0], "핑") | e.eq(args[0], "ping")) {
 
                     if (user.isBot()) return;
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     long time = System.currentTimeMillis();
 
                     tc.sendMessage("불러오는 중입니다!").queue(response -> {
@@ -284,14 +288,16 @@ public class DefaultListener extends ListenerAdapter {
                 if (e.eq(args[0], "초대") | e.eq(args[0], "invite")) {
 
                     if (user.isBot()) return;
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     sendPrivateMessage(user, "이 링크를 이용하시면, 데큐플 공식 서버로 가입하실 수 있어요! <http://decuple-d.o-r.kr/>");
 
                 }
 
                 if (e.eq(args[0], "시간") | e.eq(args[0], "시각") | e.eq(args[0], "time") | e.eq(args[0], "t")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     SimpleDateFormat format1 = new SimpleDateFormat("yyyy년 MM월 dd일");
                     SimpleDateFormat format2 = new SimpleDateFormat("HH시 mm분 ss초");
 
@@ -317,7 +323,8 @@ public class DefaultListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "봇", "Bot", "정보")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     ReadFile r = new ReadFile();
 
                     eb.setTitle("봇 : 퀸튜플");
@@ -371,7 +378,8 @@ public class DefaultListener extends ListenerAdapter {
                 }
 
                 if (e.eq(args[0], "계산") | e.eq(args[0], "Calculate") | e.eq(args[0], "Calculating") | e.eq(args[0], "Calculator") | e.eq(args[0], "calc") | e.eq(args[0], "계산기")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     if (user.isBot()) return;
 
                     if (args.length < 2) {
@@ -487,7 +495,8 @@ public class DefaultListener extends ListenerAdapter {
                 }
 
                 if (e.eq(args[0], "번역", "translate", "번역기", "파파고", "통역", "통역기")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     try {
                         String body = String.join(" ", Arrays.copyOfRange(args, 3, args.length));
                         new Translator(body, tc, args[1], args[2]);
@@ -501,13 +510,15 @@ public class DefaultListener extends ListenerAdapter {
                 }
 
                 if (e.eq(args[0], "출석", "출석체크", "출첵", "Attendance", "AttendanceCheck", "나님등장")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     AttendanceCheck at = new AttendanceCheck(user.getId(), tc, user.getName());
                     at.attendance();
                 }
 
                 if (e.eq(args[0], "백과사전", "네이버백과", "백과")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     new Encyclopedia(String.join(" ", Arrays.copyOfRange(args, 1, args.length)), tc);
                 }
 
@@ -550,7 +561,7 @@ public class DefaultListener extends ListenerAdapter {
                         try {
                             if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
                                 tc.deleteMessageById(msg.getId()).queue();
-                            
+
                             User targetUser = msg.getMentionedUsers().get(0);
                             eb.setTitle("유저 : " + targetUser.getAsTag());
 
@@ -590,7 +601,8 @@ public class DefaultListener extends ListenerAdapter {
                 }
 
                 if (e.eq(args[0], "보고", "report", "리폿", "버그", "이슈", "issue", "bug")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     try {
                         eb.setTitle("누군가로부터 도착한 보고서입니다!");
                         eb.addField("보고하신 분", user.getAsTag(), false);
@@ -609,7 +621,8 @@ public class DefaultListener extends ListenerAdapter {
                 }
 
                 if (e.eq(args[0], "멜론차트", "인기차트")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     try {
                         Melon melon = new Melon();
 
@@ -632,13 +645,15 @@ public class DefaultListener extends ListenerAdapter {
                 }
 
                 if (e.eq(args[0], "쇼핑", "shopping", "최저가", "구매")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     Shopping sh = new Shopping(user.getId(), String.join(" ", Arrays.copyOfRange(args, 1, args.length)));
                     sh.sendShopMessage(tc);
                 }
 
                 if (e.eq(args[0], "DB", "데이터베이스", "database")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     if (e.eq(args[1], "del")) {
                         db.editDatabase(args[1], String.join(" ", Arrays.copyOfRange(args, 2, args.length)), true);
                     }
@@ -647,7 +662,8 @@ public class DefaultListener extends ListenerAdapter {
                 }
 
                 if (e.eq(args[0], "사전", "국어사전", "국어", "뜻")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
 
                     if (args.length == 1) {
                         eb.setTitle("뜻을 찾으려면..");
@@ -681,7 +697,8 @@ public class DefaultListener extends ListenerAdapter {
                 }
 
                 if (e.eq(args[0], "auth", "권한", "authorization")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     try {
 
                         Authority a = new Authority();
@@ -721,7 +738,8 @@ public class DefaultListener extends ListenerAdapter {
                 }
 
                 if (e.eq(args[0], "한영변환", "gksdud", "en", "e2k")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     if (args.length == 1) {
                         eb.setTitle("무엇을 보낼 건가요?");
                         eb.setDescription("`.en dkssudgktpdy?`와 같은 형식으로 입력해 주세요.");
@@ -794,7 +812,8 @@ public class DefaultListener extends ListenerAdapter {
                 }
 
                 if (e.eq(args[0], "Emote", "Emoji", "Emoticon", "EM", "이모티콘")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     try {
 
                         StealEmoji se = new StealEmoji(user.getId(), event.getJDA(), tc);
@@ -843,7 +862,8 @@ public class DefaultListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "배송", "택배", "Delivery", "운송장", "배송", "운송장번호", "운송장조회", "배송조회")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     Delivery dv = new Delivery(tc, args[1], args[2]);
 
                     if (args.length != 3) {
@@ -863,7 +883,8 @@ public class DefaultListener extends ListenerAdapter {
                 }
 
                 if (e.eq(args[0], "날씨", "weather", "웨더")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     Weather w = new Weather();
 
                     w.sendWeatherInformation(args[1], tc);
@@ -889,13 +910,16 @@ public class DefaultListener extends ListenerAdapter {
 
                 }
 
+                if (e.eq(args[0], "exception") && e.eq(user.getId(), owner.getId())) {
+                    throw new NullPointerException("Owner send NullPointerException Trigger Command.");
+                }
+
             }
 
-        } catch (StringIndexOutOfBoundsException e) {
+        } catch (StringIndexOutOfBoundsException | IllegalStateException e) {
             // ignore
         } catch (Exception e) {
-            lW.sendMessage("Exception occurred! \n```" + e.getMessage() + "```");
-            e.printStackTrace();
+            new ExceptionReport(e);
         }
 
     }

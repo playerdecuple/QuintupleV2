@@ -6,6 +6,7 @@ import com.DecupleProject.API.Game.Overwatch;
 import com.DecupleProject.Contents.RPG.UserStatus;
 import com.DecupleProject.Core.CustomCommand;
 import com.DecupleProject.Core.DatabaseManager;
+import com.DecupleProject.Core.ExceptionReport;
 import com.DecupleProject.Core.Util.EasyEqual;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -65,7 +66,8 @@ public class OnlineGameListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "LL", "LOL", "롤", "LeagueOfLegends", "리그오브레전드")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
 
                     try {
                         if (e.eq(args[1], "np")) {
@@ -90,7 +92,8 @@ public class OnlineGameListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "Osu", "오스", "Osu!", "오스!")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
 
                     String n = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
                     new Osu(n, tc);
@@ -99,7 +102,8 @@ public class OnlineGameListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "오버워치", "Overwatch")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
 
                     String tag = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
                     Overwatch overwatch = new Overwatch(tag);
@@ -110,9 +114,10 @@ public class OnlineGameListener extends ListenerAdapter {
 
             }
 
-        } catch (StringIndexOutOfBoundsException e) {
+        } catch (StringIndexOutOfBoundsException | IllegalStateException e) {
             // ignore
         } catch (Exception e) {
+            new ExceptionReport(e);
             e.printStackTrace();
         }
     }

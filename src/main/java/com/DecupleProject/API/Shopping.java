@@ -1,5 +1,6 @@
 package com.DecupleProject.API;
 
+import com.DecupleProject.Core.ExceptionReport;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -36,6 +37,7 @@ public class Shopping {
             try {
                 text = URLEncoder.encode(keyword, "UTF-8");
             } catch (UnsupportedEncodingException e) {
+                new ExceptionReport(e);
                 e.printStackTrace();
             }
 
@@ -57,6 +59,7 @@ public class Shopping {
 
             return result.toString();
         } catch (Exception e) {
+            new ExceptionReport(e);
             return null;
         }
     }
@@ -72,10 +75,10 @@ public class Shopping {
 
             String titleA = element.getAsJsonObject().get("title").getAsString();
             String titleB = titleA.replace("<b>", "");
-            String titleC = titleB.replace("</b>", "");
 
-            return titleC;
+            return titleB.replace("</b>", "");
         } catch (Exception e) {
+            new ExceptionReport(e);
             return null;
         }
     }
@@ -89,8 +92,7 @@ public class Shopping {
             JsonArray items = obj.getAsJsonArray("items");
             JsonElement element = items.get(0);
 
-            int lowPrice = element.getAsJsonObject().get("lprice").getAsInt();
-            return lowPrice;
+            return element.getAsJsonObject().get("lprice").getAsInt();
         } catch (Exception e) {
             return 0;
         }
@@ -105,8 +107,7 @@ public class Shopping {
             JsonArray items = obj.getAsJsonArray("items");
             JsonElement element = items.get(0);
 
-            int highPrice = element.getAsJsonObject().get("hprice").getAsInt();
-            return highPrice;
+            return element.getAsJsonObject().get("hprice").getAsInt();
         } catch (Exception e) {
             return 0;
         }
@@ -121,8 +122,7 @@ public class Shopping {
             JsonArray items = obj.getAsJsonArray("items");
             JsonElement element = items.get(0);
 
-            String mallName = element.getAsJsonObject().get("mallName").getAsString();
-            return mallName;
+            return element.getAsJsonObject().get("mallName").getAsString();
         } catch (Exception e) {
             return null;
         }
@@ -162,7 +162,6 @@ public class Shopping {
                     productTypeName = "일반 상품";
                     break;
                 default:
-                    productTypeName = null;
                     break;
             }
             return productTypeName;
@@ -180,8 +179,7 @@ public class Shopping {
             JsonArray items = obj.getAsJsonArray("items");
             JsonElement element = items.get(0);
 
-            String maker = element.getAsJsonObject().get("maker").getAsString();
-            return maker;
+            return element.getAsJsonObject().get("maker").getAsString();
         } catch (Exception e) {
             return null;
         }
@@ -196,8 +194,7 @@ public class Shopping {
             JsonArray items = obj.getAsJsonArray("items");
             JsonElement element = items.get(0);
 
-            String brand = element.getAsJsonObject().get("brand").getAsString();
-            return brand;
+            return element.getAsJsonObject().get("brand").getAsString();
         } catch (Exception e) {
             return null;
         }
@@ -232,8 +229,7 @@ public class Shopping {
             JsonArray items = obj.getAsJsonArray("items");
             JsonElement element = items.get(0);
 
-            String url = element.getAsJsonObject().get("link").getAsString();
-            return url;
+            return element.getAsJsonObject().get("link").getAsString();
         } catch (Exception e) {
             return null;
         }
@@ -248,8 +244,7 @@ public class Shopping {
             JsonArray items = obj.getAsJsonArray("items");
             JsonElement element = items.get(0);
 
-            String url = element.getAsJsonObject().get("image").getAsString();
-            return url;
+            return element.getAsJsonObject().get("image").getAsString();
         } catch (Exception e) {
             return null;
         }
@@ -291,6 +286,7 @@ public class Shopping {
             tc.sendMessage(eb.build()).queue();
 
         } catch (Exception e) {
+            new ExceptionReport(e);
             tc.sendMessage("상품을" +
                     " 불러오는 도중 오류가 발생했습니다.").queue();
         }

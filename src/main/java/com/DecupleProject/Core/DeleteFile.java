@@ -1,10 +1,12 @@
 package com.DecupleProject.Core;
 
+
 import java.io.File;
 
 public class DeleteFile {
 
-    public DeleteFile() {}
+    public DeleteFile() {
+    }
 
     public void deleteFile(File f) {
 
@@ -12,7 +14,7 @@ public class DeleteFile {
         System.runFinalization();
 
         try {
-            if (f.exists()){
+            if (f.exists()) {
                 File[] folder_list = f.listFiles(); // Get file lists
 
                 for (File file : folder_list) {
@@ -32,6 +34,7 @@ public class DeleteFile {
                 }
             }
         } catch (Exception e) {
+            new ExceptionReport(e);
             e.getStackTrace();
         }
 
@@ -45,7 +48,7 @@ public class DeleteFile {
         File f = new File(p);
 
         try {
-            if (f.exists()){
+            if (f.exists()) {
                 File[] folder_list = f.listFiles(); // Get file lists
 
                 for (File file : folder_list) {
@@ -65,6 +68,7 @@ public class DeleteFile {
                 }
             }
         } catch (Exception e) {
+            new ExceptionReport(e);
             e.getStackTrace();
         }
 

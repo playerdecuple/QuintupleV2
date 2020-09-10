@@ -4,6 +4,7 @@ import com.DecupleProject.API.Melon;
 import com.DecupleProject.API.Youtube;
 import com.DecupleProject.Contents.RPG.Proficiency;
 import com.DecupleProject.Core.CustomCommand;
+import com.DecupleProject.Core.ExceptionReport;
 import com.DecupleProject.Core.GuildInfo;
 import com.DecupleProject.Core.Music.AudioInfo;
 import com.DecupleProject.Core.Music.GuildMusicManager;
@@ -12,7 +13,6 @@ import com.DecupleProject.Core.Music.TrackScheduler;
 import com.DecupleProject.Core.ReadFile;
 import com.DecupleProject.Core.Util.EasyEqual;
 import com.DecupleProject.Core.Util.LinkUtility;
-import com.DecupleProject.Core.Util.LogWriter;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -178,7 +178,8 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "E", "Exit", "Quit", "퇴장", "나가")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
 
                     if (guildInfo.getMusicChannel() != null) {
                         if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
@@ -200,7 +201,8 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "P", "Play", "Queue", "재생", "틀어")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
 
                     if (guildInfo.getMusicChannel() != null) {
                         if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
@@ -278,7 +280,8 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "S", "skip", "넘겨", "스킵", "다음")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
 
                     if (guildInfo.getMusicChannel() != null) {
                         if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
@@ -310,7 +313,8 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "vol", "volume", "볼륨", "음량")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
 
                     if (guildInfo.getMusicChannel() != null) {
                         if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
@@ -338,7 +342,8 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "멜론", "멜론차트", "Melon", "Chart", "Chats")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
 
                     if (guildInfo.getMusicChannel() != null) {
                         if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
@@ -444,14 +449,16 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "np", "nowPlaying", "재생중", "곡")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     getNowPlaying(tc);
 
                 }
 
                 if (e.eq(args[0], "sf", "shuffle", "셔플", "섞어", "섞기")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
 
                     if (guildInfo.getMusicChannel() != null) {
                         if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
@@ -475,7 +482,8 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "반복", "rp", "repeat", "rep", "반복해", "계속")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
 
                     if (guildInfo.getMusicChannel() != null) {
                         if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
@@ -497,7 +505,8 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "리스트", "list", "목록", "플레이리스트")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
 
                     if (guildInfo.getMusicChannel() != null) {
                         if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
@@ -546,7 +555,8 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "pl", "playlist", "플레이리스트", "재생목록")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
 
                     if (guildInfo.getMusicChannel() != null) {
                         if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
@@ -736,7 +746,7 @@ public class MusicListener extends ListenerAdapter {
                         tc.sendMessage("**" + word + "**에 대한 검색 결과입니다!:\n```md\n" + mp.searchPlayLists(word) + "```").delay(3, TimeUnit.MINUTES).flatMap(Message::delete).queue();
 
                     } else {
-                        
+
                         try {
                             String victim = msg.getMentionedUsers().get(0).getId();
                             if (mp.playlistExists(victim)) {
@@ -760,7 +770,7 @@ public class MusicListener extends ListenerAdapter {
                                 tc.sendMessage("<@" + victim + ">님은 갖고 계신 플레이리스트가 없습니다.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                             }
                         } catch (IndexOutOfBoundsException ex) {
-                            
+
                             String targetId = args[1];
                             User targetUser = DefaultListener.jda.retrieveUserById(targetId).complete();
 
@@ -791,14 +801,14 @@ public class MusicListener extends ListenerAdapter {
                                 }
 
                             } else {
-                                
+
                                 File codeFile = new File("D:/Database/MusicPlayList/" + args[1]);
                                 if (codeFile.exists()) {
-                                    
+
                                     ReadFile r = new ReadFile();
                                     User playlistOwner = DefaultListener
                                             .jda.retrieveUserById(Objects.requireNonNull(r.readString(new File(codeFile.getPath() + "/owner.txt")))).complete();
-                                    
+
                                     if (mp.playlistExists(args[1])) {
 
                                         int v = 0;
@@ -823,9 +833,9 @@ public class MusicListener extends ListenerAdapter {
                                 tc.sendMessage("디스코드 데이터베이스를 훑어봤는데요, 아무리 찾아봐도 그런 ID는 없더라구요.\n**AXSDG**와 같은 5자리 코드나 **멘션, 유저 ID**를 입력해 주세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
 
                             }
-                            
+
                         }
-                        
+
                     }
 
                 }
@@ -833,7 +843,7 @@ public class MusicListener extends ListenerAdapter {
 
             }
 
-        } catch (StringIndexOutOfBoundsException e) {
+        } catch (StringIndexOutOfBoundsException | IllegalStateException e) {
             // ignore
         } catch (NumberFormatException e) {
             EmbedBuilder eb = new EmbedBuilder();
@@ -841,8 +851,7 @@ public class MusicListener extends ListenerAdapter {
             eb.setDescription("무언가 잘못 입력한 것 같네요..");
             event.getChannel().sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
         } catch (Exception e) {
-            LogWriter lW = new LogWriter(event.getJDA());
-            lW.sendMessage("```" + e.getMessage() + "```");
+            new ExceptionReport(e);
 
             e.printStackTrace();
         }

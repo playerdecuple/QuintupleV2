@@ -1,5 +1,6 @@
 package com.DecupleProject.Contents.RPG;
 
+import com.DecupleProject.Core.ExceptionReport;
 import com.DecupleProject.Core.ReadFile;
 import com.DecupleProject.Core.Util.LogWriter;
 import com.DecupleProject.Core.WriteFile;
@@ -9,7 +10,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 
 import java.awt.*;
 import java.io.File;
@@ -174,9 +174,7 @@ public class Account {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogWriter lW = new LogWriter(DefaultListener.jda);
-
-            lW.sendMessage("```" + e.getMessage() + "```");
+            new ExceptionReport(e);
         }
     }
 

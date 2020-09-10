@@ -9,7 +9,8 @@ import java.nio.charset.StandardCharsets;
 
 public class GetJSON {
 
-    public GetJSON() {}
+    public GetJSON() {
+    }
 
     public String getJsonByUrl(String urlS) throws Exception {
         BufferedReader br;
@@ -70,7 +71,6 @@ public class GetJSON {
 
             return result.toString();
         } catch (FileNotFoundException ex) {
-            // ignore
             return null;
         }
     }

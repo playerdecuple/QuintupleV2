@@ -1,5 +1,6 @@
 package com.DecupleProject.API.Game;
 
+import com.DecupleProject.Core.ExceptionReport;
 import com.DecupleProject.Core.Util.GetJSON;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -149,6 +150,7 @@ public class LeagueOfLegends {
                 try {
                     bannedStr.append(getChampionNameById(e.getAsJsonObject().get("championId").getAsInt()));
                 } catch (IndexOutOfBoundsException ex) {
+                    new ExceptionReport(ex);
                     bannedStr.append("없음");
                 }
 
@@ -167,6 +169,7 @@ public class LeagueOfLegends {
             bannedStr.append("\n\n:watch: **게임 진행 시간**\n").append(playMin).append("분 ").append(playSec).append("초");
             tc.sendMessage(bannedStr.toString()).delay(3, TimeUnit.MINUTES).flatMap(Message::delete).queue();
         } catch (FileNotFoundException e) {
+            new ExceptionReport(e);
             EmbedBuilder eb = new EmbedBuilder();
 
             eb.setDescription(summonerName + "님은 게임을 하고 계시지 않은 것 같네요. 챔피언 선택 화면일 수도 있어요.");
@@ -220,7 +223,7 @@ public class LeagueOfLegends {
                 lE_Solo = jsonArray.get(1);
             }
         } catch (IndexOutOfBoundsException e) {
-            // Ignore
+            new ExceptionReport(e);
         }
 
         try {
@@ -230,7 +233,7 @@ public class LeagueOfLegends {
                 lE_Flex = jsonArray.get(1);
             }
         } catch (IndexOutOfBoundsException e) {
-            // Ignore
+            new ExceptionReport(e);
         }
 
         String soloRankTier = "UNRANKED";
@@ -312,7 +315,7 @@ public class LeagueOfLegends {
                 lE_Solo = jsonArray.get(1);
             }
         } catch (IndexOutOfBoundsException e) {
-            // Ignore
+            new ExceptionReport(e);
         }
 
         try {
@@ -322,7 +325,7 @@ public class LeagueOfLegends {
                 lE_Flex = jsonArray.get(1);
             }
         } catch (IndexOutOfBoundsException e) {
-            // Ignore
+            new ExceptionReport(e);
         }
 
         String soloRankTier = "UNRANKED";
@@ -404,7 +407,7 @@ public class LeagueOfLegends {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (IndexOutOfBoundsException | NullPointerException e) {
-            // ignore
+            new ExceptionReport(e);
         }
 
         switch (mode) {
@@ -434,7 +437,7 @@ public class LeagueOfLegends {
                 lE_Solo = jsonArray.get(1);
             }
         } catch (IndexOutOfBoundsException e) {
-            // Ignore
+            new ExceptionReport(e);
         }
 
         assert lE_Solo != null;

@@ -1,9 +1,6 @@
 package com.DecupleProject.Core.Music;
 
-import com.DecupleProject.Core.CopyFile;
-import com.DecupleProject.Core.DeleteFile;
-import com.DecupleProject.Core.ReadFile;
-import com.DecupleProject.Core.WriteFile;
+import com.DecupleProject.Core.*;
 import com.DecupleProject.Listener.DefaultListener;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -224,6 +221,7 @@ public class MusicPlaylist {
                 return null;
             }
         } catch (Exception e) {
+            new ExceptionReport(e);
             e.printStackTrace();
             return null;
         }
@@ -253,6 +251,7 @@ public class MusicPlaylist {
 
             return true;
         } catch (Exception e) {
+            new ExceptionReport(e);
             e.printStackTrace();
             return false;
         }
@@ -280,6 +279,7 @@ public class MusicPlaylist {
 
             w.writeString(f, title);
         } catch (Exception e) {
+            new ExceptionReport(e);
             e.printStackTrace();
         }
     }
@@ -296,6 +296,7 @@ public class MusicPlaylist {
                 if (f.exists()) f.delete();
             }
         } catch (Exception e) {
+            new ExceptionReport(e);
             e.printStackTrace();
         }
     }
@@ -392,6 +393,7 @@ public class MusicPlaylist {
             return true;
 
         } catch (Exception e) {
+            new ExceptionReport(e);
             // ignore
         }
 

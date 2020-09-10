@@ -16,11 +16,12 @@ public class WriteFile {
             fW.flush();
             fW.close();
         } catch (Exception e) {
+new ExceptionReport(e);
             e.printStackTrace();
         }
     }
 
-    public void writeStringToFiles(String value, File ... f) {
+    public void writeStringToFiles(String value, File... f) {
         try {
             for (File file : f) {
                 FileWriter fW = new FileWriter(file.getPath());
@@ -29,6 +30,7 @@ public class WriteFile {
                 fW.close();
             }
         } catch (Exception e) {
+new ExceptionReport(e);
             e.printStackTrace();
         }
     }
@@ -40,6 +42,7 @@ public class WriteFile {
             fW.flush();
             fW.close();
         } catch (Exception e) {
+new ExceptionReport(e);
             e.printStackTrace();
         }
     }
@@ -51,6 +54,7 @@ public class WriteFile {
             fW.flush();
             fW.close();
         } catch (Exception e) {
+new ExceptionReport(e);
             e.printStackTrace();
         }
     }
@@ -62,6 +66,7 @@ public class WriteFile {
             fW.flush();
             fW.close();
         } catch (Exception e) {
+new ExceptionReport(e);
             e.printStackTrace();
         }
     }
@@ -73,6 +78,7 @@ public class WriteFile {
             fW.flush();
             fW.close();
         } catch (Exception e) {
+new ExceptionReport(e);
             e.printStackTrace();
         }
     }
@@ -84,6 +90,7 @@ public class WriteFile {
             fW.flush();
             fW.close();
         } catch (Exception e) {
+new ExceptionReport(e);
             e.printStackTrace();
         }
     }

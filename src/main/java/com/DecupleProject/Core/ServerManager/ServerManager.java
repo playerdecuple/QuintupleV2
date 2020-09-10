@@ -190,7 +190,7 @@ public class ServerManager {
                     boolean inLine = false;
 
                     try {
-                        if (fLn[2].contains("t")) inLine = true;
+                        if (fLn[2].contains(".t.")) inLine = true;
                     } catch (ArrayIndexOutOfBoundsException e) {
                         // Ignore
                     }

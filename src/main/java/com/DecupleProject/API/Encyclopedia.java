@@ -1,5 +1,6 @@
 package com.DecupleProject.API;
 
+import com.DecupleProject.Core.ExceptionReport;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -30,6 +31,7 @@ public class Encyclopedia {
             try {
                 text = URLEncoder.encode(sName, "UTF-8");
             } catch (UnsupportedEncodingException e) {
+                new ExceptionReport(e);
                 tc.sendMessage("인코딩에 실패했습니다.").queue();
             }
 
@@ -43,7 +45,9 @@ public class Encyclopedia {
             StringBuilder result = new StringBuilder();
             String line;
 
-            while ((line = br.readLine()) != null) { result.append(line); }
+            while ((line = br.readLine()) != null) {
+                result.append(line);
+            }
             JsonParser jp = new JsonParser();
 
             JsonObject obj = (JsonObject) jp.parse(result.toString());
@@ -72,6 +76,7 @@ public class Encyclopedia {
 
             tc.sendMessage(eb.build()).queue();
         } catch (Exception e) {
+            new ExceptionReport(e);
             EmbedBuilder eb = new EmbedBuilder();
 
             eb.setDescription("검색 결과가 없거나 잘못된 결과에요!");

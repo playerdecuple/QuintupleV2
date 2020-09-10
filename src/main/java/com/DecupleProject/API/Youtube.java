@@ -1,6 +1,9 @@
 package com.DecupleProject.API;
 
+import com.DecupleProject.Core.ExceptionReport;
 import com.DecupleProject.Core.Util.LinkUtility;
+import com.DecupleProject.Core.Util.LogWriter;
+import com.DecupleProject.Listener.DefaultListener;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
@@ -20,6 +23,7 @@ public class Youtube {
         try {
             youTube = new YouTube.Builder(GoogleNetHttpTransport.newTrustedTransport(), JacksonFactory.getDefaultInstance(), null).setApplicationName("Quintuple").build();
         } catch (Exception e) {
+            new ExceptionReport(e);
             e.printStackTrace();
         }
     }
@@ -36,7 +40,7 @@ public class Youtube {
                     .setQ(search)
                     .setMaxResults(1L)
                     .setType("video")
-                   // .setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/default/url)")
+                    // .setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/default/url)")
                     .setFields("items(id/videoId)")
                     .setKey("AIzaSyDM1sK9iC6EywCHgzBYtbgDxapWTXlzvIU")
                     .execute()
@@ -47,6 +51,8 @@ public class Youtube {
                 return "https://www.youtube.com/watch?v=" + videoId;
             }
         } catch (Exception e) {
+            LogWriter lw = new LogWriter(DefaultListener.jda);
+            lw.sendMessage("```Exception thrown : \n" + e.getMessage() + "\n\nCaused By: \n" + e.getCause() + "```");
             e.printStackTrace();
         }
 
@@ -65,6 +71,7 @@ public class Youtube {
                 return null;
             }
         } catch (Exception e) {
+            new ExceptionReport(e);
             e.printStackTrace();
         }
 
@@ -84,6 +91,7 @@ public class Youtube {
                 return null;
             }
         } catch (Exception e) {
+            new ExceptionReport(e);
             e.printStackTrace();
         }
 
