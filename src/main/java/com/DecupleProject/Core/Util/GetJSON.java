@@ -1,6 +1,7 @@
 package com.DecupleProject.Core.Util;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -51,22 +52,27 @@ public class GetJSON {
      */
 
     public String getJsonByUrlForUserMode(String urlS) throws Exception {
-        BufferedReader br;
+        try {
+            BufferedReader br;
 
-        URL url = new URL(urlS);
+            URL url = new URL(urlS);
 
-        HttpURLConnection uC = (HttpURLConnection) url.openConnection();
-        uC.setRequestProperty("User-Agent", "Mozilla");
-        br = new BufferedReader(new InputStreamReader(uC.getInputStream(), StandardCharsets.UTF_8));
+            HttpURLConnection uC = (HttpURLConnection) url.openConnection();
+            uC.setRequestProperty("User-Agent", "Mozilla");
+            br = new BufferedReader(new InputStreamReader(uC.getInputStream(), StandardCharsets.UTF_8));
 
-        StringBuilder result = new StringBuilder();
-        String line;
+            StringBuilder result = new StringBuilder();
+            String line;
 
-        while ((line = br.readLine()) != null) {
-            result.append(line);
+            while ((line = br.readLine()) != null) {
+                result.append(line);
+            }
+
+            return result.toString();
+        } catch (FileNotFoundException ex) {
+            // ignore
+            return null;
         }
-
-        return result.toString();
     }
 
 }
