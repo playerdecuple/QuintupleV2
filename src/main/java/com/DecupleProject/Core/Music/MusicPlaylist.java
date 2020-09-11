@@ -44,32 +44,27 @@ public class MusicPlaylist {
 
     }
 
-    public void addMusic(String id, String... urls) {
+    public void addMusic(String id, String urls) {
 
-        int musicId = getUserPlaylistLength(id) + 1;
+        int musicId = getUserPlaylistLength(id) - 3;
 
-        for (String url : urls) {
+        File musicFolder = new File("D:/Database/MusicPlayList/" + id);
+        File musicFile = new File("D:/Database/MusicPlayList/" + id + "/" + musicId + ".txt");
 
-            File musicFolder = new File("D:/Database/MusicPlayList/" + id);
-            File musicFile = new File("D:/Database/MusicPlayList/" + id + "/" + musicId + ".txt");
+        if (musicFile.exists() && musicFolder.exists()) {
+            return;
+        } else {
+            if (!musicFolder.exists()) {
+                boolean directoryMade = musicFolder.mkdir();
 
-            if (musicFile.exists() && musicFolder.exists()) {
-                return;
-            } else {
-                if (!musicFolder.exists()) {
-                    boolean directoryMade = musicFolder.mkdir();
-
-                    if (!directoryMade) {
-                        return;
-                    }
-                }
-
-                if (url != null) {
-                    w.writeString(musicFile.getPath(), url);
+                if (!directoryMade) {
                     return;
                 }
             }
+        }
 
+        if (urls != null) {
+            w.writeString(musicFile.getPath(), urls);
         }
 
     }

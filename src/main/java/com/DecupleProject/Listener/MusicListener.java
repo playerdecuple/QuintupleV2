@@ -620,6 +620,7 @@ public class MusicListener extends ListenerAdapter {
                             if (!l.isURL(songs[i])) {
 
                                 String ytSearched = y.searchYoutube(songs[i]);
+                                System.out.println(ytSearched);
 
                                 if (ytSearched == null) {
 
@@ -627,6 +628,7 @@ public class MusicListener extends ListenerAdapter {
                                     eb.setColor(Color.RED);
 
                                     tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                                    return;
 
                                 } else {
 
@@ -856,9 +858,8 @@ public class MusicListener extends ListenerAdapter {
             eb.setDescription("무언가 잘못 입력한 것 같네요..");
             event.getChannel().sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
         } catch (Exception e) {
-            new ExceptionReport(e);
-
             e.printStackTrace();
+            new ExceptionReport(e);
         }
 
     }
