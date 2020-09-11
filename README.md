@@ -35,6 +35,7 @@ QuintupleV2의 소스 코드는 오픈소스로서, 여러분들이 사용하는
  }
  ```
  * ReadFile, WriteFile, DeleteFile : 파일의 읽기, 쓰기, 제거를 담당하는 클래스입니다.
+  - 2.0.73.4 : CopyFile이 추가되었습니다. (파일의 복사, 일괄 복사를 담당하는 클래스입니다.)
  ```java
  ReadFile r = new ReadFile();
  WriteFile w = new WriteFile();
