@@ -655,12 +655,17 @@ public class MusicListener extends ListenerAdapter {
 
                     } else if (e.eq(args[1], "리스트", "list", "l", "목록")) {
 
-                        if (msg.getMentionedMembers().get(0) != null) {
-                            mp.sendAllPlaylist(msg.getMentionedMembers().get(0).getUser().getId(), tc);
-                            return;
+                        if (args.length == 2) {
+                            mp.sendAllPlaylist(user.getId(), tc);
+                        } else {
+                            try {
+                                if (msg.getMentionedMembers().get(0) != null) {
+                                    mp.sendAllPlaylist(msg.getMentionedMembers().get(0).getUser().getId(), tc);
+                                }
+                            } catch (IndexOutOfBoundsException ex) {
+                                // ignore
+                            }
                         }
-
-                        mp.sendAllPlaylist(user.getId(), tc);
 
                     } else if (e.eq(args[1], "리셋", "reset", "r")) {
 
