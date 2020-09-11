@@ -1,6 +1,7 @@
 package com.DecupleProject.Listener;
 
 import com.DecupleProject.Contents.RPG.Account;
+import com.DecupleProject.Contents.RPG.Inventory;
 import com.DecupleProject.Contents.RPG.Proficiency;
 import com.DecupleProject.Contents.RPG.Work;
 import com.DecupleProject.Core.CustomCommand;
@@ -52,6 +53,7 @@ public class RPGListener extends ListenerAdapter {
             }
 
             Work work = new Work(tc, user);
+            Inventory inv = new Inventory(user);
 
             // ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ //
 
@@ -104,26 +106,31 @@ public class RPGListener extends ListenerAdapter {
                 if (e.eq(args[0], "벌목", "나무", "woodcut", "woodcutting")) {
                     if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
                     work.woodCutting();
+                    inv.addItem("000", 1);
                 }
 
                 if (e.eq(args[0], "낚시", "물고기", "fishing", "낚싯대", "횟감수획")) {
                     if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
                     work.fishing();
+                    inv.addItem("001", 1);
                 }
 
                 if (e.eq(args[0], "농사", "농작물", "수확물", "farming", "farm")) {
                     if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
                     work.farming();
-                }
-
-                if (e.eq(args[0], "사냥", "사냥감", "hunt", "hunting")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
-                    work.hunting();
+                    inv.addItem("002", 1);
                 }
 
                 if (e.eq(args[0], "제작", "제조", "produce")) {
                     if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
                     work.producing();
+                    inv.addItem("003", 1);
+                }
+
+                if (e.eq(args[0], "사냥", "사냥감", "hunt", "hunting")) {
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    work.hunting();
+                    inv.addItem("004", 1);
                 }
 
                 if (e.eq(args[0], "숙련도", "숙련", "일")) {
@@ -131,6 +138,10 @@ public class RPGListener extends ListenerAdapter {
                     Proficiency p = new Proficiency(user);
 
                     p.sendProficiencyInformation(tc);
+                }
+
+                if (e.eq(args[0], "아이템", "인벤토리", "Item", "Inventory")) {
+                    inv.sendItemInfo();
                 }
 
             }
