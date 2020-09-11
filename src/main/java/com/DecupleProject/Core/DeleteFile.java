@@ -15,22 +15,27 @@ public class DeleteFile {
 
         try {
             if (f.exists()) {
-                File[] folder_list = f.listFiles(); // Get file lists
 
-                for (File file : folder_list) {
-                    if (file.isFile()) {
+                if (f.isDirectory()) {
+                    File[] folder_list = f.listFiles(); // Get file lists
+
+                    for (File file : folder_list) {
+                        if (file.isFile()) {
+                            boolean deleted = file.delete();
+                            if (!deleted) return;
+                        } else {
+                            deleteFile(file); // Restart this method
+                        }
                         boolean deleted = file.delete();
                         if (!deleted) return;
-                    } else {
-                        deleteFile(file); // Restart this method
                     }
-                    boolean deleted = file.delete();
-                    if (!deleted) return;
-                }
 
-                boolean deleted = f.delete(); // Delete 'path' directory
-                if (!deleted) {
-                    System.out.println("Bot can't deleted file(s). Path : " + f.getPath());
+                    boolean deleted = f.delete(); // Delete 'path' directory
+                    if (!deleted) {
+                        System.out.println("Bot can't deleted file(s). Path : " + f.getPath());
+                    }
+                } else {
+                    f.delete();
                 }
             }
         } catch (Exception e) {
