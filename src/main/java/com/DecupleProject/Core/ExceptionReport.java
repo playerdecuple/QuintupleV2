@@ -8,10 +8,44 @@ import java.text.SimpleDateFormat;
 public class ExceptionReport {
 
     public ExceptionReport(Exception e) {
+
         try {
+            StringBuilder stackTrace = new StringBuilder();
+            int more = 0;
+            int traceCount = 0;
+
+            for (StackTraceElement trace : e.getStackTrace()) {
+
+                traceCount++;
+                StringBuilder traceMsg = new StringBuilder();
+
+                traceMsg.append("\n").append("- at ").append(trace.getClassName())
+                        .append(trace.getMethodName())
+                        .append("(FILE : ").append(trace.getFileName())
+                        .append(", LN : ").append(trace.getLineNumber()).append(")");
+
+                if ((stackTrace.toString().length() + traceMsg.toString().length()) >= 1800) {
+                    more++;
+                } else {
+                    stackTrace.append(traceMsg.toString());
+                }
+
+                if (traceCount == e.getStackTrace().length) {
+                    if (more != 0) {
+                        stackTrace.append("\n").append("...").append(" ").append(more).append(" more..");
+                    }
+                }
+            }
+
+            String msg = e.getClass().toString() + ": " + e.getMessage();
+
+            if (msg.length() > 100) {
+                msg = msg.substring(0, 97) + "...";
+            }
+
             User owner = DefaultListener.owner;
-            owner.openPrivateChannel().complete().sendMessage("```" + getTimeStamp(System.currentTimeMillis())
-                    + " - Exception thrown : \n" + e.getMessage() + "\n\nCaused By: \n" + e.getCause() + "```").queue();
+            owner.openPrivateChannel().complete().sendMessage("```diff\n" + getTimeStamp(System.currentTimeMillis())
+                    + " - Exception thrown : \n" + msg + "\n" + stackTrace + "\n\nCaused By: \n" + e.getCause() + "```").queue();
         } catch (IllegalStateException ex) {
             // ignore
         }
