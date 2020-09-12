@@ -62,7 +62,6 @@ public class MusicPlaylist {
         File musicFile = new File("D:/Database/MusicPlayList/" + id + "/" + musicId + ".txt");
 
         if (musicFile.exists() && musicFolder.exists()) {
-            return;
         } else {
             if (!musicFolder.exists()) {
                 boolean directoryMade = musicFolder.mkdir();
@@ -79,30 +78,25 @@ public class MusicPlaylist {
 
     }
 
-    public void addMusic(String id, int musicId, String... urls) {
+    public void addMusic(String id, int musicId, String url) {
 
-        for (String url : urls) {
+        File musicFolder = new File("D:/Database/MusicPlayList/" + id);
+        File musicFile = new File("D:/Database/MusicPlayList/" + id + "/" + musicId + ".txt");
 
-            File musicFolder = new File("D:/Database/MusicPlayList/" + id);
-            File musicFile = new File("D:/Database/MusicPlayList/" + id + "/" + musicId + ".txt");
+        if (musicFile.exists() && musicFolder.exists()) {
+            return;
+        } else {
+            if (!musicFolder.exists()) {
+                boolean directoryMade = musicFolder.mkdir();
 
-            if (musicFile.exists() && musicFolder.exists()) {
-                return;
-            } else {
-                if (!musicFolder.exists()) {
-                    boolean directoryMade = musicFolder.mkdir();
-
-                    if (!directoryMade) {
-                        return;
-                    }
-                }
-
-                if (url != null) {
-                    w.writeString(musicFile.getPath(), url);
-                    musicId++;
+                if (!directoryMade) {
+                    return;
                 }
             }
+        }
 
+        if (url != null) {
+            w.writeString(musicFile.getPath(), url);
         }
 
     }
