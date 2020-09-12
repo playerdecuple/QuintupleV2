@@ -46,7 +46,17 @@ public class MusicPlaylist {
 
     public void addMusic(String id, String urls) {
 
-        int musicId = getUserPlaylistLength(id) - 3;
+        File f = new File("D:/Database/MusicPlayList/" + id + "/title.txt");
+        File g = new File("D:/Database/MusicPlayList/" + id + "/share.txt");
+        File h = new File("D:/Database/MusicPlayList/" + id + "/owner.txt");
+
+        int musicId = 0;
+
+        if ((f.exists() && g.exists() && h.exists())) {
+            musicId = getUserPlaylistLength(id) - 3;
+        } else {
+            musicId = getUserPlaylistLength(id) - 1;
+        }
 
         File musicFolder = new File("D:/Database/MusicPlayList/" + id);
         File musicFile = new File("D:/Database/MusicPlayList/" + id + "/" + musicId + ".txt");

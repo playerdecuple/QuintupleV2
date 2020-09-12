@@ -552,7 +552,6 @@ public class DefaultListener extends ListenerAdapter {
                         eb.addField("이 서버에 들어온 시각", member.getTimeJoined().toString().replace("T", "\n").replace("Z", ""), false);
                         eb.addField("이 서버에서의 역할 목록", "```" + roles.toString() + "```", false);
 
-
                         eb.setThumbnail(user.getAvatarUrl());
                         eb.setColor(member.getColor());
 
@@ -582,7 +581,7 @@ public class DefaultListener extends ListenerAdapter {
                             if (member == null) return;
 
                             for (int i = 0; i < member.getRoles().size(); i++) {
-                                roles.append(", @").append(member.getRoles().get(i).getName());
+                                roles.append(", @").append(Objects.requireNonNull(guild.getMember(targetUser)).getRoles().get(i).getName());
                             }
 
                             eb.addField("이 서버에 들어온 시각", member.getTimeJoined().toString().replace("T", "\n").replace("Z", ""), false);
@@ -910,12 +909,17 @@ public class DefaultListener extends ListenerAdapter {
 
                 }
 
+                if (e.eq(args[0], "exception")) {
+                    throw new NullPointerException("Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. ");
+                }
+
             }
 
         } catch (StringIndexOutOfBoundsException | IllegalStateException e) {
             // ignore
         } catch (Exception e) {
             new ExceptionReport(e);
+            e.printStackTrace();
         }
 
     }
