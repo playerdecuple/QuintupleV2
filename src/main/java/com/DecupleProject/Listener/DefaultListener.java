@@ -352,7 +352,7 @@ public class DefaultListener extends ListenerAdapter {
 
                     MBeanServerConnection mbsc = ManagementFactory.getPlatformMBeanServer();
 
-                    com.sun.management.OperatingSystemMXBean ops = ManagementFactory.newPlatformMXBeanProxy(
+                    OperatingSystemMXBean ops = ManagementFactory.newPlatformMXBeanProxy(
                             mbsc, ManagementFactory.OPERATING_SYSTEM_MXBEAN_NAME, OperatingSystemMXBean.class);
 
 
@@ -573,15 +573,18 @@ public class DefaultListener extends ListenerAdapter {
                             eb.addBlankField(true);
 
                             Account a = new Account(targetUser.getId(), targetUser.getName(), tc);
+                            UserStatus usR = new UserStatus(targetUser.getId(), tc);
+
                             eb.addField(":moneybag: 자금(플)", String.format("%,d", a.getNowMoneyForId()) + "플", true);
-                            eb.addField(":bulb: 경험치", "Lv. " + us.getLevel() + " / " + String.format("%.2f", ((double) us.getEXP() / ((double) us.getLevel() * 10D + 5D)) * 100D) + "%", true);
+                            eb.addField(":bulb: 경험치", "Lv. " + usR.getLevel() + " / " + String.format("%.2f", ((double) usR.getEXP() / ((double) usR.getLevel() * 10D + 5D)) * 100D) + "%", true);
 
                             StringBuilder roles = new StringBuilder("@everyone");
 
                             if (member == null) return;
 
                             for (int i = 0; i < member.getRoles().size(); i++) {
-                                roles.append(", @").append(Objects.requireNonNull(guild.getMember(targetUser)).getRoles().get(i).getName());
+                                if (guild.getMember(targetUser) != null)
+                                    roles.append(", @").append(guild.getMember(targetUser).getRoles().get(i).toString());
                             }
 
                             eb.addField("이 서버에 들어온 시각", member.getTimeJoined().toString().replace("T", "\n").replace("Z", ""), false);
