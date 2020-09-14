@@ -1,7 +1,6 @@
 package com.DecupleProject;
 
 import com.DecupleProject.Core.ReadFile;
-import com.DecupleProject.Core.Util.LogWriter;
 import com.DecupleProject.Core.WriteFile;
 import com.DecupleProject.Listener.*;
 import net.dv8tion.jda.api.JDA;
@@ -21,7 +20,7 @@ public class QuintupleMain {
 
     public static void main(String[] args) throws LoginException {
 
-        boolean test = false;
+        boolean test = true;
 
         String v;
 
