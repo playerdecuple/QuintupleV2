@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 
 import java.awt.*;
 import java.io.File;
@@ -31,6 +32,12 @@ public class Account {
         this.id = id;
         this.name = name;
         this.tc = tc;
+    }
+
+    public Account(User user) {
+        this.id = user.getId();
+        this.name = user.getName();
+        this.tc = null;
     }
 
     /* Never used code yet.
@@ -251,6 +258,31 @@ public class Account {
 
         rankingInfo.append("```");
         tc.sendMessage(rankingInfo.toString()).delay(3, TimeUnit.MINUTES).flatMap(Message::delete).queue();
+
+    }
+
+    public String getMoneyForHangeul(long moneyValue) {
+
+        char[] c = new char[String.valueOf(moneyValue).length()];
+
+        StringBuilder result = new StringBuilder();
+
+        for (int i = String.valueOf(moneyValue).length() - 1; i >= 0; i--) {
+            c[i] = String.valueOf(moneyValue).charAt(i);
+            result.insert(0, c[i]);
+
+            if (i == String.valueOf(moneyValue).length() - 4 && i != 0) {
+                result.insert(0, "만 ");
+            } else if (i == String.valueOf(moneyValue).length() - 8 && i != 0) {
+                result.insert(0, "억 ");
+            } else if (i == String.valueOf(moneyValue).length() - 12 && i != 0) {
+                result.insert(0, "조 ");
+            } else if (i == String.valueOf(moneyValue).length() - 16 && i != 0) {
+                result.insert(0, "경 ");
+            }
+        }
+
+        return result.toString();
 
     }
 
