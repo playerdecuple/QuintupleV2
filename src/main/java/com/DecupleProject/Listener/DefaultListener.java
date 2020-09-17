@@ -11,6 +11,7 @@ import com.DecupleProject.Core.*;
 import com.DecupleProject.Core.Util.EasyEqual;
 import com.DecupleProject.Core.Util.LogWriter;
 
+import com.DecupleProject.Core.Util.TopicServerInfo;
 import com.gikk.twirk.Twirk;
 import com.gikk.twirk.TwirkBuilder;
 import com.sun.management.OperatingSystemMXBean;
@@ -67,6 +68,8 @@ public class DefaultListener extends ListenerAdapter {
 
         int sleepSec = 600; // Sending log cooldown.
         final ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
+
+        new TopicServerInfo();
 
         exec.scheduleAtFixedRate(() -> {
             eb.setTitle("Quintuple Self Check Service");
@@ -255,8 +258,7 @@ public class DefaultListener extends ListenerAdapter {
                     if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
                         tc.deleteMessageById(msg.getId()).queue();
                     eb.setTitle("도움말을 보여드릴게요!");
-                    eb.setDescription("아쉽지만, 명령어가 너무 많아서 정리를 해놓은 인터넷 사이트로 이동시켜 드리겠습니다!");
-                    eb.addField("링크", "https://decupleproject.fandom.com/ko/wiki/%EB%8D%B0%ED%81%90%ED%94%8C%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8:%EB%94%94%EC%8A%A4%EC%BD%94%EB%93%9C%ED%80%B8%ED%8A%9C%ED%94%8C", true);
+                    eb.setDescription("아쉽지만, 명령어가 너무 많아서 정리를 해놓은 [인터넷 사이트](https://decupleproject.fandom.com/ko/wiki/%EB%8D%B0%ED%81%90%ED%94%8C_%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8_:_%EB%94%94%EC%8A%A4%EC%BD%94%EB%93%9C_%ED%80%B8%ED%8A%9C%ED%94%8C)로 이동시켜 드리겠습니다!");
                     eb.setColor(Color.CYAN);
 
                     sendPrivateMessage(user, eb.build());
@@ -584,7 +586,7 @@ public class DefaultListener extends ListenerAdapter {
 
                             for (int i = 0; i < member.getRoles().size(); i++) {
                                 if (guild.getMember(targetUser) != null)
-                                    roles.append(", @").append(guild.getMember(targetUser).getRoles().get(i).toString());
+                                    roles.append(", @").append(Objects.requireNonNull(guild.getMember(targetUser)).getRoles().get(i).toString());
                             }
 
                             eb.addField("이 서버에 들어온 시각", member.getTimeJoined().toString().replace("T", "\n").replace("Z", ""), false);
