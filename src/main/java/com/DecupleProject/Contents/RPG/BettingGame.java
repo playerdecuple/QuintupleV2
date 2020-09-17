@@ -10,7 +10,6 @@ public class BettingGame {
     private final User user;
     private final Account ac;
 
-    private final EmbedBuilder eb = new EmbedBuilder();
 
     public BettingGame(User user) {
         this.user = user;
