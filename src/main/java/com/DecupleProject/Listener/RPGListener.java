@@ -1,9 +1,6 @@
 package com.DecupleProject.Listener;
 
-import com.DecupleProject.Contents.RPG.Account;
-import com.DecupleProject.Contents.RPG.Inventory;
-import com.DecupleProject.Contents.RPG.Proficiency;
-import com.DecupleProject.Contents.RPG.Work;
+import com.DecupleProject.Contents.RPG.*;
 import com.DecupleProject.Core.CustomCommand;
 import com.DecupleProject.Core.ExceptionReport;
 import com.DecupleProject.Core.Util.EasyEqual;
@@ -14,7 +11,9 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class RPGListener extends ListenerAdapter {
@@ -75,6 +74,73 @@ public class RPGListener extends ListenerAdapter {
                         } else if (args.length == 3 && e.eq(args[2], "서버", "server", "우리", "이곳")) {
                             ac.sendMoneyRanking(guild);
                         }
+                    }
+
+                }
+
+                if (e.eq(args[0], "도박", "배팅", "베팅", "Betting")) {
+
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+
+                    BettingGame bt = new BettingGame(user);
+
+                    if (args.length == 1) {
+                        tc.sendMessage("배팅 금액을 정해 주세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                        return;
+                    }
+
+                    long betValue = Long.parseLong(args[1]);
+                    float bettingPercentage = 1f / (float) betValue * 500000f;
+
+                    if (bettingPercentage > 1f) {
+                        bettingPercentage = 1f - new Random().nextFloat();
+                    }
+
+                    boolean bettingResult = bt.normalBetting(betValue, bettingPercentage);
+                    eb.addField("배팅 금액", ac.getMoneyForHangeul(betValue) + "플", true);
+                    eb.addField("성공 확률", (bettingPercentage * 100f) + "%", true);
+
+                    if (bettingResult) {
+                        eb.setTitle("운이 좋군요.");
+                        eb.setColor(Color.GREEN);
+
+                        tc.sendMessage(eb.build()).delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                    } else {
+                        eb.setTitle("잃어버렸습니다.");
+                        tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                    }
+
+                }
+
+                if (e.eq(args[0], "올인", "전부", "allin")) {
+
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+
+                    BettingGame bt = new BettingGame(user);
+
+                    if (args.length != 1) {
+                        return;
+                    }
+
+                    long betValue = ac.getNowMoneyForId();
+                    float bettingPercentage = 1f / (float) betValue * 50000000f;
+
+                    if (bettingPercentage > 1f) {
+                        bettingPercentage = new Random().nextFloat();
+                    }
+
+                    boolean bettingResult = bt.normalBetting(betValue, bettingPercentage);
+                    eb.addField("전 재산", ac.getMoneyForHangeul(betValue) + "플", true);
+                    eb.addField("성공 확률", (bettingPercentage * 100f) + "%", true);
+
+                    if (bettingResult) {
+                        eb.setTitle("대박!");
+                        eb.setColor(Color.GREEN);
+
+                        tc.sendMessage(eb.build()).delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                    } else {
+                        eb.setTitle("처음부터 다시..");
+                        tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                     }
 
                 }
