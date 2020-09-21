@@ -110,7 +110,7 @@ public class UserStatus {
             }
         } catch (Exception e) {
             e.printStackTrace();
-new ExceptionReport(e);
+            new ExceptionReport(e);
         }
     }
 
