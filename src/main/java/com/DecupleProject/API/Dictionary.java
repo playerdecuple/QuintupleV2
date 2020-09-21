@@ -49,6 +49,7 @@ public class Dictionary {
         }
 
         NodeList nList_s = doc.getElementsByTagName("sense");
+        StringBuilder definition = new StringBuilder();
 
         for (int s = 0; s < nList_s.getLength(); s++) {
             Node nNode = nList_s.item(s);
@@ -58,10 +59,12 @@ public class Dictionary {
                 Element eElement = (Element) nNode;
                 wordR = getTagValue("definition", eElement);
 
+                definition.append("\n").append(s + 1).append(". ").append(wordR);
+
             }
         }
 
-        String result = wordR;
+        String result = definition.toString();
 
         if ("".equals(wordName)) {
             result = "그런 단어는 없습니다.";
@@ -72,15 +75,21 @@ public class Dictionary {
     }
 
     private String getTagValue(String tag, Element eElement) {
+
         NodeList nList = eElement.getElementsByTagName(tag).item(0).getChildNodes();
+        StringBuilder str = new StringBuilder();
 
-        Node nValue = nList.item(0);
+        for (int i = 0; i < nList.getLength(); i++) {
+            Node nValue = nList.item(0);
 
-        if (nValue == null) {
-            return null;
+            if (nValue == null) {
+                return null;
+            }
+
+            str.append(nValue.getNodeValue());
         }
 
-        return nValue.getNodeValue();
+        return str.toString();
     }
 
     /* Never used code yet.
