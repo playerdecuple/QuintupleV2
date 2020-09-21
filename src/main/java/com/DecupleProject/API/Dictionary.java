@@ -19,7 +19,7 @@ public class Dictionary {
     public String getSearchResultFromWord(String word) throws ParserConfigurationException, SAXException, IOException {
 
         String wordName = "";
-        String wordR = "";
+        String wordR;
 
         String q;
 
