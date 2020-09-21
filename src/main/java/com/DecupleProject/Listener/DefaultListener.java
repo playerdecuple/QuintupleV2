@@ -693,7 +693,7 @@ public class DefaultListener extends ListenerAdapter {
 
                     eb.setTitle("국어 사전에서 찾아본 결과에요!");
                     eb.addField("찾아본 단어", "```" + input + "```", false);
-                    eb.addField("뜻", "```" + means + "```", false);
+                    eb.addField("뜻", "```md" + means + "```", false);
                     eb.setColor(Color.GREEN);
 
                     tc.sendMessage(eb.build()).queue();
