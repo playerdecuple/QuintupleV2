@@ -170,6 +170,22 @@ public class WordChain {
 
     // Other methods
 
+    public boolean existsInHistory(String word) {
+        final String gameDirectory = gm.getBasicFile().getPath();
+        final File historyFile = new File(gameDirectory + "/history.txt");
+
+        String historiesStr = r.readString(historyFile);
+        String[] histories = Objects.requireNonNull(historiesStr).split(",");
+
+        for (String history : histories) {
+            if (e.eq(word, history)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void submitWord(String word) {
         final String gameDirectory = gm.getBasicFile().getPath();
 
@@ -180,7 +196,7 @@ public class WordChain {
                 String result = dictionary.getSearchResultFromWord(word);
                 String v = r.readString(gameDirectory + "/history.txt");
 
-                if (v != null && (!e.eq(v, "?") && Objects.requireNonNull(v).contains(word))) {
+                if (existsInHistory(word)) {
                     tc.sendMessage(word + "(은)는 이미 쓰였던 단어입니다.").queue();
                     return;
                 }
