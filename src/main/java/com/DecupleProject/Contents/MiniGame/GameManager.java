@@ -1,6 +1,5 @@
 package com.DecupleProject.Contents.MiniGame;
 
-import com.DecupleProject.Contents.MiniGame.WordChain.WordChain;
 import com.DecupleProject.Core.DeleteFile;
 import com.DecupleProject.Core.ReadFile;
 import com.DecupleProject.Core.WriteFile;

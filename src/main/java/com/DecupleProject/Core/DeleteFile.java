@@ -21,13 +21,11 @@ public class DeleteFile {
 
                     for (File file : folder_list) {
                         if (file.isFile()) {
-                            boolean deleted = file.delete();
-                            if (!deleted) return;
+                            file.delete();
                         } else {
                             deleteFile(file); // Restart this method
                         }
-                        boolean deleted = file.delete();
-                        if (!deleted) return;
+                        file.delete();
                     }
 
                     boolean deleted = f.delete(); // Delete 'path' directory
@@ -59,12 +57,10 @@ public class DeleteFile {
                 for (File file : folder_list) {
                     if (file.isFile()) {
                         boolean deleted = file.delete();
-                        if (!deleted) return;
                     } else {
                         deleteFile(file); // Restart this method
                     }
                     boolean deleted = file.delete();
-                    if (!deleted) return;
                 }
 
                 boolean deleted = f.delete(); // Delete 'path' directory

@@ -84,8 +84,13 @@ public class QuintupleMain {
                 .setAutoReconnect(true)
                 .setStatus(OnlineStatus.ONLINE)
 
-                .addEventListeners(new DefaultListener(), new MusicListener(), new OnlineGameListener(), new ServerManagementListener(),
-                        new RPGListener());
+                .addEventListeners(
+                        new DefaultListener(),
+                        new MusicListener(),
+                        new OnlineGameListener(),
+                        new ServerManagementListener(),
+                        new RPGListener(),
+                        new GameListener());
 
         JDA jda = jdaBuilder.build();
         jda.getPresence().setActivity(Activity.playing(jda.getUsers().size() + " 분들과 함께"));
