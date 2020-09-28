@@ -2,7 +2,6 @@ package com.DecupleProject.Contents.MiniGame.WordChain;
 
 import com.DecupleProject.API.Dictionary;
 import com.DecupleProject.Contents.MiniGame.GameManager;
-import com.DecupleProject.Core.DeleteFile;
 import com.DecupleProject.Core.ExceptionReport;
 import com.DecupleProject.Core.ReadFile;
 import com.DecupleProject.Core.Util.EasyEqual;
@@ -18,9 +17,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class WordChain {
 
@@ -32,10 +29,6 @@ public class WordChain {
             {0x314f, 0x3150, 0x3151, 0x3152, 0x3153, 0x3154, 0x3155, 0x3156, 0x3157, 0x3158,
                     0x3159, 0x315a, 0x315b, 0x315c, 0x315d, 0x315e, 0x315f, 0x3160, 0x3161, 0x3162,
                     0x3163};
-    private static final char[] JON =
-            {0x0000, 0x3131, 0x3132, 0x3133, 0x3134, 0x3135, 0x3136, 0x3137, 0x3139, 0x313a,
-                    0x313b, 0x313c, 0x313d, 0x313e, 0x313f, 0x3140, 0x3141, 0x3142, 0x3144, 0x3145,
-                    0x3146, 0x3147, 0x3148, 0x314a, 0x314b, 0x314c, 0x314d, 0x314e};
     // JDA
     private final User user;
     private final TextChannel tc;
@@ -45,7 +38,6 @@ public class WordChain {
     private final EasyEqual e = new EasyEqual();
     private final WriteFile w = new WriteFile();
     private final ReadFile r = new ReadFile();
-    private final DeleteFile d = new DeleteFile();
     // API & Database manager
     private final Dictionary dictionary = new Dictionary();
     private final GameManager gm;
@@ -54,9 +46,6 @@ public class WordChain {
                     '고', '노', '도', '로', '모', '보', '소', '오', '조', '초', '코', '토', '포', '호',
                     '거', '너', '더', '러', '머', '버', '서', '어', '저', '처', '커', '터', '퍼', '허',
                     '구', '누', '두', '루', '무', '부', '수', '우', '주', '추', '쿠', '투', '푸', '후'};
-    // Others
-    private double timeRemaining = 20D;
-    private boolean submit = false;
 
     public WordChain(User user, TextChannel tc) {
         this.user = user;
@@ -100,7 +89,6 @@ public class WordChain {
 
         eb.setDescription("처음 차례는 " + Objects.requireNonNull(jda.getUserById(getNowTurn())).getAsMention() + "님입니다!");
         eb.addField("시작 글자", getChar() + "", true);
-        eb.addField("제한 시간", String.format("%.2f초", timeRemaining), true);
 
         eb.setColor(Color.ORANGE);
         tc.sendMessage(eb.build()).delay(60, TimeUnit.SECONDS).flatMap(Message::delete).queue();
@@ -223,8 +211,6 @@ public class WordChain {
 
                 eb.setTitle("좋습니다!");
 
-                submit = true;
-
                 if (canTwoPronunciationRules(word.charAt(word.length() - 1))) {
                     String word1 = String.valueOf(word.charAt(word.length() - 1));
                     setChar(word1
@@ -242,7 +228,6 @@ public class WordChain {
                 } else {
                     eb.addField("시작 글자", getChar() + "", true);
                 }
-                eb.addField("제한 시간", String.format("%.2f초", timeRemaining), true);
                 eb.addField("단어의 뜻", "```md\n# " + word + "\n" + result + "\n```", false);
 
                 eb.setColor(Color.GREEN);
@@ -312,7 +297,6 @@ public class WordChain {
             chI = joI / (21 * 28);
             joI = joI % (21 * 28);
             juI = joI / 28;
-            joI = joI % 28;
 
             char ch = CHO[chI];
             char ju = JUN[juI];
