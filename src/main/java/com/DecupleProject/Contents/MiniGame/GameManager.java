@@ -117,7 +117,6 @@ public class GameManager {
     }
 
     public String getGameHelp(int gameCode) {
-
         switch (gameCode) {
             case 23:
             case 22:

@@ -88,6 +88,10 @@ public class GameListener extends ListenerAdapter {
                         tc.sendMessage("게임을 종료할게요!").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                     }
 
+                    if (e.eq(m, "도움말")) {
+                        tc.sendMessage(gm.getGameHelp(gm.getGameCode())).queue();
+                    }
+
                 }
 
             } else {
@@ -107,14 +111,10 @@ public class GameListener extends ListenerAdapter {
                     args = msg.getContentRaw().substring(1).split(" ");
                 }
 
-                if (prefixCheck) {
+                if (e.eq(args[0], "게임")) {
 
-                    if (e.eq(args[0], "게임")) {
-
-                        if (e.eq(args[1], "끝말잇기", "워드체인", "wordChain")) {
-                            gm.setModeToJoin(10);
-                        }
-
+                    if (e.eq(args[1], "끝말잇기", "워드체인", "wordChain")) {
+                        gm.setModeToJoin(10);
                     }
 
                 }
