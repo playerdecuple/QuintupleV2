@@ -98,7 +98,7 @@ public class WordChain {
 
         eb.setTitle("끝말잇기 게임을 시작합시다!");
 
-        eb.setDescription("처음 차례는 " + jda.retrieveUserById(getNextTurn()).complete().getAsMention() + "님입니다!");
+        eb.setDescription("처음 차례는 " + Objects.requireNonNull(jda.getUserById(getNowTurn())).getAsMention() + "님입니다!");
         eb.addField("시작 글자", getChar() + "", true);
         eb.addField("제한 시간", String.format("%.2f초", timeRemaining), true);
 
@@ -130,7 +130,7 @@ public class WordChain {
 
     public boolean isNowTurn() {
         final String gameDirectory = gm.getBasicFile().getPath();
-        return e.eq(Objects.requireNonNull(r.readString(gameDirectory + "/turn.txt")), user.getId());
+        return e.eq(Objects.requireNonNull(r.readString(gameDirectory + "/nowTurn.txt")), user.getId());
     }
 
     public void turnHandler() {
@@ -235,7 +235,7 @@ public class WordChain {
 
                 setTurn(getNextTurn());
 
-                eb.setDescription("다음 차례는 " + jda.retrieveUserById(getNextTurn()).complete().getAsMention() + "님입니다!");
+                eb.setDescription("다음 차례는 " + Objects.requireNonNull(jda.getUserById(getNowTurn())).getAsMention() + "님입니다!");
 
                 if (canTwoPronunciationRules(getChar().charAt(0))) {
                     eb.addField("시작 글자", getChar().charAt(0) + "(" + getWordByTwoPronunciationRules(getChar().charAt(0) + ")"), true);
@@ -303,6 +303,34 @@ public class WordChain {
 
     public boolean canTwoPronunciationRules(char word) {
 
+        int chI, juI, joI;
+
+        if (word >= 0xAC00 && word <= 0xD7A3) {
+
+            joI = word - 0xAC00;
+
+            chI = joI / (21 * 28);
+            joI = joI % (21 * 28);
+            juI = joI / 28;
+            joI = joI % 28;
+
+            char ch = CHO[chI];
+            char ju = JUN[juI];
+
+            boolean canApply = (ju == 'ㅑ' | ju == 'ㅕ' | ju == 'ㅛ' | ju == 'ㅠ' | ju == 'ㅒ' | ju == 'ㅖ' | ju == 'ㅣ');
+
+            switch (ch) {
+                case 'ㄹ':
+                    return true;
+                case 'ㄴ':
+                    return canApply;
+            }
+
+        }
+
+        return false;
+
+        /*
         if (word >= 0xAC00) {
             char uniVal = (char) (word - 0xAC00);
 
@@ -323,6 +351,7 @@ public class WordChain {
         }
 
         return false;
+         */
 
     }
 }
