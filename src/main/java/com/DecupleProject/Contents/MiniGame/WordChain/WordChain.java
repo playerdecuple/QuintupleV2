@@ -17,6 +17,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.*;
 import java.util.List;
+import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 public class WordChain {
@@ -30,27 +31,37 @@ public class WordChain {
                     0x3159, 0x315a, 0x315b, 0x315c, 0x315d, 0x315e, 0x315f, 0x3160, 0x3161, 0x3162,
                     0x3163};
     // JDA
-    private final User user;
-    private final TextChannel tc;
+    private static User user;
+    private static TextChannel tc;
     private final JDA jda = DefaultListener.jda;
     private final EmbedBuilder eb = new EmbedBuilder();
     // Utility
     private final EasyEqual e = new EasyEqual();
     private final WriteFile w = new WriteFile();
     private final ReadFile r = new ReadFile();
+    private Timer t = new Timer();
     // API & Database manager
     private final Dictionary dictionary = new Dictionary();
     private final GameManager gm;
+    private TurnHandlerCheckService tHandler = new TurnHandlerCheckService();
+
     private final char[] startChar =
             {'가', '나', '다', '라', '마', '바', '사', '아', '자', '차', '카', '타', '파', '하',
                     '고', '노', '도', '로', '모', '보', '소', '오', '조', '초', '코', '토', '포', '호',
                     '거', '너', '더', '러', '머', '버', '서', '어', '저', '처', '커', '터', '퍼', '허',
                     '구', '누', '두', '루', '무', '부', '수', '우', '주', '추', '쿠', '투', '푸', '후'};
 
+    // Other
+    private double time = 10000;
+
     public WordChain(User user, TextChannel tc) {
-        this.user = user;
-        this.tc = tc;
+        WordChain.user = user;
+        WordChain.tc = tc;
         this.gm = new GameManager(tc);
+
+        tHandler.setTextChannel(tc);
+        tHandler.setRemainingTime(time);
+        tHandler.setTimer(t);
     }
 
     // Basic method
@@ -66,7 +77,8 @@ public class WordChain {
 
         for (int i = 0; i < gameFiles.size(); i++) {
 
-            if (!e.eq(gameFiles.get(i).getName(), "nowPlaying.txt")) {
+            if (!e.eq(gameFiles.get(i).getName(), "nowPlaying.txt", "startTime.txt", "turn.txt",
+                    "nowTurn.txt", "char.txt", "history.txt", "elapsedTime.txt")) {
                 if (i != gameFiles.size() - 2) {
                     turn.append(gameFiles.get(i).getName().replace(".txt", "")).append(" ");
                 } else {
@@ -82,6 +94,7 @@ public class WordChain {
         w.writeString(gameDirectory + "/char.txt", String.valueOf(startChar[new Random().nextInt(startChar.length)]));
         w.writeLong(gameDirectory + "/startTime.txt", System.currentTimeMillis());
         w.writeString(gameDirectory + "/history.txt", "?");
+        w.writeLong(gameDirectory + "/elapsedTime.txt", 0L);
 
         turnHandler();
 
@@ -89,6 +102,7 @@ public class WordChain {
 
         eb.setDescription("처음 차례는 " + Objects.requireNonNull(jda.getUserById(getNowTurn())).getAsMention() + "님입니다!");
         eb.addField("시작 글자", getChar() + "", true);
+        eb.addField("제한 시간", "10.0 초", true);
 
         eb.setColor(Color.ORANGE);
         tc.sendMessage(eb.build()).delay(60, TimeUnit.SECONDS).flatMap(Message::delete).queue();
@@ -118,27 +132,45 @@ public class WordChain {
 
     public boolean isNowTurn() {
         final String gameDirectory = gm.getBasicFile().getPath();
-        return e.eq(Objects.requireNonNull(r.readString(gameDirectory + "/nowTurn.txt")), user.getId());
+
+        try {
+            return e.eq(Objects.requireNonNull(r.readString(gameDirectory + "/nowTurn.txt")), user.getId());
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 
     public void turnHandler() {
-        /*
-        AtomicLong elapsedTime = new AtomicLong();
 
-        final ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
-        exec.scheduleAtFixedRate(() -> {
-            elapsedTime.addAndGet(1);
-            if ((double) elapsedTime.get() >= timeRemaining * 1000D) {
-                gm.gameOver();
-            } else {
-                if (submit) {
-                    elapsedTime.set(0);
-                    timeRemaining = timeRemaining * 0.8D;
-                }
-            }
-        }, 0, 1, TimeUnit.MILLISECONDS);
+        final String gameDirectory = gm.getBasicFile().getPath();
 
-         */
+        t.cancel();
+        t.purge();
+        tHandler.stop();
+
+        tHandler.resetElapsedTime();
+
+        this.t = new Timer();
+        this.tHandler = new TurnHandlerCheckService();
+
+        tHandler.setTextChannel(tc);
+        tHandler.setRemainingTime(time);
+        tHandler.setTurnStartedTimeFile(new File(gameDirectory + "/startTime.txt"));
+        tHandler.setTurnStartedTime();
+        tHandler.setTimer(t);
+
+        t.scheduleAtFixedRate(tHandler, 0, 1);
+
+    }
+
+    public void removeTurnHandler() {
+        t.cancel();
+        t.purge();
+
+        tHandler.cancel();
+        tHandler.resetElapsedTime();
+        tHandler.setContinue(false);
+        tHandler = null;
     }
 
     public String getNowTurn() {
@@ -171,19 +203,25 @@ public class WordChain {
     // Other methods
 
     public boolean existsInHistory(String word) {
-        final String gameDirectory = gm.getBasicFile().getPath();
-        final File historyFile = new File(gameDirectory + "/history.txt");
 
-        String historiesStr = r.readString(historyFile);
-        String[] histories = Objects.requireNonNull(historiesStr).split(",");
+        try {
+            final String gameDirectory = gm.getBasicFile().getPath();
+            final File historyFile = new File(gameDirectory + "/history.txt");
 
-        for (String history : histories) {
-            if (e.eq(word, history)) {
-                return true;
+            String historiesStr = r.readString(historyFile);
+            String[] histories = Objects.requireNonNull(historiesStr).split(",");
+
+            for (String history : histories) {
+                if (e.eq(word, history)) {
+                    return true;
+                }
             }
+
+            return false;
+        } catch (NullPointerException e) {
+            return false;
         }
 
-        return false;
     }
 
     public void submitWord(String word) {
@@ -225,6 +263,8 @@ public class WordChain {
                     }
                 }
 
+                tHandler.resetElapsedTime();
+                w.writeLong(gameDirectory + "/startTime.txt", System.currentTimeMillis());
                 eb.setTitle("좋습니다!");
 
                 if (canTwoPronunciationRules(word.charAt(word.length() - 1))) {
@@ -244,6 +284,10 @@ public class WordChain {
                 } else {
                     eb.addField("시작 글자", getChar() + "", true);
                 }
+
+                turnHandler();
+
+                eb.addField("제한 시간", time / 1000 + " 초", true);
                 eb.addField("단어의 뜻", "```md\n# " + word + "\n" + result + "\n```", false);
 
                 eb.setColor(Color.GREEN);
@@ -330,28 +374,98 @@ public class WordChain {
 
         return false;
 
-        /*
-        if (word >= 0xAC00) {
-            char uniVal = (char) (word - 0xAC00);
+    }
 
-            char cho = (char) (((uniVal - (uniVal % 28)) / 28) / 21);
-            char jun = (char) (((uniVal - (uniVal % 28)) / 28) % 21);
+    public void setTime(double to) {
+        time = to;
+    }
 
-            char ch = CHO[cho];
-            char ju = JUN[jun];
+}
 
-            boolean b = ju == 'ㅑ' | ju == 'ㅕ' | ju == 'ㅛ' | ju == 'ㅠ' | ju == 'ㅒ' | ju == 'ㅖ' | ju == 'ㅣ';
+class TurnHandlerCheckService extends TimerTask {
 
-            if (ch == 0x3132 | ch == 'ㄹ') {
-                return b;
+    private TextChannel tc;
+    private Timer t;
+    private double remainingTime;
+    private long elapsedTime;
+    private long turnStartedTime;
+    private boolean con = true;
+    private File turnStartedTimeFile;
+
+    public void run() {
+
+        if (getContinue()) {
+            setTurnStartedTime();
+            elapsedTime = System.currentTimeMillis() - turnStartedTime;
+
+            final GameManager gm = new GameManager(getTextChannel());
+
+            if (gm.getGameCode() == 0) {
+                this.cancel();
             } else {
-                return false;
+                if (elapsedTime >= getRemainingTime()) {
+                    gm.gameOver(1);
+                    this.cancel();
+                }
             }
-
+        } else {
+            stop();
         }
 
-        return false;
-         */
-
     }
+
+    public TextChannel getTextChannel() {
+        return tc;
+    }
+
+    public void setTextChannel(TextChannel tc) {
+        this.tc = tc;
+    }
+
+    public void resetElapsedTime() {
+        elapsedTime = 0;
+    }
+
+
+    public double getRemainingTime() {
+        return remainingTime;
+    }
+
+    public void setRemainingTime(double remainingTime) {
+        this.remainingTime = remainingTime;
+    }
+
+    public void setTurnStartedTime() {
+        try {
+            this.turnStartedTime = new ReadFile().readLong(turnStartedTimeFile);
+        } catch (Exception e) {
+            this.turnStartedTime = System.currentTimeMillis() - 20000;
+        }
+    }
+
+    public void setTimer(Timer timer) {
+        t = timer;
+    }
+
+    public boolean getContinue() {
+        return con;
+    }
+
+    public void setContinue(boolean con) {
+        this.con = con;
+    }
+
+    public void stop() {
+        t.cancel();
+        t.purge();
+        this.cancel();
+
+        super.cancel();
+        t = null;
+    }
+
+    public void setTurnStartedTimeFile(File x) {
+        this.turnStartedTimeFile = x;
+    }
+
 }
