@@ -883,10 +883,6 @@ public class DefaultListener extends ListenerAdapter {
 
                 }
 
-                if (e.eq(args[0], "UT")) {
-                    tc.sendMessage("OK").queue();
-                }
-
                 if (e.eq(args[0], "날씨", "weather", "웨더")) {
                     if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
                         tc.deleteMessageById(msg.getId()).queue();
