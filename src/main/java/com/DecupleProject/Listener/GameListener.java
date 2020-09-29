@@ -68,7 +68,7 @@ public class GameListener extends ListenerAdapter {
                     }
 
                     if (e.eq(m, "GG")) {
-                        gm.gameOver();
+                        gm.gameOver(0);
                         tc.sendMessage("게임 참가 모드를 종료했습니다.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                     }
 
@@ -84,8 +84,13 @@ public class GameListener extends ListenerAdapter {
                     }
 
                     if (e.eq(m, "GG")) {
-                        gm.gameOver();
-                        tc.sendMessage("게임을 종료할게요!").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                        if (gm.getGameCode() != 10) {
+                            WordChain wc = new WordChain(user, tc);
+                            wc.removeTurnHandler();
+
+                            gm.gameOver(0);
+                            tc.sendMessage("게임을 종료할게요!").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                        }
                     }
 
                     if (e.eq(m, "도움말")) {

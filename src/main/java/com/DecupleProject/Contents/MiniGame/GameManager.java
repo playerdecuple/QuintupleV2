@@ -181,9 +181,22 @@ public class GameManager {
     }
 
 
-    public void gameOver() {
+    public void gameOver(int v) {
 
         // TODO : add user's EXP value.
+
+        w.writeInt(BASIC_PATH + "/nowPlaying.txt", 0);
+
+        switch (v) {
+            case 0:
+                break;
+            case 1:
+                tc.sendMessage("시간이 초과되어 게임이 종료됩니다!").queue();
+                break;
+            case 2:
+                tc.sendMessage("게임 오버!").queue();
+                break;
+        }
 
         DeleteFile d = new DeleteFile();
         d.deleteFile(BASIC_PATH);
