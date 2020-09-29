@@ -116,12 +116,14 @@ public class GameListener extends ListenerAdapter {
                     args = msg.getContentRaw().substring(1).split(" ");
                 }
 
-                if (e.eq(args[0], "게임")) {
+                if (m.charAt(0) == 'Q' | m.charAt(0) == 'q' | m.charAt(0) == '.' | prefixCheck) {
+                    if (e.eq(args[0], "게임")) {
 
-                    if (e.eq(args[1], "끝말잇기", "워드체인", "wordChain")) {
-                        gm.setModeToJoin(10);
+                        if (e.eq(args[1], "끝말잇기", "워드체인", "wordChain")) {
+                            gm.setModeToJoin(10);
+                        }
+
                     }
-
                 }
 
             }
