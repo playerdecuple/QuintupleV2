@@ -23,6 +23,7 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.*;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
@@ -926,6 +927,41 @@ public class DefaultListener extends ListenerAdapter {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void onPrivateMessageReceived(PrivateMessageReceivedEvent event) {
+        User user = event.getAuthor();
+        Message message = event.getMessage();
+        EasyEqual e = new EasyEqual();
+
+        String[] args = message.getContentRaw().split(" ");
+
+        if (e.eq(args[0], "소스", "코드", "코드뷰어")) {
+            if (args.length == 1) {
+                return;
+            }
+
+            Authority a = new Authority();
+
+            if (a.getAuthorityForId(user.getId()) >= 3) {
+
+                try {
+
+                    SendSource s = new SendSource(user);
+
+                    if (args.length == 4) {
+                        s.sendSource(args[1], Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+                    } else if (args.length == 3) {
+                        s.sendSource(args[1], Integer.parseInt(args[2]), Integer.parseInt(args[2]));
+                    }
+
+                } catch (ArrayIndexOutOfBoundsException ex) {
+                    ex.printStackTrace();
+                }
+
+            }
+        }
     }
 
     public void sendPrivateMessage(User target, String message) {
