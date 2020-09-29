@@ -20,6 +20,7 @@ public class ExceptionReport {
                 StringBuilder traceMsg = new StringBuilder();
 
                 traceMsg.append("\n").append("- at ").append(trace.getClassName())
+                        .append(".")
                         .append(trace.getMethodName())
                         .append("(FILE : ").append(trace.getFileName())
                         .append(", LN : ").append(trace.getLineNumber()).append(")");
