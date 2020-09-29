@@ -264,6 +264,7 @@ public class WordChain {
                 }
 
                 tHandler.resetElapsedTime();
+
                 w.writeLong(gameDirectory + "/startTime.txt", System.currentTimeMillis());
                 eb.setTitle("좋습니다!");
 
