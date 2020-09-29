@@ -918,6 +918,32 @@ public class DefaultListener extends ListenerAdapter {
                     }
                 }
 
+                if (e.eq(args[0], "소스T", "코드T", "코드뷰어T")) {
+                    if (args.length == 1) {
+                        return;
+                    }
+
+                    Authority a = new Authority();
+
+                    if (a.getAuthorityForId(user.getId()) >= 3) {
+
+                        try {
+
+                            SendSource s = new SendSource(user);
+
+                            if (args.length == 4) {
+                                tc.sendMessage(s.returnSource(args[1], Integer.parseInt(args[2]), Integer.parseInt(args[3]))).queue();
+                            } else if (args.length == 3) {
+                                tc.sendMessage(s.returnSource(args[1], Integer.parseInt(args[2]), Integer.parseInt(args[2]))).queue();
+                            }
+
+                        } catch (ArrayIndexOutOfBoundsException ex) {
+                            ex.printStackTrace();
+                        }
+
+                    }
+                }
+
             }
 
         } catch (StringIndexOutOfBoundsException | IllegalStateException e) {
@@ -934,6 +960,7 @@ public class DefaultListener extends ListenerAdapter {
         User user = event.getAuthor();
         Message message = event.getMessage();
         EasyEqual e = new EasyEqual();
+        PrivateChannel tc = event.getChannel();
 
         String[] args = message.getContentRaw().split(" ");
 
@@ -951,9 +978,9 @@ public class DefaultListener extends ListenerAdapter {
                     SendSource s = new SendSource(user);
 
                     if (args.length == 4) {
-                        s.sendSource(args[1], Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+                        tc.sendMessage(s.returnSource(args[1], Integer.parseInt(args[2]), Integer.parseInt(args[3]))).queue();
                     } else if (args.length == 3) {
-                        s.sendSource(args[1], Integer.parseInt(args[2]), Integer.parseInt(args[2]));
+                        tc.sendMessage(s.returnSource(args[1], Integer.parseInt(args[2]), Integer.parseInt(args[2]))).queue();
                     }
 
                 } catch (ArrayIndexOutOfBoundsException ex) {

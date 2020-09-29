@@ -23,7 +23,6 @@ public class SendSource {
         File readFile = new File(BASE_PATH + "/" + path);
 
         if (!readFile.exists()) {
-            user.openPrivateChannel().complete().sendMessage("Bot couldn't sent source code(s).").queue();
             return;
         }
 
@@ -44,7 +43,7 @@ public class SendSource {
 
         for (int l = 0; l < list.size(); l++) {
             if (l + 1 >= startLine && l + 1 <= endLine) {
-                message.append(list.get(l)).append("\n");
+                message.append(String.format("%03d", l + 1)).append("|").append(list.get(l)).append("\n");
             }
         }
 
@@ -57,6 +56,48 @@ public class SendSource {
                     "***, __Ln " + startLine + " ~ " + endLine + "__\n```java\n" + message.toString() + "```").queue();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public String returnSource(String path, int startLine, int endLine) {
+        String BASE_PATH = "D:/QuintupleV2/src/main/java/com/DecupleProject";
+        File readFile = new File(BASE_PATH + "/" + path);
+
+        if (!readFile.exists()) {
+            return "Bot couldn't sent source code(s).";
+        }
+
+        List<String> list = new ArrayList<>();
+
+        try {
+            Scanner scanner = new Scanner(readFile);
+
+            while (scanner.hasNextLine()) {
+                list.add(scanner.nextLine());
+            }
+        } catch (IOException e) {
+            new ExceptionReport(e);
+            e.printStackTrace();
+        }
+
+        StringBuilder message = new StringBuilder();
+
+        for (int l = 0; l < list.size(); l++) {
+            if (l + 1 >= startLine && l + 1 <= endLine) {
+                message.append(String.format("%03d", l + 1)).append("|").append(list.get(l)).append("\n");
+            }
+        }
+
+        try {
+            if (message.toString().length() >= 1850) {
+                return "The code cannot be transmitted because the number of characters exceeds 1850 characters.";
+            }
+
+            return "***" + "com.DecupleProject." + path.replace("/", ".") +
+                    "***, __Ln " + startLine + " ~ " + endLine + "__\n```java\n" + message.toString() + "```";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "ERROR";
         }
     }
 
