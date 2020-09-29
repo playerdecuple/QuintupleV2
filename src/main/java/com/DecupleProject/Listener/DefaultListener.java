@@ -11,6 +11,7 @@ import com.DecupleProject.Core.*;
 import com.DecupleProject.Core.Util.EasyEqual;
 import com.DecupleProject.Core.Util.LogWriter;
 
+import com.DecupleProject.Core.Util.SendSource;
 import com.DecupleProject.Core.Util.TopicServerInfo;
 import com.gikk.twirk.Twirk;
 import com.gikk.twirk.TwirkBuilder;
@@ -894,28 +895,30 @@ public class DefaultListener extends ListenerAdapter {
                     w.sendWeatherInformation(args[1], tc);
                 }
 
-                if (e.eq(args[0], "reload", "restart", "apply")) {
-                    Authority a = new Authority();
-
-                    if (a.getAuthorityForId(user.getId()) == 4) {
-                        sendPrivateMessage(owner, "\"**Bot will restart myself!** __Please don't turn off computer.__\"");
-                        restartQuintuple();
+                if (e.eq(args[0], "소스", "코드", "코드뷰어")) {
+                    if (args.length == 1) {
+                        return;
                     }
-                }
-
-                if (e.eq(args[0], "end", "shutdown", "exit")) {
 
                     Authority a = new Authority();
 
-                    if (a.getAuthorityForId(user.getId()) == 4) {
-                        sendPrivateMessage(owner, "**Bot is shutting down!**");
-                        shutdownQuintuple();
+                    if (a.getAuthorityForId(user.getId()) >= 3) {
+
+                        try {
+
+                            SendSource s = new SendSource(user);
+
+                            if (args.length == 4) {
+                                s.sendSource(args[1], Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+                            } else if (args.length == 3) {
+                                s.sendSource(args[1], Integer.parseInt(args[2]), Integer.parseInt(args[2]));
+                            }
+
+                        } catch (ArrayIndexOutOfBoundsException ex) {
+                            ex.printStackTrace();
+                        }
+
                     }
-
-                }
-
-                if (e.eq(args[0], "exception")) {
-                    throw new NullPointerException("Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. Bot received Exception Trigger Command from Owner. ");
                 }
 
             }
