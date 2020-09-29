@@ -1,6 +1,7 @@
 package com.DecupleProject.Listener;
 
 import com.DecupleProject.Contents.RPG.*;
+import com.DecupleProject.Contents.RPG.Weapon.WeaponManager;
 import com.DecupleProject.Core.CustomCommand;
 import com.DecupleProject.Core.ExceptionReport;
 import com.DecupleProject.Core.Util.EasyEqual;
@@ -12,6 +13,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -208,6 +210,49 @@ public class RPGListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "아이템", "인벤토리", "Item", "Inventory")) {
                     inv.sendItemInfo();
+                }
+
+                if (e.eq(args[0], "무기")) {
+
+                    WeaponManager wp = new WeaponManager(user, tc);
+
+                    if (args.length == 1) {
+                        wp.sendWeaponInfo();
+                        return;
+                    }
+
+                    if (e.eq(args[1], "생성", "만들기", "추가")) {
+                        if (args.length == 2) {
+                            eb.setDescription("`.무기 생성 [이름]` 형식으로 작성해 주세요.");
+                            eb.setColor(Color.red);
+                            tc.sendMessage(eb.build()).queue();
+                            return;
+                        }
+
+                        String name = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+                        boolean created = wp.createWeapon(name);
+
+                        if (!created) {
+                            eb.setDescription("무기를 만들지 못했습니다.");
+                            tc.sendMessage(eb.build()).queue();
+                        }
+                    }
+
+                    if (e.eq(args[1], "파괴", "제거", "삭제")) {
+                        wp.removeWeapon(0);
+                    }
+
+                    if (e.eq(args[1], "복원", "복구")) {
+
+                        if (ac.getNowMoneyForId() >= 1000000000) {
+                            ac.giveMoney(user.getId(), -1000000000, false, false);
+                            wp.restoreWeapon();
+
+                            tc.sendMessage("무기를 복구했습니다.").queue();
+                        }
+
+                    }
+
                 }
 
             }
