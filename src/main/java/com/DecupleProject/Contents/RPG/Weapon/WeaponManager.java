@@ -72,11 +72,13 @@ public class WeaponManager {
     }
 
     public void backup() {
-        w.writeString(DEAD_WEAPON_NAME_FILE, getWeaponName());
-        w.writeString(DEAD_WEAPON_IMGE_FILE, getWeaponImage());
-        w.writeString(DEAD_WEAPON_DESC_FILE, getDescription());
-        w.writeInt(DEAD_WEAPON_REIN_FILE, getReinforce());
-        w.writeInt(DEAD_WEAPON_STAT_FILE, getStatus());
+        if (!DEAD_WEAPON_NAME_FILE.exists()) {
+            w.writeString(DEAD_WEAPON_NAME_FILE, getWeaponName());
+            w.writeString(DEAD_WEAPON_IMGE_FILE, getWeaponImage());
+            w.writeString(DEAD_WEAPON_DESC_FILE, getDescription());
+            w.writeInt(DEAD_WEAPON_REIN_FILE, getReinforce());
+            w.writeInt(DEAD_WEAPON_STAT_FILE, getStatus());
+        }
     }
 
     public boolean createWeapon(String weaponName) {
@@ -136,6 +138,22 @@ public class WeaponManager {
         return basedFilesExists() ? r.readString(DESC_FILE) : "없음";
     }
 
+    public int getPlusStatusByWeaponReinforceValue() {
+        return getReinforce() * 10000;
+    }
+
+    public long getRealStatus() {
+        return getPlusStatusByWeaponReinforceValue() + getStatus();
+    }
+
+    public long getLastReinforcedTime() {
+        if (TIME_FILE.exists()) {
+            return r.readLong(TIME_FILE);
+        } else {
+            return 0L;
+        }
+    }
+
     public String getWeaponImage() {
         if (IMGE_FILE.exists()) {
             return r.readString(IMGE_FILE);
@@ -151,14 +169,6 @@ public class WeaponManager {
         if (l.isURL(imageUrl)) {
             w.writeString(IMGE_FILE, imageUrl);
         }
-    }
-
-    public int getPlusStatusByWeaponReinforceValue() {
-        return getReinforce() * 10000;
-    }
-
-    public long getRealStatus() {
-        return getPlusStatusByWeaponReinforceValue() + getStatus();
     }
 
     public boolean setWeaponName(String weaponName, boolean sendMessage) {
@@ -263,7 +273,9 @@ public class WeaponManager {
 
                 eb.setTitle("무기가 파괴되었습니다..");
                 eb.setDescription("하지만 걱정 마세요! 일부 금액을 낸다면, 복구할 수 있어요. 무기를 다시 만드려면 `.무기 생성 [이름]`을 입력해 주세요. (이래도 무기 복구는 할 수 있어요.)");
+                eb.setImage(getWeaponImage());
                 eb.setColor(Color.RED);
+                eb.setFooter(user.getAsTag(), user.getAvatarUrl());
 
                 tc.sendMessage(eb.build()).queue();
                 return;
@@ -369,11 +381,7 @@ public class WeaponManager {
         switch(type) {
             case 1: // Type 1 = Get success percentage.
                 return successPercentage;
-            case 2: // Type 2 = Get failure percentage.
-                return 100D - successPercentage - decreasePercentage;
-            case 3: // Type 3 = Get decrease percentage.
-                return decreasePercentage;
-            case 4: // Type 4 = Get destroy percentage.
+            case 2:
                 return destroyPercentage;
             default:
                 return 0D;
@@ -415,6 +423,70 @@ public class WeaponManager {
 
         tc.sendMessage(eb.build()).queue();
 
+    }
+
+    public void reinforceWeapon() {
+        WeaponReinforce wr = new WeaponReinforce(user, tc);
+        eb.clear();
+
+        switch (wr.reinforceWeapon()) {
+            case -3:
+                eb.setDescription("무기가 없네요. `.무기 생성 [이름]`으로 무기를 만들어 보세요.");
+                eb.setFooter(user.getAsTag(), user.getAvatarUrl());
+                tc.sendMessage(eb.build()).queue();
+                break;
+            case -2:
+                eb.setDescription("강화를 할 수 있기까지 " + (int) ((3000L - (System.currentTimeMillis() - getLastReinforcedTime())) / 1000) + "초 남았습니다.");
+                eb.setFooter(user.getAsTag(), user.getAvatarUrl());
+                tc.sendMessage(eb.build()).queue();
+                break;
+            case -1:
+                eb.setTitle("전설적인 무기가 강화를 거부합니다.");
+                eb.setDescription("이미 100성 강화가 완료된 무기입니다.");
+                eb.setColor(Color.YELLOW);
+                eb.setImage(getWeaponImage());
+
+                tc.sendMessage(eb.build()).queue();
+                break;
+            case 0:
+                eb.setDescription("돈이 부족하여 대장장이가 강화를 거절했습니다.");
+                eb.setFooter(user.getAsTag(), user.getAvatarUrl());
+                tc.sendMessage(eb.build());
+                break;
+            case 1:
+                eb.setTitle("『 최고의 결과로군! 』");
+                eb.setFooter(user.getAsTag(), user.getAvatarUrl());
+                eb.addField("무기 이름", getWeaponName(), true);
+                eb.addField("현재 강화 정보", getWeaponRank() + " " + getReinforce() + "성 (확률 " + String.format("%.2f", getReinforcePercentage(1)) + "%)", true);
+                eb.addField("현재 스테이터스", "+ " + getRealStatus(), true);
+                eb.setImage(getWeaponImage());
+                eb.setColor(getWeaponColor(getReinforce()));
+                tc.sendMessage(eb.build()).queue();
+                break;
+            case 2:
+                break;
+            case 3:
+                eb.setTitle("『 안타깝군 그래. 』");
+                eb.setFooter(user.getAsTag(), user.getAvatarUrl());
+                eb.addField("무기 이름", getWeaponName(), true);
+                eb.addField("현재 강화 정보", getWeaponRank() + " " + getReinforce() + "성 (확률 " + String.format("%.2f", getReinforcePercentage(1)) + "%)", true);
+                eb.addField("현재 스테이터스", "+ " + getRealStatus(), true);
+                eb.setImage(getWeaponImage());
+                eb.setColor(Color.YELLOW);
+                tc.sendMessage(eb.build()).queue();
+                break;
+            case 4:
+                eb.setTitle("『 조금 금이 간 것 같네만. 』");
+                eb.setDescription("강화에 실패하여, 강화 성공 횟수가 차감되었습니다.");
+                eb.setFooter(user.getAsTag(), user.getAvatarUrl());
+                eb.addField("무기 이름", getWeaponName(), true);
+                eb.addField("현재 강화 정보", getWeaponRank() + " " + getReinforce() + "성 (확률 " + String.format("%.2f", getReinforcePercentage(1)) + "%)", true);
+                eb.addField("현재 스테이터스", "+ " + getRealStatus(), true);
+                eb.setImage(getWeaponImage());
+                eb.setColor(Color.ORANGE);
+                tc.sendMessage(eb.build()).queue();
+                break;
+        }
     }
 
 

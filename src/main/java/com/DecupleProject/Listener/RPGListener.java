@@ -253,6 +253,12 @@ public class RPGListener extends ListenerAdapter {
 
                     }
 
+                    if (e.eq(args[1], "강화")) {
+
+                        wp.reinforceWeapon();
+
+                    }
+
                 }
 
             }
