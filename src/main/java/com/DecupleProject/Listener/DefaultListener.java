@@ -909,6 +909,8 @@ public class DefaultListener extends ListenerAdapter {
                                 s.sendSource(args[1], Integer.parseInt(args[2]), Integer.parseInt(args[3]));
                             } else if (args.length == 3) {
                                 s.sendSource(args[1], Integer.parseInt(args[2]), Integer.parseInt(args[2]));
+                            } else if (args.length == 2) {
+                                tc.sendMessage(s.returnSource(args[1], 1, 1)).queue();
                             }
 
                         } catch (ArrayIndexOutOfBoundsException ex) {
@@ -935,6 +937,8 @@ public class DefaultListener extends ListenerAdapter {
                                 tc.sendMessage(s.returnSource(args[1], Integer.parseInt(args[2]), Integer.parseInt(args[3]))).queue();
                             } else if (args.length == 3) {
                                 tc.sendMessage(s.returnSource(args[1], Integer.parseInt(args[2]), Integer.parseInt(args[2]))).queue();
+                            } else if (args.length == 2) {
+                                tc.sendMessage(s.returnSource(args[1], 1, 1)).queue();
                             }
 
                         } catch (ArrayIndexOutOfBoundsException ex) {

@@ -21,8 +21,26 @@ public class SendSource {
     public void sendSource(String path, int startLine, int endLine) {
         String BASE_PATH = "D:/QuintupleV2/src/main/java/com/DecupleProject";
         File readFile = new File(BASE_PATH + "/" + path);
+        StringBuilder message = new StringBuilder();
 
         if (!readFile.exists()) {
+            return;
+        }
+
+        if (readFile.isDirectory()) {
+            File[] fileList = readFile.listFiles();
+
+            for (File file : fileList) {
+                if (file.isDirectory()) {
+                    message.append("* ").append(file.getName()).append("\n");
+                } else {
+                    message.append("- ").append(file.getName()).append("\n");
+                }
+            }
+
+            user.openPrivateChannel().complete().sendMessage("***com.DecupleProject." + path.replace("/", ".") +
+                    "*** __This file is directory.__```asciidoc\n" + message.toString() + "```__*__ : Directory(or Folder) | __-__ : File").queue();
+
             return;
         }
 
@@ -39,11 +57,9 @@ public class SendSource {
             e.printStackTrace();
         }
 
-        StringBuilder message = new StringBuilder();
-
         for (int l = 0; l < list.size(); l++) {
             if (l + 1 >= startLine && l + 1 <= endLine) {
-                message.append(String.format("% 4d", l + 1)).append("| ").append(list.get(l)).append("\n");
+                message.append(String.format("% 5d", l + 1)).append("| ").append(list.get(l)).append("\n");
             }
         }
 
@@ -67,6 +83,23 @@ public class SendSource {
             return "Bot couldn't sent source code(s).";
         }
 
+        StringBuilder message = new StringBuilder();
+
+        if (readFile.isDirectory()) {
+            File[] fileList = readFile.listFiles();
+
+            for (File file : fileList) {
+                if (file.isDirectory()) {
+                    message.append("* ").append(file.getName()).append("\n");
+                } else {
+                    message.append("- ").append(file.getName()).append("\n");
+                }
+            }
+
+            return "***com.DecupleProject." + path.replace("/", ".") +
+                    "*** __This file is directory.__```asciidoc\n" + message.toString() + "```__*__ : Directory(or Folder) | __-__ : File";
+        }
+
         List<String> list = new ArrayList<>();
 
         try {
@@ -80,11 +113,9 @@ public class SendSource {
             e.printStackTrace();
         }
 
-        StringBuilder message = new StringBuilder();
-
         for (int l = 0; l < list.size(); l++) {
             if (l + 1 >= startLine && l + 1 <= endLine) {
-                message.append(String.format("% 4d", l + 1)).append("| ").append(list.get(l)).append("\n");
+                message.append(String.format("% 5d", l + 1)).append("| ").append(list.get(l)).append("\n");
             }
         }
 
@@ -125,7 +156,7 @@ public class SendSource {
 
         for (int l = 0; l < list.size(); l++) {
             if (l + 1 >= startLine && l + 1 <= endLine) {
-                message.append(String.format("% 4d", l + 1)).append("| ").append(list.get(l)).append("\n");
+                message.append(String.format("% 5d", l + 1)).append("| ").append(list.get(l)).append("\n");
             }
         }
 
