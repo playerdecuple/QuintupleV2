@@ -11,13 +11,19 @@ public class WeaponReinforce {
     private final Account ac;
     private final WeaponManager wp;
 
+    private long requireMoney;
+
     public WeaponReinforce(User u, TextChannel t) {
         wp = new WeaponManager(u, t);
         ac = new Account(u);
     }
 
-    public int reinforceWeapon() {
-        long requireMoney = (100L * (long) wp.getReinforce()) + (50L * (long) wp.getReinforce());
+    public int reinforceWeapon(boolean shield) {
+        requireMoney = (100L * (long) wp.getReinforce()) + (50L * (long) wp.getReinforce());
+
+        if (shield) {
+            requireMoney = requireMoney * wp.getReinforce() * 100L;
+        }
 
         if (requireMoney > ac.getNowMoneyForId()) {
             return 0; // Lack of money
@@ -43,8 +49,12 @@ public class WeaponReinforce {
             wp.setLastReinforcedTime(true, 0L);
             return 1; // success
         } else if (rnd > wp.getReinforcePercentage(1) && rnd <= wp.getReinforcePercentage(2)) {
-            wp.removeWeapon(1);
-            return 2; // destroy
+            if (!shield) {
+                wp.removeWeapon(1);
+                return 2; // destroy
+            } else {
+                return 5; // shield
+            }
         } else {
             int rnd2 = r.nextInt(10);
 
@@ -55,6 +65,10 @@ public class WeaponReinforce {
                 return 4; // decrease
             }
         }
+    }
+
+    public long getRequireMoney() {
+        return requireMoney;
     }
 
 }

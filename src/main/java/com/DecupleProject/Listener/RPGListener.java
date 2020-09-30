@@ -255,8 +255,24 @@ public class RPGListener extends ListenerAdapter {
 
                     if (e.eq(args[1], "강화")) {
 
-                        wp.reinforceWeapon();
+                        if (args.length == 2) {
+                            wp.reinforceWeapon(false);
+                        } else if (e.eq(args[2], "파괴방지", "파방", "실드")) {
+                            wp.reinforceWeapon(true);
+                        }
 
+                    }
+
+                }
+
+                if (e.eq(args[0], "강화")) {
+
+                    WeaponManager wp = new WeaponManager(user, tc);
+
+                    if (args.length == 1) {
+                        wp.reinforceWeapon(false);
+                    } else if (e.eq(args[2], "파괴방지", "파방", "실드")) {
+                        wp.reinforceWeapon(true);
                     }
 
                 }

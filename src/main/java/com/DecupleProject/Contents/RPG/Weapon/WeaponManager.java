@@ -425,11 +425,11 @@ public class WeaponManager {
 
     }
 
-    public void reinforceWeapon() {
+    public void reinforceWeapon(boolean shield) {
         WeaponReinforce wr = new WeaponReinforce(user, tc);
         eb.clear();
 
-        switch (wr.reinforceWeapon()) {
+        switch (wr.reinforceWeapon(shield)) {
             case -3:
                 eb.setDescription("무기가 없네요. `.무기 생성 [이름]`으로 무기를 만들어 보세요.");
                 eb.setFooter(user.getAsTag(), user.getAvatarUrl());
@@ -450,6 +450,7 @@ public class WeaponManager {
                 break;
             case 0:
                 eb.setDescription("돈이 부족하여 대장장이가 강화를 거절했습니다.");
+                eb.addField("필요 금액", String.format("%,d", wr.getRequireMoney()) + "플", true);
                 eb.setFooter(user.getAsTag(), user.getAvatarUrl());
                 tc.sendMessage(eb.build());
                 break;
@@ -478,6 +479,17 @@ public class WeaponManager {
             case 4:
                 eb.setTitle("『 조금 금이 간 것 같네만. 』");
                 eb.setDescription("강화에 실패하여, 강화 성공 횟수가 차감되었습니다.");
+                eb.setFooter(user.getAsTag(), user.getAvatarUrl());
+                eb.addField("무기 이름", getWeaponName(), true);
+                eb.addField("현재 강화 정보", getWeaponRank() + " " + getReinforce() + "성 (확률 " + String.format("%.2f", getReinforcePercentage(1)) + "%)", true);
+                eb.addField("현재 스테이터스", "+ " + getRealStatus(), true);
+                eb.setImage(getWeaponImage());
+                eb.setColor(Color.ORANGE);
+                tc.sendMessage(eb.build()).queue();
+                break;
+            case 5:
+                eb.setTitle("『 다행이야. 』");
+                eb.setDescription("강화에 실패하여, 무기가 파괴되었으나 파괴 방지 마법으로 인해 복구되었습니다.");
                 eb.setFooter(user.getAsTag(), user.getAvatarUrl());
                 eb.addField("무기 이름", getWeaponName(), true);
                 eb.addField("현재 강화 정보", getWeaponRank() + " " + getReinforce() + "성 (확률 " + String.format("%.2f", getReinforcePercentage(1)) + "%)", true);
