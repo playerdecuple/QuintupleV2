@@ -1,5 +1,6 @@
 package com.DecupleProject.Core;
 
+import com.DecupleProject.Core.Util.SendSource;
 import com.DecupleProject.Listener.DefaultListener;
 import net.dv8tion.jda.api.entities.User;
 
@@ -10,6 +11,8 @@ public class ExceptionReport {
     public ExceptionReport(Exception e) {
 
         try {
+            User owner = DefaultListener.owner;
+
             StringBuilder stackTrace = new StringBuilder();
             int more = 0;
             int traceCount = 0;
@@ -19,11 +22,15 @@ public class ExceptionReport {
                 traceCount++;
                 StringBuilder traceMsg = new StringBuilder();
 
+                SendSource s = new SendSource(owner);
+
                 traceMsg.append("\n").append("- at ").append(trace.getClassName())
                         .append(".")
                         .append(trace.getMethodName())
                         .append("(FILE : ").append(trace.getFileName())
-                        .append(", LN : ").append(trace.getLineNumber()).append(")");
+                        .append(", LN : ").append(trace.getLineNumber()).append(")")
+                        .append(s.returnSourceExp(trace.getClassName().replace(".", "/") + ".java",
+                                trace.getLineNumber(), trace.getLineNumber()));
 
                 if ((stackTrace.toString().length() + traceMsg.toString().length()) >= 1800) {
                     more++;
@@ -44,7 +51,6 @@ public class ExceptionReport {
                 msg = msg.substring(0, 97) + "...";
             }
 
-            User owner = DefaultListener.owner;
             owner.openPrivateChannel().complete().sendMessage("```diff\n" + getTimeStamp(System.currentTimeMillis())
                     + " - Exception thrown : \n" + msg + "\n" + stackTrace + "\n\nCaused By: \n" + e.getCause() + "```").queue();
         } catch (IllegalStateException ex) {

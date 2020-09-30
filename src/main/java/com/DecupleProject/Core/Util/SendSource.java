@@ -43,7 +43,7 @@ public class SendSource {
 
         for (int l = 0; l < list.size(); l++) {
             if (l + 1 >= startLine && l + 1 <= endLine) {
-                message.append(String.format("%03d", l + 1)).append("|").append(list.get(l)).append("\n");
+                message.append(String.format("% 4d", l + 1)).append("| ").append(list.get(l)).append("\n");
             }
         }
 
@@ -84,7 +84,7 @@ public class SendSource {
 
         for (int l = 0; l < list.size(); l++) {
             if (l + 1 >= startLine && l + 1 <= endLine) {
-                message.append(String.format("%03d", l + 1)).append("|").append(list.get(l)).append("\n");
+                message.append(String.format("% 4d", l + 1)).append("| ").append(list.get(l)).append("\n");
             }
         }
 
@@ -95,6 +95,46 @@ public class SendSource {
 
             return "***" + "com.DecupleProject." + path.replace("/", ".") +
                     "***, __Ln " + startLine + " ~ " + endLine + "__\n```java\n" + message.toString() + "```";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "ERROR";
+        }
+    }
+
+    public String returnSourceExp(String path, int startLine, int endLine) {
+        File readFile = new File("D:/QuintupleV2/src/main/java/" + path);
+
+        if (!readFile.exists()) {
+            return "";
+        }
+
+        List<String> list = new ArrayList<>();
+
+        try {
+            Scanner scanner = new Scanner(readFile);
+
+            while (scanner.hasNextLine()) {
+                list.add(scanner.nextLine());
+            }
+        } catch (IOException e) {
+            new ExceptionReport(e);
+            e.printStackTrace();
+        }
+
+        StringBuilder message = new StringBuilder();
+
+        for (int l = 0; l < list.size(); l++) {
+            if (l + 1 >= startLine && l + 1 <= endLine) {
+                message.append(String.format("% 4d", l + 1)).append("| ").append(list.get(l)).append("\n");
+            }
+        }
+
+        try {
+            if (message.toString().length() >= 1850) {
+                return "";
+            }
+
+            return "``````java\n" + message.toString().replace("    ", "") + "``````diff\n";
         } catch (Exception e) {
             e.printStackTrace();
             return "ERROR";
