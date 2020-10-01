@@ -6,7 +6,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Objects;
 
 public class GuildInfo {
@@ -16,7 +15,6 @@ public class GuildInfo {
 
     private final WriteFile w = new WriteFile();
     private final ReadFile r = new ReadFile();
-    private final DeleteFile d = new DeleteFile();
 
     private final File BASE_DIRECTORY;
 
@@ -38,11 +36,6 @@ public class GuildInfo {
         w.writeString(BASE_DIRECTORY.getPath() + "/MusicChannel.txt", id);
     }
 
-    public void deleteMusicChannel() {
-        File f = new File(BASE_DIRECTORY.getPath() + "/MusicChannel.txt");
-        d.deleteFile(f);
-    }
-
     public TextChannel getMusicChannel() {
 
         String musicChannelId = null;
@@ -60,11 +53,6 @@ public class GuildInfo {
         }
 
         return jda.getTextChannelById(Objects.requireNonNull(musicChannelId));
-    }
-
-    public boolean hasMusicChannel() {
-        File f = new File(BASE_DIRECTORY.getPath() + "/MusicChannel.txt");
-        return f.exists();
     }
 
     public Guild getGuild() {
