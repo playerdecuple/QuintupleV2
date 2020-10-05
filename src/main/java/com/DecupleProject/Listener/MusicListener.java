@@ -503,7 +503,7 @@ public class MusicListener extends ListenerAdapter {
 
                 }
 
-                if (e.eq(args[0], "리스트", "list", "목록", "플레이리스트")) {
+                if (e.eq(args[0], "리스트", "list", "목록")) {
 
                     if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
                         tc.deleteMessageById(msg.getId()).queue();
