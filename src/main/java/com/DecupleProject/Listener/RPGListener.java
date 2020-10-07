@@ -264,6 +264,19 @@ public class RPGListener extends ListenerAdapter {
 
                     }
 
+
+                    if (e.eq(args[1], "이미지", "Image", "이미지설정")) {
+
+                        if (args.length == 3) {
+                            boolean isLink = new LinkUtility().isURL(args[2]);
+
+                            if (isLink) {
+                                wp.setWeaponImage(args[2]);
+                            }
+                        }
+
+                    }
+
                 }
 
                 if (e.eq(args[0], "강화")) {
@@ -274,20 +287,6 @@ public class RPGListener extends ListenerAdapter {
                         wp.reinforceWeapon(false);
                     } else if (e.eq(args[2], "파괴방지", "파방", "실드")) {
                         wp.reinforceWeapon(true);
-                    }
-
-                }
-
-                if (e.eq(args[0], "이미지", "Image", "이미지설정")) {
-
-                    WeaponManager wp = new WeaponManager(user, tc);
-
-                    if (args.length == 2) {
-                        boolean isLink = new LinkUtility().isURL(args[1]);
-
-                        if (isLink) {
-                            wp.setWeaponImage(args[1]);
-                        }
                     }
 
                 }
