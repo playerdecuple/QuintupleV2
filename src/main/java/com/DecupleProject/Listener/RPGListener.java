@@ -272,6 +272,8 @@ public class RPGListener extends ListenerAdapter {
 
                             if (isLink) {
                                 wp.setWeaponImage(args[2]);
+                                eb.setDescription("무기의 [이미지](" + args[2] + ")를 바꾸었습니다.");
+                                tc.sendMessage(eb.build()).queue();
                             }
                         }
 
