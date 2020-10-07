@@ -143,5 +143,10 @@
             <artifactId>jython-standalone</artifactId>
             <version>2.7.2</version>
         </dependency>
+        <dependency>
+            <groupId>net.dv8tion</groupId>
+            <artifactId>JDA</artifactId>
+            <version>4.2.0_200</version>
+        </dependency>
     </dependencies>
 </project>
