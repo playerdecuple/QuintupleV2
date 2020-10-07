@@ -5,6 +5,7 @@ import com.DecupleProject.Contents.RPG.Weapon.WeaponManager;
 import com.DecupleProject.Core.CustomCommand;
 import com.DecupleProject.Core.ExceptionReport;
 import com.DecupleProject.Core.Util.EasyEqual;
+import com.DecupleProject.Core.Util.LinkUtility;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
@@ -273,6 +274,20 @@ public class RPGListener extends ListenerAdapter {
                         wp.reinforceWeapon(false);
                     } else if (e.eq(args[2], "파괴방지", "파방", "실드")) {
                         wp.reinforceWeapon(true);
+                    }
+
+                }
+
+                if (e.eq(args[0], "이미지", "Image", "이미지설정")) {
+
+                    WeaponManager wp = new WeaponManager(user, tc);
+
+                    if (args.length == 2) {
+                        boolean isLink = new LinkUtility().isURL(args[1]);
+
+                        if (isLink) {
+                            wp.setWeaponImage(args[1]);
+                        }
                     }
 
                 }
