@@ -128,6 +128,8 @@ public class GameListener extends ListenerAdapter {
 
             }
 
+        } catch (StringIndexOutOfBoundsException e) {
+            // ignore
         } catch (Exception e) {
             new ExceptionReport(e);
             e.printStackTrace();
