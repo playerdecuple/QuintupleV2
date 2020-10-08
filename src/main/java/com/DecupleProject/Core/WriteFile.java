@@ -16,7 +16,7 @@ public class WriteFile {
             fW.flush();
             fW.close();
         } catch (Exception e) {
-new ExceptionReport(e);
+            new ExceptionReport(e);
             e.printStackTrace();
         }
     }
@@ -30,7 +30,7 @@ new ExceptionReport(e);
                 fW.close();
             }
         } catch (Exception e) {
-new ExceptionReport(e);
+            new ExceptionReport(e);
             e.printStackTrace();
         }
     }
@@ -42,7 +42,7 @@ new ExceptionReport(e);
             fW.flush();
             fW.close();
         } catch (Exception e) {
-new ExceptionReport(e);
+            new ExceptionReport(e);
             e.printStackTrace();
         }
     }
@@ -54,7 +54,7 @@ new ExceptionReport(e);
             fW.flush();
             fW.close();
         } catch (Exception e) {
-new ExceptionReport(e);
+            new ExceptionReport(e);
             e.printStackTrace();
         }
     }
@@ -66,7 +66,7 @@ new ExceptionReport(e);
             fW.flush();
             fW.close();
         } catch (Exception e) {
-new ExceptionReport(e);
+            new ExceptionReport(e);
             e.printStackTrace();
         }
     }
@@ -78,7 +78,7 @@ new ExceptionReport(e);
             fW.flush();
             fW.close();
         } catch (Exception e) {
-new ExceptionReport(e);
+            new ExceptionReport(e);
             e.printStackTrace();
         }
     }
@@ -90,7 +90,7 @@ new ExceptionReport(e);
             fW.flush();
             fW.close();
         } catch (Exception e) {
-new ExceptionReport(e);
+            new ExceptionReport(e);
             e.printStackTrace();
         }
     }
