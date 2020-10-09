@@ -101,6 +101,7 @@ public class RPGListener extends ListenerAdapter {
 
                     if (ac.getNowMoneyForId() < betValue) {
                         tc.sendMessage("금액이 부족합니다.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                        return;
                     }
 
                     boolean bettingResult = bt.normalBetting(betValue, bettingPercentage);
