@@ -96,7 +96,11 @@ public class RPGListener extends ListenerAdapter {
                     float bettingPercentage = 1f / (float) betValue * 500000f;
 
                     if (bettingPercentage > 1f) {
-                        bettingPercentage = 1f - new Random().nextFloat();
+                        bettingPercentage = 0.5f;
+                    }
+
+                    if (ac.getNowMoneyForId() < betValue) {
+                        tc.sendMessage("금액이 부족합니다.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                     }
 
                     boolean bettingResult = bt.normalBetting(betValue, bettingPercentage);
