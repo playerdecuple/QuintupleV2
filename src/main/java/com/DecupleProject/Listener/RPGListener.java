@@ -2,6 +2,7 @@ package com.DecupleProject.Listener;
 
 import com.DecupleProject.Contents.RPG.*;
 import com.DecupleProject.Contents.RPG.Weapon.WeaponManager;
+import com.DecupleProject.Contents.Ranking;
 import com.DecupleProject.Core.CustomCommand;
 import com.DecupleProject.Core.ExceptionReport;
 import com.DecupleProject.Core.Util.EasyEqual;
@@ -281,6 +282,13 @@ public class RPGListener extends ListenerAdapter {
                                 tc.sendMessage(eb.build()).queue();
                             }
                         }
+
+                    }
+
+                    if (e.eq(args[1], "랭킹", "랭크", "순위", "Ranking")) {
+
+                        Ranking r = new Ranking();
+                        r.sendWeaponRanking(tc);
 
                     }
 
