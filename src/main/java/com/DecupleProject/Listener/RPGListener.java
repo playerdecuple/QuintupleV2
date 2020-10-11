@@ -296,7 +296,7 @@ public class RPGListener extends ListenerAdapter {
 
                     }
 
-                    if (e.eq(args[1], "랭킹", "랭크", "순위", "Ranking")) {
+                    if (e.eq(args[1], "랭킹", "랭크", "순위", "Ranking", "무기랭킹")) {
 
                         if (args.length == 2) {
 
