@@ -1,6 +1,5 @@
 package com.DecupleProject.Contents.RPG;
 
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 
 import java.util.Random;
