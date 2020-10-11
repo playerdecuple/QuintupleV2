@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.entities.User;
 
 import java.awt.*;
 import java.io.File;
-import java.util.Random;
+import java.util.*;
 
 public class WeaponManager {
 
@@ -516,6 +516,5 @@ public class WeaponManager {
                 break;
         }
     }
-
 
 }
