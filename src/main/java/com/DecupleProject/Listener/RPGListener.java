@@ -68,7 +68,8 @@ public class RPGListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "아르바이트", "알바", "돈")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
 
                     if (args.length == 1) {
                         ac.giveMoney(user.getId(), 0, true, true);
@@ -84,7 +85,8 @@ public class RPGListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "도박", "배팅", "베팅", "Betting")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
 
                     BettingGame bt = new BettingGame(user);
 
@@ -123,7 +125,8 @@ public class RPGListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "올인", "전부", "allin")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
 
                     BettingGame bt = new BettingGame(user);
 
@@ -156,7 +159,8 @@ public class RPGListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "파산", "삭제", "초기화")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
 
                     if (args.length != 1) {
                         return;
@@ -171,7 +175,8 @@ public class RPGListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "계좌")) {
 
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
 
                     if (args.length != 1) return;
                     ac.sendAccountMessage(tc);
@@ -179,37 +184,43 @@ public class RPGListener extends ListenerAdapter {
                 }
 
                 if (e.eq(args[0], "벌목", "나무", "woodcut", "woodcutting")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     work.woodCutting();
                     inv.addItem("000", 1);
                 }
 
                 if (e.eq(args[0], "낚시", "물고기", "fishing", "낚싯대", "횟감수획")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     work.fishing();
                     inv.addItem("001", 1);
                 }
 
                 if (e.eq(args[0], "농사", "농작물", "수확물", "farming", "farm")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     work.farming();
                     inv.addItem("002", 1);
                 }
 
                 if (e.eq(args[0], "제작", "제조", "produce")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     work.producing();
                     inv.addItem("003", 1);
                 }
 
                 if (e.eq(args[0], "사냥", "사냥감", "hunt", "hunting")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     work.hunting();
                     inv.addItem("004", 1);
                 }
 
                 if (e.eq(args[0], "숙련도", "숙련", "일")) {
-                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE)) tc.deleteMessageById(msg.getId()).queue();
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
                     Proficiency p = new Proficiency(user);
 
                     p.sendProficiencyInformation(tc);
@@ -292,12 +303,14 @@ public class RPGListener extends ListenerAdapter {
                             Ranking r = new Ranking();
                             r.sendWeaponRanking(tc, null);
 
-                        }
+                        } else {
 
-                        if (e.eq(args[2], "서버", "길드")) {
+                            if (e.eq(args[2], "서버", "길드")) {
 
-                            Ranking r = new Ranking();
-                            r.sendWeaponRanking(tc, guild);
+                                Ranking r = new Ranking();
+                                r.sendWeaponRanking(tc, guild);
+
+                            }
 
                         }
 
