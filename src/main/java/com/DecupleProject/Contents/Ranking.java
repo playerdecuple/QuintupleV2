@@ -37,7 +37,7 @@ public class Ranking {
             weaponInfo.put(weapon.getName(), new ReadFile().readInt(weapon.getPath() + "/Reinforce.txt"));
         }
 
-        Iterator it = sortByValue(weaponInfo, true).iterator();
+        Iterator it = sortByValue(weaponInfo, false).iterator();
         StringBuilder rank = new StringBuilder("```md\n# 무기 랭킹\n\n");
 
         int count = 1;
