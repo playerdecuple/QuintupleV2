@@ -3,6 +3,7 @@ package com.DecupleProject.Contents;
 import com.DecupleProject.Contents.RPG.Weapon.WeaponManager;
 import com.DecupleProject.Core.ReadFile;
 import com.DecupleProject.Listener.DefaultListener;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -27,7 +28,7 @@ public class Ranking {
         return list;
     }
 
-    public void sendWeaponRanking(TextChannel tc) {
+    public void sendWeaponRanking(TextChannel tc, Guild guild) {
 
         Map<String, Integer> weaponInfo = new HashMap<>();
         File f = new File("D:/Database/Weapon/");
@@ -43,20 +44,27 @@ public class Ranking {
         int count = 1;
 
         do {
+
             String temp = (String) it.next();
             User user = DefaultListener.jda.retrieveUserById(temp).complete();
             WeaponManager wp = new WeaponManager(user, tc);
 
-            rank.append(count)
-                    .append(". ")
-                    .append(user.getAsTag().replace("*", "(별)").replace("_", "(언더바)"))
-                    .append(" [")
-                    .append(wp.getWeaponName())
-                    .append("](★ ")
-                    .append(wp.getReinforce())
-                    .append(")\n");
+            if (guild == null || guild.isMember(user)) {
 
-            count++;
+                if (wp.getReinforce() == 0) break;
+
+                rank.append(count)
+                        .append(". ")
+                        .append(user.getAsTag().replace("*", "(별)").replace("_", "(언더바)"))
+                        .append(" [")
+                        .append(wp.getWeaponName())
+                        .append("](★ ")
+                        .append(wp.getReinforce())
+                        .append(")\n");
+
+                count++;
+
+            }
 
             if (it.hasNext()) {
                 String nextTemp = (String) it.next();
@@ -67,6 +75,8 @@ public class Ranking {
                     count--;
                 }
             }
+
+            if (count > 10) break;
         } while (it.hasNext());
 
         rank.append("```");
