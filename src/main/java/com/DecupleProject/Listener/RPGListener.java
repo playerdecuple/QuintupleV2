@@ -301,7 +301,7 @@ public class RPGListener extends ListenerAdapter {
                         if (args.length == 2) {
 
                             Ranking r = new Ranking();
-                            r.sendWeaponRanking(tc, null);
+                            r.sendWeaponRanking(tc);
 
                         } else {
 

@@ -28,6 +28,58 @@ public class Ranking {
         return list;
     }
 
+    public void sendWeaponRanking(TextChannel tc) {
+
+        Map<String, Integer> weaponInfo = new HashMap<>();
+        File f = new File("D:/Database/Weapon/");
+        File[] weapons = f.listFiles();
+
+        for (File weapon : weapons) {
+            weaponInfo.put(weapon.getName(), new ReadFile().readInt(weapon.getPath() + "/Reinforce.txt"));
+        }
+
+        Iterator it = sortByValue(weaponInfo, false).iterator();
+        StringBuilder rank = new StringBuilder("```md\n# 무기 랭킹\n\n");
+
+        int count = 1;
+
+        do {
+
+            String temp = (String) it.next();
+            User user = DefaultListener.jda.retrieveUserById(temp).complete();
+            WeaponManager wp = new WeaponManager(user, tc);
+
+            if (wp.getReinforce() == 0) break;
+
+            rank.append(count)
+                    .append(". ")
+                    .append(user.getAsTag().replace("*", "(별)").replace("_", "(언더바)"))
+                    .append(" [")
+                    .append(wp.getWeaponName())
+                    .append("](★ ")
+                    .append(wp.getReinforce())
+                    .append(")\n");
+
+            count++;
+
+            if (it.hasNext()) {
+                String nextTemp = (String) it.next();
+                User nextUser = DefaultListener.jda.retrieveUserById(nextTemp).complete();
+                WeaponManager nextWp = new WeaponManager(nextUser, tc);
+
+                if (nextWp.getReinforce() == wp.getReinforce()) {
+                    count--;
+                }
+            }
+
+            if (count > 10) break;
+        } while (it.hasNext());
+
+        rank.append("```");
+        tc.sendMessage(rank.toString()).delay(2, TimeUnit.MINUTES).flatMap(Message::delete).queue();
+
+    }
+
     public void sendWeaponRanking(TextChannel tc, Guild guild) {
 
         Map<String, Integer> weaponInfo = new HashMap<>();
@@ -82,6 +134,6 @@ public class Ranking {
         rank.append("```");
         tc.sendMessage(rank.toString()).delay(2, TimeUnit.MINUTES).flatMap(Message::delete).queue();
 
-   }
+    }
 
 }
