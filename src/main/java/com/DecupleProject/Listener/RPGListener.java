@@ -298,6 +298,11 @@ public class RPGListener extends ListenerAdapter {
 
                 }
 
+                if (e.eq(args[0], "레이드", "월드보스", "이벤트보스", "보스")) {
+                    WorldBossRaid boss = new WorldBossRaid(user);
+                    boss.attackWorldBoss(tc);
+                }
+
             }
 
         } catch (StringIndexOutOfBoundsException | IllegalStateException e) {
