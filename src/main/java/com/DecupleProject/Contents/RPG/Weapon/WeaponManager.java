@@ -4,6 +4,7 @@ import com.DecupleProject.Core.DeleteFile;
 import com.DecupleProject.Core.ReadFile;
 import com.DecupleProject.Core.Util.EasyEqual;
 import com.DecupleProject.Core.Util.LinkUtility;
+import com.DecupleProject.Core.Util.TextTool;
 import com.DecupleProject.Core.WriteFile;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -144,6 +145,21 @@ public class WeaponManager {
 
     public long getRealStatus() {
         return getPlusStatusByWeaponReinforceValue() + getStatus();
+    }
+
+    public long getMaxDamage() {
+        return (long) (getRealStatus() * 12);
+    }
+
+    public long getMinDamage() {
+        return (long) (getRealStatus() * 4);
+    }
+
+    public long getRandomDamage() {
+        long max = getMaxDamage();
+        long min = getMinDamage();
+
+        return new TextTool().nextLong(min, max);
     }
 
     public long getLastReinforcedTime() {
