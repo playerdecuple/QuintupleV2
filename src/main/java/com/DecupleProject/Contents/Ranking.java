@@ -157,6 +157,8 @@ public class Ranking {
                     System.out.println(nextWp.getReinforce() + " == " + wp.getReinforce());
                     count--;
                 }
+
+                System.out.println(nextWp.getReinforce() + " != " + wp.getReinforce());
             }
 
             if (count > 10) break;
