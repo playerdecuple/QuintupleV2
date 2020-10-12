@@ -31,7 +31,6 @@ public class WeaponReinforce {
         }
 
         if (nowMoney < requireMoney) {
-            System.out.println(ac.getNowMoneyForId() + ", " + requireMoney);
             return 0; // Lack of money
         }
 
