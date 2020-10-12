@@ -148,19 +148,6 @@ public class Ranking {
                     .append(wp.getReinforce())
                     .append(")\n");
 
-            if (it.hasNext()) {
-                String nextTemp = (String) it.next();
-                User nextUser = DefaultListener.jda.retrieveUserById(nextTemp).complete();
-                WeaponManager nextWp = new WeaponManager(nextUser, tc);
-
-                if (nextWp.getReinforce() == wp.getReinforce()) {
-                    System.out.println(nextWp.getReinforce() + " == " + wp.getReinforce());
-                    count--;
-                }
-
-                System.out.println(nextWp.getReinforce() + " != " + wp.getReinforce());
-            }
-
             if (count > 10) break;
 
         } while (it.hasNext());
@@ -213,16 +200,6 @@ public class Ranking {
 
             } else {
                 count--;
-            }
-
-            if (it.hasNext()) {
-                String nextTemp = (String) it.next();
-                User nextUser = DefaultListener.jda.retrieveUserById(nextTemp).complete();
-                WeaponManager nextWp = new WeaponManager(nextUser, tc);
-
-                if (nextWp.getReinforce() == wp.getReinforce()) {
-                    count--;
-                }
             }
 
             if (count > 10) break;
