@@ -113,7 +113,7 @@ public class Ranking {
             if (admin && isTeamDecuple(DefaultListener.jda.retrieveUserById(weapon.getName()).complete())) {
                 weaponInfo.put(weapon.getName(), new ReadFile().readInt(weapon.getPath() + "/Reinforce.txt"));
             } else {
-                if (!isTeamDecuple(DefaultListener.jda.retrieveUserById(weapon.getName()).complete())) {
+                if (!admin && !isTeamDecuple(DefaultListener.jda.retrieveUserById(weapon.getName()).complete())) {
                     weaponInfo.put(weapon.getName(), new ReadFile().readInt(weapon.getPath() + "/Reinforce.txt"));
                 }
             }
@@ -203,6 +203,7 @@ public class Ranking {
             }
 
             if (count > 10) break;
+
         } while (it.hasNext());
 
         rank.append("```");
