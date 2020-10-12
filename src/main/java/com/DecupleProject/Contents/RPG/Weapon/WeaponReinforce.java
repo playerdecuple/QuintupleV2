@@ -25,7 +25,8 @@ public class WeaponReinforce {
             requireMoney = requireMoney * wp.getReinforce() * 100L;
         }
 
-        if (requireMoney > ac.getNowMoneyForId()) {
+        if (ac.getNowMoneyForId() < requireMoney) {
+            System.out.println(ac.getNowMoneyForId() + ", " + requireMoney);
             return 0; // Lack of money
         }
 
