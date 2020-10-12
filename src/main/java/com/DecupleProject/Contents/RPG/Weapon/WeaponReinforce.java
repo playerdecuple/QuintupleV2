@@ -24,8 +24,6 @@ public class WeaponReinforce {
         long nowMoney = ac.getNowMoneyForId();
         requireMoney = (1000L * (long) wp.getReinforce()) + (500L * (long) wp.getReinforce());
 
-        System.out.println(nowMoney);
-
         if (shield) {
             requireMoney = requireMoney * wp.getReinforce() * 500L;
         }
