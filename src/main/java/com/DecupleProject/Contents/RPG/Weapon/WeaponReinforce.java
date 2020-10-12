@@ -19,13 +19,16 @@ public class WeaponReinforce {
     }
 
     public int reinforceWeapon(boolean shield) {
+        long nowMoney = ac.getNowMoneyForId();
         requireMoney = (100L * (long) wp.getReinforce()) + (50L * (long) wp.getReinforce());
+
+        System.out.println(nowMoney);
 
         if (shield) {
             requireMoney = requireMoney * wp.getReinforce() * 100L;
         }
 
-        if (ac.getNowMoneyForId() < requireMoney) {
+        if (nowMoney < requireMoney) {
             System.out.println(ac.getNowMoneyForId() + ", " + requireMoney);
             return 0; // Lack of money
         }
