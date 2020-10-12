@@ -42,7 +42,6 @@ public class Ranking {
             if (ID.equals(userId)) return true;
         }
 
-        System.out.println("Nope");
         return false;
     }
 
@@ -129,33 +128,38 @@ public class Ranking {
             }
 
             String temp = (String) it.next();
-            User user = DefaultListener.jda.retrieveUserById(temp).complete();
-            WeaponManager wp = new WeaponManager(user, tc);
 
-            if (wp.getReinforce() == 0) break;
+            if (!admin || isTeamDecuple(DefaultListener.jda.retrieveUserById(temp).complete())) {
 
-            rank.append(count)
-                    .append(". ")
-                    .append(user.getAsTag().replace("*", "(별)").replace("_", "(언더바)"))
-                    .append(" [")
-                    .append(wp.getWeaponName())
-                    .append("](★ ")
-                    .append(wp.getReinforce())
-                    .append(")\n");
+                User user = DefaultListener.jda.retrieveUserById(temp).complete();
+                WeaponManager wp = new WeaponManager(user, tc);
 
-            count++;
+                if (wp.getReinforce() == 0) break;
 
-            if (it.hasNext()) {
-                String nextTemp = (String) it.next();
-                User nextUser = DefaultListener.jda.retrieveUserById(nextTemp).complete();
-                WeaponManager nextWp = new WeaponManager(nextUser, tc);
+                rank.append(count)
+                        .append(". ")
+                        .append(user.getAsTag().replace("*", "(별)").replace("_", "(언더바)"))
+                        .append(" [")
+                        .append(wp.getWeaponName())
+                        .append("](★ ")
+                        .append(wp.getReinforce())
+                        .append(")\n");
 
-                if (nextWp.getReinforce() == wp.getReinforce()) {
-                    count--;
+                count++;
+
+                if (it.hasNext()) {
+                    String nextTemp = (String) it.next();
+                    User nextUser = DefaultListener.jda.retrieveUserById(nextTemp).complete();
+                    WeaponManager nextWp = new WeaponManager(nextUser, tc);
+
+                    if (nextWp.getReinforce() == wp.getReinforce()) {
+                        count--;
+                    }
                 }
-            }
 
-            if (count > 10) break;
+                if (count > 10) break;
+
+            }
 
         } while (it.hasNext());
 
