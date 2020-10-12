@@ -18,7 +18,7 @@ public class QuintupleMain {
 
     public static final String version = "Alpha 2.0";
 
-    public static void main(String[] args) throws LoginException {
+    public static void main(String[] args) throws LoginException, InterruptedException {
 
         boolean test = false;
 
@@ -93,6 +93,8 @@ public class QuintupleMain {
                         new GameListener());
 
         JDA jda = jdaBuilder.build();
+        jda.awaitReady();
+
         jda.getPresence().setActivity(Activity.playing(jda.getUsers().size() + " 분들과 함께"));
 
     }
