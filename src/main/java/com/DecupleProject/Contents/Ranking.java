@@ -52,7 +52,67 @@ public class Ranking {
         File[] accounts = f.listFiles();
 
         for (File account : accounts) {
-            if (!admin || isTeamDecuple(DefaultListener.jda.retrieveUserById(account.getName().replace(".txt", "")).complete())) {
+            if (admin && isTeamDecuple(DefaultListener.jda.retrieveUserById(account.getName().replace(".txt", "")).complete())) {
+                moneyInfo.put(account.getName().replace(".txt", ""), new ReadFile().readLong(account));
+            } else if (!admin && !isTeamDecuple(DefaultListener.jda.retrieveUserById(account.getName().replace(".txt", "")).complete())) {
+                moneyInfo.put(account.getName().replace(".txt", ""), new ReadFile().readLong(account));
+            }
+        }
+
+        Iterator it = sortByValue(moneyInfo, false).iterator();
+        StringBuilder rank = new StringBuilder("```md\n# 자금 랭킹\n\n");
+
+        int count = 1;
+
+        do {
+
+            if (moneyInfo.isEmpty()) {
+                rank.append("* 랭킹 정보가 없습니다.");
+                break;
+            }
+
+            String temp = (String) it.next();
+            User user = DefaultListener.jda.retrieveUserById(temp).complete();
+            Account ac = new Account(user);
+
+            if (ac.getNowMoneyForId() == 0L) break;
+
+            rank.append(count)
+                    .append(". ")
+                    .append(user.getAsTag().replace("*", "(별)").replace("_", "(언더바)"))
+                    .append(" [자금](")
+                    .append(ac.getMoneyForHangeul(ac.getNowMoneyForId()))
+                    .append(" 플)\n");
+
+            count++;
+
+            if (it.hasNext()) {
+                String nextTemp = (String) it.next();
+                User nextUser = DefaultListener.jda.retrieveUserById(nextTemp).complete();
+                Account nextAc = new Account(nextUser);
+
+                if (ac.getNowMoneyForId() == nextAc.getNowMoneyForId()) {
+                    count--;
+                }
+            }
+
+            if (count > 10) break;
+
+        } while (it.hasNext());
+
+        rank.append("```");
+        tc.sendMessage(rank.toString()).delay(2, TimeUnit.MINUTES).flatMap(Message::delete).queue();
+
+    }
+
+    public void sendMoneyRanking(TextChannel tc, Guild guild) {
+
+        Map<String, Long> moneyInfo = new HashMap<>();
+        File f = new File("D:/Database/Money");
+        File[] accounts = f.listFiles();
+
+        for (File account : accounts) {
+            if (!isTeamDecuple(DefaultListener.jda.retrieveUserById(account.getName().replace(".txt", "")).complete())) {
                 moneyInfo.put(account.getName().replace(".txt", ""), new ReadFile().readLong(account));
             }
         }
@@ -164,7 +224,9 @@ public class Ranking {
         File[] weapons = f.listFiles();
 
         for (File weapon : weapons) {
-            weaponInfo.put(weapon.getName(), new ReadFile().readInt(weapon.getPath() + "/Reinforce.txt"));
+            if (!isTeamDecuple(DefaultListener.jda.retrieveUserById(weapon.getName()).complete())) {
+                weaponInfo.put(weapon.getName(), new ReadFile().readInt(weapon.getPath() + "/Reinforce.txt"));
+            }
         }
 
         Iterator it = sortByValue(weaponInfo, false).iterator();
