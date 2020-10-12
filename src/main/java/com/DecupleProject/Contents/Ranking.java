@@ -42,6 +42,7 @@ public class Ranking {
             if (ID.equals(userId)) return true;
         }
 
+        System.out.println("Nope");
         return false;
     }
 
