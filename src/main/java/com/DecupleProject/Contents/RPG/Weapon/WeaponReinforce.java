@@ -49,11 +49,12 @@ public class WeaponReinforce {
         Random r = new Random();
         float rnd = r.nextFloat() * 100;
 
+        ac.giveMoney(user.getId(), requireMoney * -1, false, false);
+
         if (rnd <= wp.getReinforcePercentage(1)) {
             wp.setWeaponReinforce(true, 1);
             wp.setLastReinforcedTime(true, 0L);
 
-            ac.giveMoney(user.getId(), requireMoney * -1, false, false);
             return 1; // success
         } else if (rnd > wp.getReinforcePercentage(1) && rnd <= wp.getReinforcePercentage(2)) {
             if (!shield) {
@@ -72,6 +73,7 @@ public class WeaponReinforce {
                 return 4; // decrease
             }
         }
+
     }
 
     public long getRequireMoney() {
