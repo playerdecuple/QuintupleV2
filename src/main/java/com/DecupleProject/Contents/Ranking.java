@@ -134,8 +134,6 @@ public class Ranking {
             }
 
             String temp = (String) it.next();
-
-
             User user = DefaultListener.jda.retrieveUserById(temp).complete();
             WeaponManager wp = new WeaponManager(user, tc);
 
@@ -156,6 +154,7 @@ public class Ranking {
                 WeaponManager nextWp = new WeaponManager(nextUser, tc);
 
                 if (nextWp.getReinforce() == wp.getReinforce()) {
+                    System.out.println(nextWp.getReinforce() + " == " + wp.getReinforce());
                     count--;
                 }
             }
