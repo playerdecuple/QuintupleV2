@@ -301,7 +301,7 @@ public class RPGListener extends ListenerAdapter {
                         if (args.length == 2) {
 
                             Ranking r = new Ranking();
-                            r.sendWeaponRanking(tc);
+                            r.sendWeaponRanking(tc, false);
 
                         } else {
 
@@ -309,6 +309,13 @@ public class RPGListener extends ListenerAdapter {
 
                                 Ranking r = new Ranking();
                                 r.sendWeaponRanking(tc, guild);
+
+                            }
+
+                            if (e.eq(args[2], "관리자", "어드민", "팀", "팀뎈")) {
+
+                                Ranking r = new Ranking();
+                                r.sendWeaponRanking(tc, true);
 
                             }
 
