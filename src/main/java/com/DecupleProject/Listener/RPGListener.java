@@ -331,7 +331,7 @@ public class RPGListener extends ListenerAdapter {
 
                     if (args.length == 1) {
                         wp.reinforceWeapon(false);
-                    } else if (e.eq(args[2], "파괴방지", "파방", "실드")) {
+                    } else if (e.eq(args[1], "파괴방지", "파방", "실드")) {
                         wp.reinforceWeapon(true);
                     }
 
