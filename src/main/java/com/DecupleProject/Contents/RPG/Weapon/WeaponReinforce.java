@@ -27,7 +27,7 @@ public class WeaponReinforce {
         System.out.println(nowMoney);
 
         if (shield) {
-            requireMoney = requireMoney * wp.getReinforce() * 1000L;
+            requireMoney = requireMoney * wp.getReinforce() * 500L;
         }
 
         if (nowMoney < requireMoney) {
