@@ -468,7 +468,8 @@ public class WeaponManager {
                 eb.setDescription("돈이 부족하여 대장장이가 강화를 거절했습니다.");
                 eb.addField("필요 금액", String.format("%,d", wr.getRequireMoney()) + "플", true);
                 eb.setFooter(user.getAsTag(), user.getAvatarUrl());
-                tc.sendMessage(eb.build());
+
+                tc.sendMessage(eb.build()).queue();
                 break;
             case 1:
                 eb.setTitle("『 최고의 결과로군! 』");
