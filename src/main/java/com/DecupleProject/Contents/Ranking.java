@@ -122,9 +122,11 @@ public class Ranking {
         Iterator it = sortByValue(weaponInfo, false).iterator();
         StringBuilder rank = new StringBuilder("```md\n# 무기 랭킹\n\n");
 
-        int count = 1;
+        int count = 0;
 
         do {
+
+            count++;
 
             if (weaponInfo.isEmpty()) {
                 rank.append("* 랭킹 정보가 없습니다.");
@@ -147,8 +149,6 @@ public class Ranking {
                     .append("](★ ")
                     .append(wp.getReinforce())
                     .append(")\n");
-
-            count++;
 
             if (it.hasNext()) {
                 String nextTemp = (String) it.next();
@@ -182,9 +182,11 @@ public class Ranking {
         Iterator it = sortByValue(weaponInfo, false).iterator();
         StringBuilder rank = new StringBuilder("```md\n# 무기 랭킹\n\n");
 
-        int count = 1;
+        int count = 0;
 
         do {
+
+            count++;
 
             if (weaponInfo.isEmpty()) {
                 rank.append("* 랭킹 정보가 없습니다.");
@@ -208,8 +210,8 @@ public class Ranking {
                         .append(wp.getReinforce())
                         .append(")\n");
 
-                count++;
-
+            } else {
+                count--;
             }
 
             if (it.hasNext()) {
