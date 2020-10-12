@@ -110,8 +110,12 @@ public class Ranking {
         File[] weapons = f.listFiles();
 
         for (File weapon : weapons) {
-            if (!admin || isTeamDecuple(DefaultListener.jda.retrieveUserById(weapon.getName()).complete())) {
+            if (admin && isTeamDecuple(DefaultListener.jda.retrieveUserById(weapon.getName()).complete())) {
                 weaponInfo.put(weapon.getName(), new ReadFile().readInt(weapon.getPath() + "/Reinforce.txt"));
+            } else {
+                if (!isTeamDecuple(DefaultListener.jda.retrieveUserById(weapon.getName()).complete())) {
+                    weaponInfo.put(weapon.getName(), new ReadFile().readInt(weapon.getPath() + "/Reinforce.txt"));
+                }
             }
         }
 
@@ -129,37 +133,34 @@ public class Ranking {
 
             String temp = (String) it.next();
 
-            if (!admin || isTeamDecuple(DefaultListener.jda.retrieveUserById(temp).complete())) {
 
-                User user = DefaultListener.jda.retrieveUserById(temp).complete();
-                WeaponManager wp = new WeaponManager(user, tc);
+            User user = DefaultListener.jda.retrieveUserById(temp).complete();
+            WeaponManager wp = new WeaponManager(user, tc);
 
-                if (wp.getReinforce() == 0) break;
+            if (wp.getReinforce() == 0) break;
 
-                rank.append(count)
-                        .append(". ")
-                        .append(user.getAsTag().replace("*", "(별)").replace("_", "(언더바)"))
-                        .append(" [")
-                        .append(wp.getWeaponName())
-                        .append("](★ ")
-                        .append(wp.getReinforce())
-                        .append(")\n");
+            rank.append(count)
+                    .append(". ")
+                    .append(user.getAsTag().replace("*", "(별)").replace("_", "(언더바)"))
+                    .append(" [")
+                    .append(wp.getWeaponName())
+                    .append("](★ ")
+                    .append(wp.getReinforce())
+                    .append(")\n");
 
-                count++;
+            count++;
 
-                if (it.hasNext()) {
-                    String nextTemp = (String) it.next();
-                    User nextUser = DefaultListener.jda.retrieveUserById(nextTemp).complete();
-                    WeaponManager nextWp = new WeaponManager(nextUser, tc);
+            if (it.hasNext()) {
+                String nextTemp = (String) it.next();
+                User nextUser = DefaultListener.jda.retrieveUserById(nextTemp).complete();
+                WeaponManager nextWp = new WeaponManager(nextUser, tc);
 
-                    if (nextWp.getReinforce() == wp.getReinforce()) {
-                        count--;
-                    }
+                if (nextWp.getReinforce() == wp.getReinforce()) {
+                    count--;
                 }
-
-                if (count > 10) break;
-
             }
+
+            if (count > 10) break;
 
         } while (it.hasNext());
 
