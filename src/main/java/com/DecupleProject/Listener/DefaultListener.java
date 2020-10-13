@@ -770,8 +770,6 @@ public class DefaultListener extends ListenerAdapter {
                         return;
                     }
 
-                    msg.delete().queue();
-
                     String value = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
                     eb.setDescription(value);
                     eb.setFooter(user.getAsTag(), user.getAvatarUrl());
