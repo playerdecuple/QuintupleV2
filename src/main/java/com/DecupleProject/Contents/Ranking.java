@@ -82,7 +82,7 @@ public class Ranking {
                     .append(user.getAsTag().replace("*", "(별)").replace("_", "(언더바)"))
                     .append(" [자금](")
                     .append(ac.getMoneyForHangeul(ac.getNowMoneyForId()))
-                    .append(" 플)\n");
+                    .append(")\n");
 
             count++;
 
@@ -131,26 +131,29 @@ public class Ranking {
 
             String temp = (String) it.next();
             User user = DefaultListener.jda.retrieveUserById(temp).complete();
-            Account ac = new Account(user);
 
-            if (ac.getNowMoneyForId() == 0L) break;
+            if (guild.isMember(user)) {
+                Account ac = new Account(user);
 
-            rank.append(count)
-                    .append(". ")
-                    .append(user.getAsTag().replace("*", "(별)").replace("_", "(언더바)"))
-                    .append(" [자금](")
-                    .append(ac.getMoneyForHangeul(ac.getNowMoneyForId()))
-                    .append(" 플)\n");
+                if (ac.getNowMoneyForId() == 0L) break;
 
-            count++;
+                rank.append(count)
+                        .append(". ")
+                        .append(user.getAsTag().replace("*", "(별)").replace("_", "(언더바)"))
+                        .append(" [자금](")
+                        .append(ac.getMoneyForHangeul(ac.getNowMoneyForId()))
+                        .append(" 플)\n");
 
-            if (it.hasNext()) {
-                String nextTemp = (String) it.next();
-                User nextUser = DefaultListener.jda.retrieveUserById(nextTemp).complete();
-                Account nextAc = new Account(nextUser);
+                count++;
 
-                if (ac.getNowMoneyForId() == nextAc.getNowMoneyForId()) {
-                    count--;
+                if (it.hasNext()) {
+                    String nextTemp = (String) it.next();
+                    User nextUser = DefaultListener.jda.retrieveUserById(nextTemp).complete();
+                    Account nextAc = new Account(nextUser);
+
+                    if (ac.getNowMoneyForId() == nextAc.getNowMoneyForId()) {
+                        count--;
+                    }
                 }
             }
 
