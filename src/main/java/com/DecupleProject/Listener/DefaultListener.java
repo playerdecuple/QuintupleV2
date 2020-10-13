@@ -1,6 +1,8 @@
 package com.DecupleProject.Listener;
 
 import com.DecupleProject.API.*;
+import com.DecupleProject.API.School.MealServiceAPI;
+import com.DecupleProject.API.School.SchoolBaseAPI;
 import com.DecupleProject.Calculate.QuadraticEquation;
 import com.DecupleProject.Calculate.SmallFactorization;
 import com.DecupleProject.Calculate.Square;
@@ -916,13 +918,23 @@ public class DefaultListener extends ListenerAdapter {
                     }
                 }
 
+                if (e.eq(args[0], "급식", "급식정보", "Meal")) {
+
+                    if (args.length == 2) {
+
+                        new MealServiceAPI().sendMealInfo(args[1], tc);
+
+                    }
+
+                }
+
             }
 
         } catch (StringIndexOutOfBoundsException | IllegalStateException e) {
             // ignore
         } catch (Exception e) {
-            new ExceptionReport(e);
             e.printStackTrace();
+            new ExceptionReport(e);
         }
 
     }
