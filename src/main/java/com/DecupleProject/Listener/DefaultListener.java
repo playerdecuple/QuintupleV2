@@ -751,7 +751,6 @@ public class DefaultListener extends ListenerAdapter {
                         return;
                     }
 
-                    msg.delete().queue();
                     String result = new TextTool().qwertyToHangeul(String.join(" ", Arrays.copyOfRange(args, 1, args.length)));
 
                     eb.setDescription(result);
