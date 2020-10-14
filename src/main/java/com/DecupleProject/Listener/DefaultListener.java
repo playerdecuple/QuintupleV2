@@ -14,6 +14,8 @@ import com.DecupleProject.Core.Util.*;
 
 import com.gikk.twirk.Twirk;
 import com.gikk.twirk.TwirkBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.sun.management.OperatingSystemMXBean;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -925,6 +927,39 @@ public class DefaultListener extends ListenerAdapter {
                         new MealServiceAPI().sendMealInfo(args[1], tc);
 
                     }
+
+                }
+
+                if (e.eq(args[0], "한강", "퐁당", "나락", "풍덩", "FALLGUYS")) {
+
+                    String url = "http://hangang.dkserver.wo.tc/";
+                    String json = new GetJSON().getJsonByUrl(url);
+
+                    JsonParser jsonParser = new JsonParser();
+                    JsonObject jsonObject = (JsonObject) jsonParser.parse(json);
+                    double temp = jsonObject.get("temp").getAsDouble();
+                    String time = jsonObject.get("time").getAsString();
+
+                    eb.setTitle("현재 한강 : " + String.format("%.1f", temp) + "˚C");
+                    eb.addField("조회 시각", time, true);
+
+                    TextTool t = new TextTool();
+
+                    if (t.between(-40, Integer.parseInt(String.format("%.0f", temp)), -10)) {
+                        eb.setColor(Color.BLUE);
+                    } else if (t.between(-10, Integer.parseInt(String.format("%.0f", temp)), 10)) {
+                        eb.setColor(Color.CYAN);
+                    } else if (t.between(10, Integer.parseInt(String.format("%.0f", temp)), 15)) {
+                        eb.setColor(Color.GREEN);
+                    } else if (t.between(15, Integer.parseInt(String.format("%.0f", temp)), 25)) {
+                        eb.setColor(Color.YELLOW);
+                    } else if (t.between(25, Integer.parseInt(String.format("%.0f", temp)), 30)) {
+                        eb.setColor(Color.ORANGE);
+                    } else {
+                        eb.setColor(Color.RED);
+                    }
+
+                    tc.sendMessage(eb.build()).queue();
 
                 }
 

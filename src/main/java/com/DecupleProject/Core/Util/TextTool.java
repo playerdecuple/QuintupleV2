@@ -52,6 +52,12 @@ public class TextTool {
         return val;
     }
 
+    public boolean between(int a, int b, int c) {
+
+        return a <= b && b < c;
+
+    }
+
     public long nextLong(long boundFrom, long boundTo) {
         return ThreadLocalRandom.current().nextLong(boundFrom, boundTo);
     }
