@@ -926,6 +926,10 @@ public class DefaultListener extends ListenerAdapter {
 
                         new MealServiceAPI().sendMealInfo(args[1], tc);
 
+                    } else if (args.length == 3) {
+
+                        new MealServiceAPI().sendMealInfo(args[1], tc, args[2]);
+
                     }
 
                 }
