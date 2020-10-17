@@ -75,6 +75,7 @@ public class DefaultListener extends ListenerAdapter {
         new TopicServerInfo();
 
         exec.scheduleAtFixedRate(() -> {
+            eb.clear();
             eb.setTitle("Quintuple Self Check Service");
             eb.addField("Now Status", "Fine", true);
             eb.addField("JDA Heartbeats", jda.getGatewayPing() + " ms", true);
