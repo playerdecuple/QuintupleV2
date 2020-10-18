@@ -47,6 +47,8 @@ public class DefaultListener extends ListenerAdapter {
 
     public static JDA jda;
     public static User owner;
+    public static TextChannel twitchTextChannel;
+    public static Twirk twirk;
 
     LogWriter lW;
 
@@ -59,11 +61,16 @@ public class DefaultListener extends ListenerAdapter {
         this.lW = new LogWriter(jda);
         owner = jda.retrieveUserById("419116887469981708").complete();
 
+        twitchTextChannel = jda.getTextChannelById("727947460944855202");
+
         try {
-            Twirk twirk = new TwirkBuilder("#playerdecuple", "oauth:rhhsunhtgg4hlyr1cfkfkl939u6wfk", "oauth:rhhsunhtgg4hlyr1cfkfkl939u6wfk").build();
+            twirk = new TwirkBuilder("#playerdecuple", "oauth:rhhsunhtgg4hlyr1cfkfkl939u6wfk", "oauth:rhhsunhtgg4hlyr1cfkfkl939u6wfk").build();
             twirk.addIrcListener(new TwitchListener());
-        } catch (IOException e) {
+            twirk.connect();
+        } catch (IOException | InterruptedException e) {
             new ExceptionReport(e);
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
