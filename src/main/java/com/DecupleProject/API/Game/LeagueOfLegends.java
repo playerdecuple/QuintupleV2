@@ -406,8 +406,10 @@ public class LeagueOfLegends {
 
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (IndexOutOfBoundsException | NullPointerException e) {
+        } catch (NullPointerException e) {
             new ExceptionReport(e);
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("IndexOutOfBoundsException occurred.");
         }
 
         switch (mode) {
