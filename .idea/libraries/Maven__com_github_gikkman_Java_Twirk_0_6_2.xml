@@ -8,6 +8,7 @@
     </JAVADOC>
     <SOURCES>
       <root url="jar://$MAVEN_REPOSITORY$/com/github/Gikkman/Java-Twirk/0.6.2/Java-Twirk-0.6.2-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/Gikkman/Java-Twirk/0.6.2/Java-Twirk-0.6.2.jar!/" />
     </SOURCES>
   </library>
 </component>
