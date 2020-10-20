@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
 import java.awt.*;
 import java.io.File;
@@ -105,7 +106,11 @@ public class UserStatus {
                 w.writeInt(levelFile, finalLevel);
 
                 if ((showMessage || showLvUpMessage) && Objects.requireNonNull(tc.getGuild().getMember(jda.getSelfUser())).hasPermission(Permission.MESSAGE_WRITE)) {
-                    tc.sendMessage(eb.build()).queue();
+                    try {
+                        tc.sendMessage(eb.build()).queue();
+                    } catch (InsufficientPermissionException ex) {
+                        // ignore
+                    }
                 }
             }
         } catch (Exception e) {
