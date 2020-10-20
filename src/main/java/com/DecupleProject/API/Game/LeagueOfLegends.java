@@ -443,7 +443,9 @@ public class LeagueOfLegends {
         }
 
         assert lE_Solo != null;
-        return "https://opgg-static.akamaized.net/images/medals/" + lE_Solo.getAsJsonObject().get("tier").getAsString().toLowerCase() + "_1.png";
+        String imageTier = lE_Solo.getAsJsonObject().get("tier").getAsString();
+
+        return imageTier != null ? "https://opgg-static.akamaized.net/images/medals/" + imageTier + "_1.png" : "https://opgg-static.akamaized.net/images/medals/default.png?image=q_auto&v=1";
     }
 
     public String getMostChampInfo(String id) throws Exception {
