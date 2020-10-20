@@ -233,7 +233,7 @@ public class LeagueOfLegends {
                 lE_Flex = jsonArray.get(1);
             }
         } catch (IndexOutOfBoundsException e) {
-            new ExceptionReport(e);
+            // ignore
         }
 
         String soloRankTier = "UNRANKED";
