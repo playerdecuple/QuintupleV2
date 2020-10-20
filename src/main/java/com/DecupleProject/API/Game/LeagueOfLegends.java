@@ -32,7 +32,7 @@ public class LeagueOfLegends {
     private final String summonerName;
     private final String summonerId;
 
-    private final String LOL_VERSION = "10.16.1";
+    private final String LOL_VERSION = "10.21.1";
 
     public LeagueOfLegends(String summonerName) throws Exception {
 
