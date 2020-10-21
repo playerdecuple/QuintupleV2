@@ -27,6 +27,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.management.MBeanServerConnection;
 import javax.script.ScriptEngine;
@@ -972,6 +973,28 @@ public class DefaultListener extends ListenerAdapter {
                     }
 
                     tc.sendMessage(eb.build()).queue();
+
+                }
+
+                if (e.eq(args[0], "예외")) {
+
+                    if (new Authority().getAuthorityForId(user.getId()) >= 3) {
+
+                        if (args.length >= 2) {
+
+                            String exName = args[1];
+
+                            if (e.eq(exName, "NPE", "NullPointerException")) {
+                                try {
+                                    throw new NullPointerException();
+                                } catch (NullPointerException ex) {
+                                    new ExceptionReport(ex, user, tc);
+                                }
+                            }
+
+                        }
+
+                    }
 
                 }
 
