@@ -8,8 +8,10 @@ import com.gikk.twirk.types.twitchMessage.TwitchMessage;
 import com.gikk.twirk.types.users.TwitchUser;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.TextChannel;
 import org.python.indexer.Def;
 
+import java.awt.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Timer;
@@ -23,6 +25,24 @@ public class TwitchListener implements TwirkListener {
     public String senderUserName;
     public String msgContents;
     public String msgTimeStamp;
+
+
+
+    @Override
+    public void onConnect() {
+        TextChannel[] tc = {DefaultListener.jda.getTextChannelById("704541586062573638"), DefaultListener.jda.getTextChannelById("699439025479745556")};
+
+        for (TextChannel t : tc) {
+            EmbedBuilder eb = new EmbedBuilder();
+
+            eb.setTitle("데큐플 트위치 방송 ON!", "https://twitch.tv/playerdecuple");
+            eb.setColor(Color.MAGENTA);
+            eb.setDescription("지금 데큐플이 트위치 방송을 켰어요! 어서 접속해 보세요!");
+
+            assert t != null;
+            t.sendMessage(eb.build()).queue();
+        }
+    }
 
     @Override
     public void onPrivMsg(TwitchUser user, TwitchMessage msg) {
