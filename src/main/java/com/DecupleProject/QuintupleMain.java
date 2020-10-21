@@ -20,7 +20,7 @@ public class QuintupleMain {
 
     public static void main(String[] args) throws LoginException, InterruptedException {
 
-        boolean test = false;
+        boolean test = true;
 
         String v;
 
