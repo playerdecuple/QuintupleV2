@@ -859,7 +859,7 @@ public class MusicListener extends ListenerAdapter {
             event.getChannel().sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
         } catch (Exception e) {
             e.printStackTrace();
-            new ExceptionReport(e);
+            new ExceptionReport(e, event.getAuthor(), event.getChannel());
         }
 
     }

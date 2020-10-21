@@ -117,7 +117,7 @@ public class OnlineGameListener extends ListenerAdapter {
         } catch (StringIndexOutOfBoundsException | IllegalStateException e) {
             // ignore
         } catch (Exception e) {
-            new ExceptionReport(e);
+            new ExceptionReport(e, event.getAuthor(), event.getTextChannel());
             e.printStackTrace();
         }
     }

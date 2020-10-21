@@ -981,7 +981,7 @@ public class DefaultListener extends ListenerAdapter {
             // ignore
         } catch (Exception e) {
             e.printStackTrace();
-            new ExceptionReport(e);
+            new ExceptionReport(e, event.getAuthor(), event.getTextChannel());
         }
 
     }

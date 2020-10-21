@@ -131,7 +131,7 @@ public class GameListener extends ListenerAdapter {
         } catch (StringIndexOutOfBoundsException e) {
             // ignore
         } catch (Exception e) {
-            new ExceptionReport(e);
+            new ExceptionReport(e, event.getAuthor(), event.getChannel());
             e.printStackTrace();
         }
 
