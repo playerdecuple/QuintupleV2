@@ -995,27 +995,26 @@ public class DefaultListener extends ListenerAdapter {
 
         String[] args = message.getContentRaw().split(" ");
 
-        if (e.eq(args[0], "소스", "코드", "코드뷰어")) {
-            if (args.length == 1) {
-                return;
-            }
+        if (e.eq(args[0], "정지", "ban", "밴", "금지")) {
 
             Authority a = new Authority();
 
             if (a.getAuthorityForId(user.getId()) >= 3) {
 
-                try {
+                if (args.length == 1) {
+                    return;
+                } else {
+                    if (jda.retrieveUserById(args[1]).complete() != null) {
+                        PrivateChannel targetDM = jda.retrieveUserById(args[1]).complete().openPrivateChannel().complete();
 
-                    SendSource s = new SendSource(user);
+                        EmbedBuilder eb = new EmbedBuilder();
+                        eb.setTitle("귀하의 퀸튜플 계정이 정지되었습니다.");
+                        eb.setDescription("귀하는 이제부터 퀸튜플에 대한 서비스를 일절 이용할 수 없습니다.");
+                        eb.addField("사유", String.join(" ", Arrays.copyOfRange(args, 2, args.length)), false);
+                        eb.setFooter("이의 제기 : playerdecuple@gmail.com");
 
-                    if (args.length == 4) {
-                        tc.sendMessage(s.returnSource(args[1], Integer.parseInt(args[2]), Integer.parseInt(args[3]))).queue();
-                    } else if (args.length == 3) {
-                        tc.sendMessage(s.returnSource(args[1], Integer.parseInt(args[2]), Integer.parseInt(args[2]))).queue();
+                        targetDM.sendMessage(eb.build()).queue();
                     }
-
-                } catch (ArrayIndexOutOfBoundsException ex) {
-                    ex.printStackTrace();
                 }
 
             }
