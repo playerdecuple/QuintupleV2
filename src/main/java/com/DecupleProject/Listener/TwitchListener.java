@@ -27,7 +27,7 @@ public class TwitchListener implements TwirkListener {
     public String msgTimeStamp;
 
 
-
+    /*
     @Override
     public void onConnect() {
         TextChannel[] tc = {DefaultListener.jda.getTextChannelById("704541586062573638"), DefaultListener.jda.getTextChannelById("699439025479745556")};
@@ -43,6 +43,7 @@ public class TwitchListener implements TwirkListener {
             t.sendMessage(eb.build()).queue();
         }
     }
+     */
 
     @Override
     public void onPrivMsg(TwitchUser user, TwitchMessage msg) {
