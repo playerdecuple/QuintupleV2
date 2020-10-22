@@ -2,7 +2,6 @@ package com.DecupleProject.Listener;
 
 import com.DecupleProject.API.*;
 import com.DecupleProject.API.School.MealServiceAPI;
-import com.DecupleProject.API.School.SchoolBaseAPI;
 import com.DecupleProject.Calculate.QuadraticEquation;
 import com.DecupleProject.Calculate.SmallFactorization;
 import com.DecupleProject.Calculate.Square;
@@ -27,7 +26,6 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.management.MBeanServerConnection;
 import javax.script.ScriptEngine;
@@ -270,7 +268,7 @@ public class DefaultListener extends ListenerAdapter {
                     if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
                         tc.deleteMessageById(msg.getId()).queue();
                     eb.setTitle("도움말을 보여드릴게요!");
-                    eb.setDescription("아쉽지만, 명령어가 너무 많아서 정리를 해놓은 [인터넷 사이트](https://decupleproject.fandom.com/ko/wiki/%EB%8D%B0%ED%81%90%ED%94%8C_%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8_:_%EB%94%94%EC%8A%A4%EC%BD%94%EB%93%9C_%ED%80%B8%ED%8A%9C%ED%94%8C)로 이동시켜 드리겠습니다!");
+                    eb.setDescription("아쉽지만, 명령어가 너무 많아서 정리를 해놓은 [인터넷 사이트](https://playerdecuple.github.io/posts/%ED%80%B8%ED%8A%9C%ED%94%8C%EC%9D%84-%EC%93%B0%EB%8A%94-%EB%B0%A9%EB%B2%95%EC%97%90-%EB%8C%80%ED%95%B4-%EC%95%8C%EC%95%84-%EB%B4%85%EC%8B%9C%EB%8B%A4/)로 이동시켜 드리겠습니다!");
                     eb.setColor(Color.CYAN);
 
                     sendPrivateMessage(user, eb.build());
