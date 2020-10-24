@@ -84,7 +84,7 @@ public class ServerManagementListener extends ListenerAdapter {
                 if (args.length < 1) return;
                 ServerManager manager = new ServerManager(guild, member);
 
-                if (e.eq(args[0], "청소", "cl", "cls", "clean", "삭제")) {
+                if (e.eq(args[0], "청소", "cl", "cls", "clean")) {
                     if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
                         tc.deleteMessageById(msg.getId()).queue();
                     if (args.length == 1) {
