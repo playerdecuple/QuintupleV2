@@ -79,7 +79,6 @@ public class QuintupleMain {
                         GatewayIntent.GUILD_EMOJIS)
                 .setAutoReconnect(true)
                 .setStatus(OnlineStatus.ONLINE)
-
                 .addEventListeners(
                         new DefaultListener(),
                         new MusicListener(),
