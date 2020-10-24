@@ -115,7 +115,7 @@ public class MusicListener extends ListenerAdapter {
 
                 GuildInfo guildInfo = new GuildInfo(guild);
 
-                if (e.eq(args[0], "C", "Enter", "입장", "들어와", "연결")) {
+                if (e.eq(args[0], "C", "Connect", "Enter", "입장", "들어와", "연결")) {
 
                     // if (args[0].equalsIgnoreCase("C")) {
 
@@ -176,7 +176,7 @@ public class MusicListener extends ListenerAdapter {
 
                 }
 
-                if (e.eq(args[0], "E", "Exit", "Quit", "퇴장", "나가")) {
+                if (e.eq(args[0], "E", "D", "Disconnect", "Exit", "Quit", "퇴장", "나가")) {
 
                     if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
                         tc.deleteMessageById(msg.getId()).queue();
