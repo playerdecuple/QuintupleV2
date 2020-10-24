@@ -442,6 +442,7 @@ public class LeagueOfLegends {
             }
         } catch (IndexOutOfBoundsException e) {
             // Ignore
+            // Recommitted
         }
 
         String imageTier = (lE_Solo != null) ? lE_Solo.getAsJsonObject().get("tier").getAsString() : null;
