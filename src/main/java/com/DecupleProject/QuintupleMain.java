@@ -23,11 +23,7 @@ public class QuintupleMain {
         boolean test = false;
 
         String v;
-
-        if (test)
-            v = "test";
-        else
-            v = "real";
+        v = (test) ? "test" : "real";
 
         File f = new File("D:/Database/NowMode.txt");
         File t = new File("D:/Database/StartTime.txt");
