@@ -668,8 +668,13 @@ public class DefaultListener extends ListenerAdapter {
                 if (e.eq(args[0], "DB", "데이터베이스", "database")) {
                     if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
                         tc.deleteMessageById(msg.getId()).queue();
-                    if (e.eq(args[1], "del")) {
+                    if (e.eq(args[1], "del", "delete", "삭제")) {
                         db.editDatabase(args[1], String.join(" ", Arrays.copyOfRange(args, 2, args.length)), true);
+                        return;
+                    }
+                    if (e.eq(args[1], "view", "viewer", "열람", "확인", "뷰어")) {
+                        db.getDatabaseAndSendInfo(args[1]);
+                        return;
                     }
 
                     db.editDatabase(args[1], String.join(" ", Arrays.copyOfRange(args, 2, args.length)), false);
@@ -993,6 +998,12 @@ public class DefaultListener extends ListenerAdapter {
                         }
 
                     }
+
+                }
+
+                if (e.eq(args[0], "Emote")) {
+
+                    tc.sendMessage(msg.getEmotes().get(0).getId()).queue();
 
                 }
 
