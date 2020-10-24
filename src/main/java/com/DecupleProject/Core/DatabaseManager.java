@@ -32,9 +32,20 @@ public class DatabaseManager {
     
     public String getDatabase(String databasePath) {
         File f = new File(dFilePath + databasePath.replace(".txt", "") + ".txt");
-        
-        if (f.exists()) return r.readString(f);
-        return null;
+
+        return f.exists() ? r.readString(f) : null;
+    }
+
+    public void getDatabaseAndSendInfo(String databasePath) {
+        File f = new File(dFilePath + databasePath.replace(".txt", "") + ".txt");
+        EmbedBuilder eb = new EmbedBuilder();
+
+        eb.setTitle("Database Viewer");
+        eb.addField("Loaded DB", databasePath.replace(".txt", ""), false);
+        eb.addField("Now Data", "```" + (f.exists() ? r.readString(f) : null) + "```", false);
+        eb.setColor(Color.GREEN);
+
+        tc.sendMessage(eb.build()).queue();
     }
     
     public void setDatabase(String databasePath, String to) {
