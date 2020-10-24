@@ -444,8 +444,7 @@ public class LeagueOfLegends {
             new ExceptionReport(e);
         }
 
-        assert lE_Solo != null;
-        String imageTier = lE_Solo.getAsJsonObject().get("tier").getAsString();
+        String imageTier = (lE_Solo != null) ? lE_Solo.getAsJsonObject().get("tier").getAsString() : null;
 
         return imageTier != null ? "https://opgg-static.akamaized.net/images/medals/" + imageTier + "_1.png" : "https://opgg-static.akamaized.net/images/medals/default.png?image=q_auto&v=1";
     }
