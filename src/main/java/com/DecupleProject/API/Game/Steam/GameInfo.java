@@ -20,8 +20,8 @@ public class GameInfo {
         this.id = id;
         this.title = title;
         this.price = e.eq(price, "") ? "?" : price;
-        this.discount = e.eq(discount, "") ? "?" : discount;
-        this.discountedPrice = e.eq(discountedPrice, "") ? "0%" : discountedPrice;
+        this.discount = e.eq(discount, "") ? "0%" : discount;
+        this.discountedPrice = e.eq(discountedPrice, "") ? price : discountedPrice;
         this.reviewSummary = e.eq(reviewSummary, "") ? "?" : reviewSummary;
         this.platforms = platforms;
         this.addedOn = e.eq(addedOn, "") ? "?" : addedOn;
