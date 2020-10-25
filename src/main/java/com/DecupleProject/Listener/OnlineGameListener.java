@@ -3,6 +3,7 @@ package com.DecupleProject.Listener;
 import com.DecupleProject.API.Game.LeagueOfLegends;
 import com.DecupleProject.API.Game.Osu;
 import com.DecupleProject.API.Game.Overwatch;
+import com.DecupleProject.API.Game.Steam.SteamGame;
 import com.DecupleProject.Contents.RPG.UserStatus;
 import com.DecupleProject.Core.CustomCommand;
 import com.DecupleProject.Core.DatabaseManager;
@@ -112,13 +113,24 @@ public class OnlineGameListener extends ListenerAdapter {
 
                 }
 
+                if (e.eq(args[0], "스팀", "Steam", "게임정보", "GameInfo")) {
+
+                    if (args.length > 1) {
+                        SteamGame sg = new SteamGame();
+                        tc.sendMessage(sg.sendGameInfoEmbed(String.join(" ", Arrays.copyOfRange(args, 1, args.length)))).queue();
+                    } else {
+                        tc.sendMessage("게임 이름을 입력해 주세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                    }
+
+                }
+
             }
 
         } catch (StringIndexOutOfBoundsException | IllegalStateException e) {
             // ignore
         } catch (Exception e) {
-            new ExceptionReport(e, event.getAuthor(), event.getTextChannel());
             e.printStackTrace();
+            new ExceptionReport(e, event.getAuthor(), event.getTextChannel());
         }
     }
 
