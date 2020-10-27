@@ -14,4 +14,5 @@ public enum SearchMode {
     String getSortBy() {
         return sortBy;
     }
+
 }
