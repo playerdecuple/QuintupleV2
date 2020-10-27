@@ -32,6 +32,7 @@ import net.dv8tion.jda.api.managers.AudioManager;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import javax.validation.groups.Default;
 import java.awt.*;
 import java.io.File;
 import java.nio.ByteBuffer;
@@ -955,10 +956,19 @@ public class MusicListener extends ListenerAdapter {
                 EmbedBuilder eb = new EmbedBuilder();
 
                 if (showMessage) {
-                    eb.setDescription("오, 이런. 이 CD에는 문제가 약간 있나 보네요.");
+                    eb.setTitle("Track을 불러오는 데 실패했습니다.");
+                    eb.addField("Exception Name", e.getClass().getName(), true);
+                    eb.addBlankField(true);
+                    eb.addField("Exception Caused By", e.getCause().getClass().getName(), true);
+                    eb.addField("TextChannel Info", tc.getName() + ", " + tc.getId(), true);
+                    eb.addField("Guild Info", tc.getGuild().getName() + ", " + tc.getGuild().getId(), true);
+                    eb.addField("발생 시각", getTimeStamp(System.currentTimeMillis(), false), true);
+                    eb.addField("Exception Message", "```" + e.getMessage() + "```", false);
+                    eb.setDescription("곡을 불러올 수 없었습니다. 팀 데큐플에 해당 내용을 보고합니다.");
                     eb.setColor(Color.RED);
 
                     tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                    DefaultListener.owner.openPrivateChannel().complete().sendMessage(eb.build()).queue();
                 }
             }
         });
