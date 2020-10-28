@@ -81,7 +81,7 @@ public class QuintupleMain {
                 .setStatus(OnlineStatus.ONLINE)
                 .addEventListeners(
                         new DefaultListener(),
-                        new MusicListener(),
+                        // new MusicListener(), // YouTube API 429 Response
                         new OnlineGameListener(),
                         new ServerManagementListener(),
                         new RPGListener(),
