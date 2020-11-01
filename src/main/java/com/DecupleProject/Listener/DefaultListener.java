@@ -63,7 +63,7 @@ public class DefaultListener extends ListenerAdapter {
         twitchTextChannel = jda.getTextChannelById("727947460944855202");
 
         try {
-            twirk = new TwirkBuilder("#playerdecuple", "oauth:rhhsunhtgg4hlyr1cfkfkl939u6wfk", "oauth:rhhsunhtgg4hlyr1cfkfkl939u6wfk").build();
+            twirk = new TwirkBuilder("#playerdecuple", "oauth:rhhsunhtgg4hlyr1cfkfkl939u6wfk", "oauth:rhhsunhtgg4hlyr1cfkfkl939u6wfk").setVerboseMode(false).build();
             twirk.addIrcListener(new TwitchListener());
             twirk.connect();
         } catch (IOException | InterruptedException e) {
@@ -615,6 +615,8 @@ public class DefaultListener extends ListenerAdapter {
                 }
 
                 if (e.eq(args[0], "보고", "report", "리폿", "버그", "이슈", "issue", "bug")) {
+
+                    /*
                     if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
                         tc.deleteMessageById(msg.getId()).queue();
                     try {
@@ -632,6 +634,19 @@ public class DefaultListener extends ListenerAdapter {
                     } catch (ArrayIndexOutOfBoundsException ex) {
                         return;
                     }
+                     */
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
+
+                    eb.setTitle("의견 및 피드백 해보기!");
+                    eb.setDescription("환영합니다! 팀 데큐플은 여러분의 의견과 피드백을 받는 것에 대해 항상 감사하게 생각합니다. 다음과 같은 수단을 써서, 팀 데큐플에 연락을 주세요.");
+                    eb.addField("팀 데큐플 공식 포럼(NodeBB 기반)", "[바로 가기](http://www.developerdecuple.kro.kr/)", true);
+                    eb.addField("팀 데큐플 공식 이메일", "playerdecuple@gmail.com", true);
+                    eb.addField("팀 데큐플 공식 블로그", "[바로 가기](https://playerdecuple.github.io/)", true);
+                    eb.setColor(Color.BLUE);
+
+                    tc.sendMessage(eb.build()).queue();
+
                 }
 
                 if (e.eq(args[0], "멜론차트", "인기차트")) {
