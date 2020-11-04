@@ -118,8 +118,6 @@ public class MusicListener extends ListenerAdapter {
 
                 if (e.eq(args[0], "C", "Connect", "Enter", "입장", "들어와", "연결")) {
 
-                    // if (args[0].equalsIgnoreCase("C")) {
-
                     msg.delete().queue();
 
                     if (guildInfo.getMusicChannel() != null) {
@@ -138,8 +136,10 @@ public class MusicListener extends ListenerAdapter {
                             else {
                                 VoiceChannel vc = Objects.requireNonNull(member.getVoiceState()).getChannel();
 
-                                if (vc == null) return;
-                                else {
+                                if (vc == null) {
+                                    tc.sendMessage("먼저 보이스 채널에 연결해 주세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                                    return;
+                                } else {
                                     am.setSendingHandler(new AudioSendHandler() {
                                         @Override
                                         public boolean canProvide() {
@@ -223,8 +223,10 @@ public class MusicListener extends ListenerAdapter {
                             else {
                                 VoiceChannel vc = Objects.requireNonNull(member.getVoiceState()).getChannel();
 
-                                if (vc == null) return;
-                                else {
+                                if (vc == null) {
+                                    tc.sendMessage("먼저 보이스 채널에 연결해 주세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                                    return;
+                                } else {
                                     setVolume(tc, 20, false);
 
 
@@ -364,8 +366,10 @@ public class MusicListener extends ListenerAdapter {
                             else {
                                 VoiceChannel vc = Objects.requireNonNull(member.getVoiceState()).getChannel();
 
-                                if (vc == null) return;
-                                else {
+                                if (vc == null) {
+                                    tc.sendMessage("먼저 보이스 채널에 연결해 주세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                                    return;
+                                } else {
                                     setVolume(tc, 20, false);
 
 
@@ -571,6 +575,13 @@ public class MusicListener extends ListenerAdapter {
 
                     if (args.length < 2) {
 
+                        VoiceChannel vc = Objects.requireNonNull(Objects.requireNonNull(member).getVoiceState()).getChannel();
+
+                        if (vc == null) {
+                            tc.sendMessage("먼저 보이스 채널에 연결해 주세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
+
                         if (mp.playlistExists(user.getId())) {
 
                             int i = 1;
@@ -757,6 +768,14 @@ public class MusicListener extends ListenerAdapter {
 
                         try {
                             String victim = msg.getMentionedUsers().get(0).getId();
+
+                            VoiceChannel vc = Objects.requireNonNull(Objects.requireNonNull(member).getVoiceState()).getChannel();
+
+                            if (vc == null) {
+                                tc.sendMessage("먼저 보이스 채널에 연결해 주세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                                return;
+                            }
+
                             if (mp.playlistExists(victim)) {
 
                                 int v = 0;
@@ -783,6 +802,13 @@ public class MusicListener extends ListenerAdapter {
                             User targetUser = DefaultListener.jda.retrieveUserById(targetId).complete();
 
                             if (targetUser != null) {
+
+                                VoiceChannel vc = Objects.requireNonNull(Objects.requireNonNull(member).getVoiceState()).getChannel();
+
+                                if (vc == null) {
+                                    tc.sendMessage("먼저 보이스 채널에 연결해 주세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                                    return;
+                                }
 
                                 if (mp.playlistExists(targetId)) {
 
