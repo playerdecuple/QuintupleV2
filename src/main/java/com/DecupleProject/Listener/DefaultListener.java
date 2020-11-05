@@ -1,6 +1,7 @@
 package com.DecupleProject.Listener;
 
 import com.DecupleProject.API.*;
+import com.DecupleProject.API.Dictionary;
 import com.DecupleProject.API.School.MealServiceAPI;
 import com.DecupleProject.Calculate.QuadraticEquation;
 import com.DecupleProject.Calculate.SmallFactorization;
@@ -35,10 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -1013,12 +1011,6 @@ public class DefaultListener extends ListenerAdapter {
                         }
 
                     }
-
-                }
-
-                if (e.eq(args[0], "Emote")) {
-
-                    tc.sendMessage(msg.getEmotes().get(0).getId()).queue();
 
                 }
 
