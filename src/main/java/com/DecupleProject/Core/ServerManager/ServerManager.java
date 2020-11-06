@@ -27,6 +27,7 @@ public class ServerManager {
 
         File serverDirectory = new File("D:/Database/Servers/");
         File guildDirectory = new File(serverDirectory.getPath() + "/" + guild.getId() + "/");
+        File attentionFile = new File(guildDirectory.getPath() + "/Attention");
 
         if (!serverDirectory.exists()) {
             boolean serverDirectoryMade = serverDirectory.mkdir();
@@ -43,6 +44,9 @@ public class ServerManager {
                 System.out.println("Bot couldn't made a directory. Path : " + guildDirectory.getPath());
             }
         }
+
+        boolean attentionFileMade = attentionFile.exists() || attentionFile.mkdir();
+        if (!attentionFileMade) System.out.println("Bot couldn't made a directory.");
 
         this.bot = guild.getMember(DefaultListener.jda.getSelfUser());
     }
@@ -157,18 +161,28 @@ public class ServerManager {
     public void attention(TextChannel tc, Member user, String attentionInfo) {
 
         if (member.hasPermission(Permission.MANAGE_CHANNEL)) {
+            int attentionCount = getAttentionCount(user) + 1;
             user.getUser().openPrivateChannel().complete().sendMessage(member.getUser().getAsTag() + "님이 " + user.getAsMention() + "님에게 다음과 같이 경고하였습니다." +
-                    "\n```" + attentionInfo + "```").queue();
+                    "\n```" + attentionInfo + "```\n" +
+                    "현재 경고 횟수는 " + attentionCount + "회 입니다.").queue();
 
-            File attentionCountFile = new File("D:/Database/Servers/" + user.getGuild().getId() + "/" + user.getUser().getId() + ".txt");
-            int attentionCount = attentionCountFile.exists() ? new ReadFile().readInt(attentionCountFile) + 1 : 1;
-
-            new WriteFile().writeInt(attentionCountFile, attentionCount);
+            setAttentionCount(user, attentionCount);
+            tc.sendMessage("경고를 완료하였습니다.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
         } else {
             eb.setDescription("권한이 없네요. `채널 관리` 권한이 있어야 이 기능을 사용할 수 있어요.");
             tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
         }
 
+    }
+
+    public void setAttentionCount(Member user, int count) {
+        File attentionCountFile = new File("D:/Database/Servers/" + user.getGuild().getId() + "/Attention/" + user.getUser().getId() + ".txt");
+        new WriteFile().writeInt(attentionCountFile, count);
+    }
+
+    public int getAttentionCount(Member user) {
+        File attentionCountFile = new File("D:/Database/Servers/" + user.getGuild().getId() + "/Attention/" + user.getUser().getId() + ".txt");
+        return attentionCountFile.exists() ? new ReadFile().readInt(attentionCountFile) : 0;
     }
 
     public MessageEmbed makeEmbed(String script) {

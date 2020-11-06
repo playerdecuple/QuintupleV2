@@ -142,10 +142,24 @@ public class ServerManagementListener extends ListenerAdapter {
                             }
                         }
 
-                        Member target = guild.getMember(msg.getMentionedMembers().get(0).getUser());
+                        Member target = msg.getMentionedMembers().get(0);
                         String info = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
 
                         manager.attention(tc, target, info);
+
+                    }
+
+                    if (e.eq(args[1], "유저", "사용자", "타깃")) {
+
+                        if (member != null) {
+                            if (!member.hasPermission(Permission.MANAGE_SERVER)) {
+                                tc.sendMessage(":no_entry_sign: 이 명령어는 서버의 `서버 관리` 권한을 받은 사람만 사용할 수 있어요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                                return;
+                            }
+                        }
+
+                        Member target = guild.getMember(msg.getMentionedMembers().get(0).getUser());
+                        tc.sendMessage(target == null ? "해당 멤버를 발견하지 못했습니다." : target.getUser().getAsTag() + " : " + manager.getAttentionCount(target) + "회의 경고를 받았습니다.").queue();
 
                     }
 
