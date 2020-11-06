@@ -143,9 +143,9 @@ public class ServerManagementListener extends ListenerAdapter {
                         }
 
                         Member target = msg.getMentionedMembers().get(0);
-                        String info = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+                        String reason = String.join(" ", Arrays.copyOfRange(args, 3, args.length)).replace("<@!" + target.getUser().getId() + ">", "");
 
-                        manager.attention(tc, target, info);
+                        manager.attention(tc, target, reason);
 
                     }
 
@@ -173,8 +173,7 @@ public class ServerManagementListener extends ListenerAdapter {
                         }
 
                         Member target = msg.getMentionedMembers().get(0);
-
-                        String info = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+                        String info = String.join(" ", Arrays.copyOfRange(args, 3, args.length));
 
                         manager.kickMember(tc, target, info);
                     }
