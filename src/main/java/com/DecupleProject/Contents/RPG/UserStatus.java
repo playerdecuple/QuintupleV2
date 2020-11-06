@@ -2,14 +2,12 @@ package com.DecupleProject.Contents.RPG;
 
 import com.DecupleProject.Core.ExceptionReport;
 import com.DecupleProject.Core.ReadFile;
-import com.DecupleProject.Core.Util.LogWriter;
 import com.DecupleProject.Core.WriteFile;
 import com.DecupleProject.Listener.DefaultListener;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
 import java.awt.*;
@@ -113,6 +111,8 @@ public class UserStatus {
                     }
                 }
             }
+        } catch (NullPointerException e) {
+            System.out.println("Received message when readying JDA. NullPointerException occurred.");
         } catch (Exception e) {
             e.printStackTrace();
             new ExceptionReport(e);
