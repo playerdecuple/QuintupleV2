@@ -53,7 +53,7 @@ public class ExceptionReport {
             }
 
             owner.openPrivateChannel().complete().sendMessage("```diff\n" + getTimeStamp(System.currentTimeMillis())
-                    + " - Exception thrown : \n" + msg + "\n" + stackTrace + "\n\nCaused By: \n" + e.getCause() + "```").queue();
+                    + " - Exception thrown : \n" + msg + "\n" + stackTrace + "\n\nCaused By: \n" + e.getCause().getMessage() + "```").queue();
         } catch (IllegalStateException ex) {
             // ignore
         }
@@ -104,7 +104,7 @@ public class ExceptionReport {
             }
 
             owner.openPrivateChannel().complete().sendMessage("```diff\n" + getTimeStamp(System.currentTimeMillis())
-                    + " - Exception thrown : \n" + msg + "\n" + stackTrace + "\n\nCaused By: \n" + e.getCause() + "```" +
+                    + " - Exception thrown : \n" + msg + "\n" + stackTrace + "\n\nCaused By: \n" + e.getCause().getMessage() + "```" +
                     "__Cause info__\n[User] " + u.getAsTag() + " / " + u.getId() + "\n" +
                     "[TextChannel] " + t.getName() + " <" + t.getGuild().getName() + "[" + t.getGuild().getId() + "]> / " + t.getId()).queue();
         } catch (IllegalStateException ex) {
