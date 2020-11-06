@@ -145,6 +145,17 @@ public class ServerManagementListener extends ListenerAdapter {
                         Member target = msg.getMentionedMembers().get(0);
                         String reason = String.join(" ", Arrays.copyOfRange(args, 3, args.length)).replace("<@!" + target.getUser().getId() + ">", "");
 
+                        if (e.eq(target.getUser().getId(), user.getId())) {
+                            tc.sendMessage("자신에게 경고를 하거나, 자신의 경고 횟수를 초기화할 수 없습니다.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
+
+                        if (e.eq(reason, "초기화")) {
+                            tc.sendMessage(target.getUser().getAsMention() + "님의 경고를 초기화하였습니다.").delay(20, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            manager.setAttentionCount(target, 0);
+                            return;
+                        }
+
                         manager.attention(tc, target, reason);
 
                     }
@@ -175,6 +186,11 @@ public class ServerManagementListener extends ListenerAdapter {
                         Member target = msg.getMentionedMembers().get(0);
                         String info = String.join(" ", Arrays.copyOfRange(args, 3, args.length));
 
+                        if (e.eq(target.getUser().getId(), user.getId())) {
+                            tc.sendMessage("자신을 추방할 수 없습니다.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
+
                         manager.kickMember(tc, target, info);
                     }
 
@@ -188,8 +204,12 @@ public class ServerManagementListener extends ListenerAdapter {
                         }
 
                         Member target = msg.getMentionedMembers().get(0);
-
                         String info = String.join(" ", Arrays.copyOfRange(args, 3, args.length));
+
+                        if (e.eq(target.getUser().getId(), user.getId())) {
+                            tc.sendMessage("자신을 차단할 수 없습니다.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
 
                         manager.banMember(tc, target, info, Integer.parseInt(args[2]));
                     }
