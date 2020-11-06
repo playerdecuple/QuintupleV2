@@ -142,8 +142,7 @@ public class ServerManagementListener extends ListenerAdapter {
                             }
                         }
 
-                        User target = msg.getMentionedMembers().get(0).getUser();
-
+                        Member target = guild.getMember(msg.getMentionedMembers().get(0).getUser());
                         String info = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
 
                         manager.attention(tc, target, info);

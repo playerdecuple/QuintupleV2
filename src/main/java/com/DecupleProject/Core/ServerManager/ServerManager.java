@@ -154,18 +154,22 @@ public class ServerManager {
 
     }
 
-    public void attention(TextChannel tc, User user, String attentionInfo) {
+    public void attention(TextChannel tc, Member user, String attentionInfo) {
 
         if (member.hasPermission(Permission.MANAGE_CHANNEL)) {
-            user.openPrivateChannel().complete().sendMessage(member.getUser().getAsTag() + "님이 " + user.getAsMention() + "님에게 다음과 같이 경고하였습니다." +
+            user.getUser().openPrivateChannel().complete().sendMessage(member.getUser().getAsTag() + "님이 " + user.getAsMention() + "님에게 다음과 같이 경고하였습니다." +
                     "\n```" + attentionInfo + "```").queue();
+
+            File attentionCountFile = new File("D:/Database/Servers/" + user.getGuild().getId() + "/" + user.getUser().getId() + ".txt");
+            int attentionCount = attentionCountFile.exists() ? new ReadFile().readInt(attentionCountFile) + 1 : 1;
+
+            new WriteFile().writeInt(attentionCountFile, attentionCount);
         } else {
             eb.setDescription("권한이 없네요. `채널 관리` 권한이 있어야 이 기능을 사용할 수 있어요.");
             tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
         }
 
     }
-
 
     public MessageEmbed makeEmbed(String script) {
 
