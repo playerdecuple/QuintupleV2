@@ -145,6 +145,11 @@ public class ServerManagementListener extends ListenerAdapter {
                         Member target = msg.getMentionedMembers().get(0);
                         String reason = String.join(" ", Arrays.copyOfRange(args, 3, args.length)).replace("<@!" + target.getUser().getId() + ">", "");
 
+                        if (target.hasPermission(Permission.ADMINISTRATOR)) {
+                            tc.sendMessage("관리자에게는 권한을 행사할 수 없습니다.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
+
                         if (e.eq(target.getUser().getId(), user.getId())) {
                             tc.sendMessage("자신에게 경고를 하거나, 자신의 경고 횟수를 초기화할 수 없습니다.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                             return;
@@ -186,6 +191,11 @@ public class ServerManagementListener extends ListenerAdapter {
                         Member target = msg.getMentionedMembers().get(0);
                         String info = String.join(" ", Arrays.copyOfRange(args, 3, args.length));
 
+                        if (target.hasPermission(Permission.ADMINISTRATOR)) {
+                            tc.sendMessage("관리자에게는 권한을 행사할 수 없습니다.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
+
                         if (e.eq(target.getUser().getId(), user.getId())) {
                             tc.sendMessage("자신을 추방할 수 없습니다.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                             return;
@@ -205,6 +215,11 @@ public class ServerManagementListener extends ListenerAdapter {
 
                         Member target = msg.getMentionedMembers().get(0);
                         String info = String.join(" ", Arrays.copyOfRange(args, 3, args.length));
+
+                        if (target.hasPermission(Permission.ADMINISTRATOR)) {
+                            tc.sendMessage("관리자에게는 권한을 행사할 수 없습니다.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
 
                         if (e.eq(target.getUser().getId(), user.getId())) {
                             tc.sendMessage("자신을 차단할 수 없습니다.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
