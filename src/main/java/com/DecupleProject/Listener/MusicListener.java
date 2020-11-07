@@ -30,9 +30,9 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.AudioManager;
 import org.jetbrains.annotations.NotNull;
+import org.python.bouncycastle.asn1.sec.SECNamedCurves;
 
 import javax.annotation.Nullable;
-import javax.validation.groups.Default;
 import java.awt.*;
 import java.io.File;
 import java.nio.ByteBuffer;
@@ -255,7 +255,6 @@ public class MusicListener extends ListenerAdapter {
                         }
 
                         Youtube youtube = new Youtube();
-
                         String youtubeSearched = youtube.searchYoutube(input);
 
                         if (youtubeSearched == null) {
@@ -613,6 +612,11 @@ public class MusicListener extends ListenerAdapter {
 
                         String input = String.join(" ", Arrays.copyOfRange(args, 2, args.length)).replace(" ", "");
                         String[] songs = input.split("[|]");
+
+                        if (input.contains("https://twitch.tv") || input.contains("https://www.twitch.tv")) {
+                            tc.sendMessage("트위치 라이브는 플레이리스트에 저장해 둘 수 없습니다.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
 
                         Youtube y = new Youtube();
 

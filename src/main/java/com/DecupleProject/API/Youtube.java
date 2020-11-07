@@ -32,6 +32,7 @@ public class Youtube {
 
         LinkUtility l = new LinkUtility();
         if (l.isURL(search)) return search;
+        if (search.contains("https://www.twitch.tv/") || search.contains("https://twitch.tv")) return search;
 
         try {
 
@@ -50,6 +51,7 @@ public class Youtube {
                 String videoId = results.get(0).getId().getVideoId();
                 return "https://www.youtube.com/watch?v=" + videoId;
             }
+
         } catch (Exception e) {
             LogWriter lw = new LogWriter(DefaultListener.jda);
             lw.sendMessage("```Exception thrown : \n" + e.getMessage() + "\n\nCaused By: \n" + e.getCause() + "```");
@@ -85,6 +87,8 @@ public class Youtube {
 
         try {
             if (url != null) {
+                if (url.contains("https://www.twitch.tv/") || url.contains("https://twitch.tv")) return null;
+
                 URL urlR = new URL("http://www.youtube.com/oembed?url=" + url + "&format=json");
                 thumbnailUrl = new JSONObject(IOUtils.toString(urlR, StandardCharsets.UTF_8)).getString("thumbnail_url");
             } else {
