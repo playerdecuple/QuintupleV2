@@ -103,7 +103,6 @@ public class Vote {
                             }
 
                             eb2.setColor(Color.CYAN);
-                            eb2.setThumbnail(getEmojiCode(getMaxValueOfArray(votes) + 1).getImageUrl());
                             tc.sendMessage(eb2.build()).queue();
 
                             guildVoteFile.delete();
@@ -113,6 +112,8 @@ public class Vote {
                 );
 
     }
+
+    /*
 
     public int getMaxValueOfArray(int[] value) {
         if (value == null || value.length == 0) return 0;
@@ -133,5 +134,7 @@ public class Vote {
 
         return 0;
     }
+
+     */
 
 }
