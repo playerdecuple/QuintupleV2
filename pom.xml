@@ -6,7 +6,7 @@
 
     <groupId>com.projectdecuple</groupId>
     <artifactId>QuintupleV2</artifactId>
-    <version>2.0.103R.4</version>
+    <version>2.0.103R.7</version>
 
     <build>
         <plugins>
