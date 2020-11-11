@@ -10,6 +10,7 @@ import com.DecupleProject.Core.Util.LinkUtility;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -351,6 +352,51 @@ public class RPGListener extends ListenerAdapter {
                 if (e.eq(args[0], "레이드", "월드보스", "이벤트보스", "보스")) {
                     WorldBossRaid boss = new WorldBossRaid(user);
                     boss.attackWorldBoss(tc);
+                }
+
+                if (e.eq(args[0], "길드", "Guild")) {
+
+                    GuildSystem gld = new GuildSystem(event.getJDA(), tc, user.getId());
+
+                    if (args.length == 1) {
+                        if (gld.hasGuild()) {
+                            eb.setTitle("길드 : " + gld.getGuildName(gld.getGuildId(user.getId())));
+                            eb.addField("길드장", event.getJDA().retrieveUserById(gld.getGuildId(user.getId())).complete().getAsTag(), true);
+                            eb.addField("길드 레벨", gld.getGuildLevel(gld.getGuildId(user.getId())) + " 레벨 (티어 " + gld.getGuildTierFromLevel(gld.getGuildLevel(gld.getGuildId(user.getId()))) + ")", true);
+                            eb.addField("길드 자금", new Account(user.getId(), "", tc).getMoneyForHangeul(gld.getGuildMoney()) + "플", true);
+                            eb.setImage(gld.getGuildImage());
+                            eb.setColor(Color.GREEN);
+
+                            tc.sendMessage(eb.build()).queue();
+                        } else {
+                            tc.sendMessage("아직 가입한 길드가 없네요. `.길드 가입 [유저 태그]`를 이용해서 길드에 가입해 보세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                        }
+                    } else {
+
+                        if (e.eq(args[1], "초대")) {
+
+                            String tag = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+                            try {
+                                gld.sendInviteRequest(Objects.requireNonNull(event.getJDA().getUserByTag(tag)).getId());
+                            } catch (NullPointerException ex) {
+                                tc.sendMessage("해당 유저를 찾을 수 없었어요. 태그를 다시 입력해 보세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            }
+
+                        }
+
+                        if (e.eq(args[1], "가입")) {
+
+                            String tag = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+                            try {
+                                gld.sendJoinRequest(Objects.requireNonNull(event.getJDA().getUserByTag(tag)).getId());
+                            } catch (NullPointerException ex) {
+                                tc.sendMessage("해당 유저를 찾을 수 없었어요. 태그를 다시 입력해 보세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            }
+
+                        }
+
+                    }
+
                 }
 
             }
