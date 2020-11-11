@@ -1030,7 +1030,6 @@ public class DefaultListener extends ListenerAdapter {
         User user = event.getAuthor();
         Message message = event.getMessage();
         EasyEqual e = new EasyEqual();
-        PrivateChannel tc = event.getChannel();
 
         String[] args = message.getContentRaw().split(" ");
 
@@ -1041,7 +1040,6 @@ public class DefaultListener extends ListenerAdapter {
             if (a.getAuthorityForId(user.getId()) >= 3) {
 
                 if (args.length == 1) {
-                    return;
                 } else {
                     if (jda.retrieveUserById(args[1]).complete() != null) {
                         PrivateChannel targetDM = jda.retrieveUserById(args[1]).complete().openPrivateChannel().complete();
