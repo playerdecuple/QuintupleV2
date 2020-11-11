@@ -2,14 +2,12 @@ package com.DecupleProject.Contents;
 
 import com.DecupleProject.Contents.RPG.Account;
 import com.DecupleProject.Contents.RPG.Weapon.WeaponManager;
-import com.DecupleProject.Core.DatabaseManager;
 import com.DecupleProject.Core.ReadFile;
 import com.DecupleProject.Listener.DefaultListener;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
-import org.python.indexer.Def;
 
 import java.io.File;
 import java.util.*;
