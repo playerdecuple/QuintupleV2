@@ -178,8 +178,19 @@ public class RPGListener extends ListenerAdapter {
                     if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
                         tc.deleteMessageById(msg.getId()).queue();
 
-                    if (args.length != 1) return;
-                    ac.sendAccountMessage(tc);
+                    if (args.length == 1) {
+                        ac.sendAccountMessage(tc);
+                    } else {
+
+                        if (e.eq(args[1], "랭킹", "순위")) {
+                            Ranking ranking = new Ranking();
+
+                            if (e.eq(args[2], "길드")) {
+                                ranking.sendMoneyRanking(tc, guild);
+                            } else ranking.sendMoneyRanking(tc, e.eq(args[2], "관리자", "어드민", "팀뎈", "팀"));
+                        }
+
+                    }
 
                 }
 
