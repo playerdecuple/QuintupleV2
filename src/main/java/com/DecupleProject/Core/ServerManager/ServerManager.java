@@ -1,5 +1,6 @@
 package com.DecupleProject.Core.ServerManager;
 
+import com.DecupleProject.Core.DeleteFile;
 import com.DecupleProject.Core.ReadFile;
 import com.DecupleProject.Core.Util.LinkUtility;
 import com.DecupleProject.Core.WriteFile;
@@ -7,6 +8,7 @@ import com.DecupleProject.Listener.DefaultListener;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+import org.python.antlr.ast.Delete;
 
 import java.awt.*;
 import java.io.File;
@@ -183,6 +185,21 @@ public class ServerManager {
     public int getAttentionCount(Member user) {
         File attentionCountFile = new File("D:/Database/Servers/" + user.getGuild().getId() + "/Attention/" + user.getUser().getId() + ".txt");
         return attentionCountFile.exists() ? new ReadFile().readInt(attentionCountFile) : 0;
+    }
+
+    public boolean isVerifiedServer(Guild guild) {
+        File verifyFile = new File("D:/Database/Servers/" + guild.getId() + "/Verify.txt");
+        return verifyFile.exists();
+    }
+
+    public void verifyServer(Guild guild) {
+        File verifyFile = new File("D:/Database/Servers/" + guild.getId() + "/Verify.txt");
+        new WriteFile().writeString(verifyFile, "verify-completed-server");
+    }
+
+    public void verifyResetServer(Guild guild) {
+        File verifyFile = new File("D:/Database/Servers/" + guild.getId() + "/Verify.txt");
+        new DeleteFile().deleteFile(verifyFile);
     }
 
     public MessageEmbed makeEmbed(String script) {

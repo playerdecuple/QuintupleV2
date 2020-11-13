@@ -10,6 +10,7 @@ import com.DecupleProject.Contents.AttendanceCheck;
 import com.DecupleProject.Contents.RPG.Account;
 import com.DecupleProject.Contents.RPG.UserStatus;
 import com.DecupleProject.Core.*;
+import com.DecupleProject.Core.ServerManager.ServerManager;
 import com.DecupleProject.Core.Util.*;
 
 import com.gikk.twirk.Twirk;
@@ -992,22 +993,18 @@ public class DefaultListener extends ListenerAdapter {
 
                 }
 
-                if (e.eq(args[0], "예외")) {
+                if (e.eq(args[0], "인증", "verification", "verify")) {
 
                     if (new Authority().getAuthorityForId(user.getId()) >= 3) {
 
-                        if (args.length >= 2) {
-
-                            String exName = args[1];
-
-                            if (e.eq(exName, "NPE", "NullPointerException")) {
-                                try {
-                                    throw new NullPointerException();
-                                } catch (NullPointerException ex) {
-                                    new ExceptionReport(ex, user, tc);
-                                }
-                            }
-
+                        switch (args[1]) {
+                            case "부여":
+                                String guildId = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+                                new ServerManager(guild, member).verifyServer(Objects.requireNonNull(jda.getGuildById(guildId)));
+                                break;
+                            case "해제":
+                                guildId = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+                                new ServerManager(guild, member).verifyResetServer(Objects.requireNonNull(jda.getGuildById(guildId)));
                         }
 
                     }
