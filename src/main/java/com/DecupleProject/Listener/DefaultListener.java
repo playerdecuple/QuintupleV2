@@ -997,14 +997,28 @@ public class DefaultListener extends ListenerAdapter {
 
                     if (new Authority().getAuthorityForId(user.getId()) >= 3) {
 
+                        String guildId = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+                        Guild targetGuild = jda.getGuildById(guildId);
+
                         switch (args[1]) {
                             case "부여":
-                                String guildId = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
-                                new ServerManager(guild, member).verifyServer(Objects.requireNonNull(jda.getGuildById(guildId)));
+                                new ServerManager(guild, member).verifyServer(Objects.requireNonNull(targetGuild));
+                                Objects.requireNonNull(targetGuild.getOwner())
+                                        .getUser()
+                                        .openPrivateChannel()
+                                        .complete()
+                                        .sendMessage("`" + guild.getName() + "` 서버가 인증되었습니다!")
+                                        .queue();
                                 break;
                             case "해제":
-                                guildId = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
-                                new ServerManager(guild, member).verifyResetServer(Objects.requireNonNull(jda.getGuildById(guildId)));
+                                new ServerManager(guild, member).verifyResetServer(Objects.requireNonNull(targetGuild));
+                                Objects.requireNonNull(targetGuild.getOwner())
+                                        .getUser()
+                                        .openPrivateChannel()
+                                        .complete()
+                                        .sendMessage("`" + guild.getName() + "` 서버가 인증 해제되었습니다..")
+                                        .queue();
+                                break;
                         }
 
                     }
