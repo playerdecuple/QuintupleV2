@@ -116,6 +116,11 @@ public class ServerManagementListener extends ListenerAdapter {
 
                         eb.setThumbnail(guild.getIconUrl());
                         eb.setColor(Color.CYAN);
+
+                        if (manager.isVerifiedServer(guild)) {
+                            eb.setFooter("이 서버는 인증되었습니다!", "https://www.pngmart.com/files/12/TikTok-Verified-Badge-PNG-Photos.png");
+                        }
+
                         tc.sendMessage(eb.build()).queue();
                     }
 
