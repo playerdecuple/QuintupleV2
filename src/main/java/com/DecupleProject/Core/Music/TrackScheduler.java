@@ -117,6 +117,8 @@ public class TrackScheduler extends AudioEventAdapter {
         }
     }
 
+    public AudioTrack getLastTrack() { return lastTrack; }
+
     public boolean isRepeating() {
         return repeating;
     }

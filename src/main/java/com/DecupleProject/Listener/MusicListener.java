@@ -313,6 +313,75 @@ public class MusicListener extends ListenerAdapter {
 
                 }
 
+                if (e.eq(args[0], "r", "replay", "last", "마지막", "다시")) {
+
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
+
+                    if (guildInfo.getMusicChannel() != null) {
+                        if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
+                            tc.sendMessage("이 곳에서는 **음악 명령어**를 사용할 수 없습니다! 대신, " + guildInfo.getMusicChannel().getAsMention() + " 채널에서 써 주세요.")
+                                    .delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
+                    }
+
+                    GuildMusicManager musicManager = getGuildAudioPlayer(guild);
+
+                    try {
+
+                        if (!am.isConnected()) {
+
+                            if (member == null) return;
+                            else {
+                                VoiceChannel vc = Objects.requireNonNull(member.getVoiceState()).getChannel();
+
+                                if (vc == null) {
+                                    tc.sendMessage("먼저 보이스 채널에 연결해 주세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                                    return;
+                                } else {
+                                    setVolume(tc, 20, false);
+
+
+                                    am.setSendingHandler(new AudioSendHandler() {
+                                        @Override
+                                        public boolean canProvide() {
+                                            return false;
+                                        }
+
+                                        @Nullable
+                                        @Override
+                                        public ByteBuffer provide20MsAudio() {
+                                            return null;
+                                        }
+                                    });
+
+                                    am.openAudioConnection(vc);
+
+                                    eb.setDescription("`" + vc.getName() + "` 보이스 채널에 연결했어요!");
+                                    eb.setFooter(user.getAsTag(), user.getAvatarUrl());
+                                    eb.setColor(Color.CYAN);
+                                    tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                                }
+                            }
+
+                        }
+
+                        loadAndPlay(tc, musicManager.scheduler.getLastTrack().getInfo().uri, true, member);
+
+
+                    } catch (NullPointerException ex) {
+
+                        eb.setTitle("보이스 채널에 연결할 수 없었어요.");
+                        eb.setDescription("혹시 보이스 채널에 계시지 않으신가요?");
+                        eb.setColor(Color.RED);
+
+                        tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+
+                    }
+
+                }
+
                 if (e.eq(args[0], "ps", "pause", "잠깐", "멈춰")) {
 
                     if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
