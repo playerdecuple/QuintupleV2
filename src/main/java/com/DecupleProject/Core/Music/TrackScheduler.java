@@ -118,9 +118,9 @@ public class TrackScheduler extends AudioEventAdapter {
 
         try {
             if (!queue.isEmpty()) {
+                pl.startTrack(tracks.get(0).getTrack(), false);
                 this.queue.remove();
                 tracks.remove(0);
-                pl.startTrack(tracks.get(0).getTrack(), false);
 
                 /*
                 AudioTrack track = tracks.get(0).getTrack();
@@ -151,12 +151,14 @@ public class TrackScheduler extends AudioEventAdapter {
 
         try {
             if (!queue.isEmpty()) {
-                for (int i = 1; i < value; i++) {
+                for (int i = 1; i < value - 1; i++) {
                     this.queue.remove();
                     tracks.remove(0);
                 }
 
                 pl.startTrack(tracks.get(0).getTrack(), false);
+                this.queue.remove();
+                tracks.remove(0);
 
                 /*
 
