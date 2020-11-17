@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 public class TrackScheduler extends AudioEventAdapter {
     private boolean repeating = false;
+    private boolean listRepeating = false;
 
     public final AudioPlayer pl;
     public final Queue<AudioInfo> queue;
@@ -39,70 +40,14 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     @Override
-    public void onTrackStart(AudioPlayer pl, AudioTrack track) {
-
-        /*
-
-        WriteFile w = new WriteFile();
-
-        File serverDirectory = new File("D:/Database/Servers/" + tc.getGuild().getId() + "/");
-
-        if (!serverDirectory.exists())
-            serverDirectory.mkdir();
-
-        File topicFile = new File(serverDirectory.getPath() + "/Topic" + tc.getId() + ".txt");
-        w.writeString(topicFile, tc.getTopic());
-
-        long pos = track.getDuration();
-
-        int ns = (int) (pos / 1000) % 60;
-        int nm = (int) (pos / (1000 * 60)) % 60;
-        int nh = (int) (pos / (1000 * 60 * 60));
-
-        try {
-            // tc.getManager().setTopic("**" + track.getInfo().title + "** :arrow_forward: [" + nh + "시간 " + nm + "분 " + ns + "초] :loud_sound:").complete(false);
-        } catch (Exception e) {
-            // ignore
-        }
-
-         */
-    }
-
-    @Override
     public void onTrackEnd(AudioPlayer pl, AudioTrack track, AudioTrackEndReason endReason) {
         this.lastTrack = track;
 
-        /*
-        File serverDirectory = new File("D:/Database/Servers/" + tc.getGuild().getId());
-        File topicFile = new File(serverDirectory.getPath() + "/Topic" + tc.getId() + ".txt");
-
-        ReadFile r = new ReadFile();
-
-        try {
-            // tc.getManager().setTopic(r.readString(topicFile)).complete(false);
-        } catch (Exception e) {
-            // ignore
-        }
-         */
-
         if (endReason.mayStartNext) {
             if (repeating) {
-                pl.startTrack(lastTrack.makeClone(), false);
+                pl.startTrack(lastTrack.makeClone(), listRepeating);
             } else {
-
-                if (queue.isEmpty()) {
-                    /*
-                    tc.getGuild().getAudioManager().closeAudioConnection();
-
-                    EmbedBuilder eb = new EmbedBuilder();
-                    eb.setDescription("모든 곡을 재생했습니다. 자원을 아끼기 위해서 연결을 끊을게요.");
-
-                    tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
-                     */
-
-                    return; // V2.0.101.3 (Not Released)
-                }
-
+                if (queue.isEmpty()) return;
                 nextTrack();
             }
         }
@@ -190,9 +135,13 @@ public class TrackScheduler extends AudioEventAdapter {
         return repeating;
     }
 
+    public boolean isListRepeating() { return listRepeating; }
+
     public void setRepeating(boolean repeating) {
         this.repeating = repeating;
     }
+
+    public void setListRepeating(boolean repeating) { this.listRepeating = repeating; }
 
     public void shuffle() {
         ArrayList<AudioInfo> tracks = new ArrayList<>(queue);
