@@ -30,7 +30,6 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.AudioManager;
 import org.jetbrains.annotations.NotNull;
-import org.python.bouncycastle.asn1.sec.SECNamedCurves;
 
 import javax.annotation.Nullable;
 import java.awt.*;
