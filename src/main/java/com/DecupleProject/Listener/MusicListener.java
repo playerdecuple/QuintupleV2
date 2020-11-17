@@ -310,6 +310,33 @@ public class MusicListener extends ListenerAdapter {
                             skipTrack(tc, Integer.parseInt(args[1]), true);
                         }
                     }
+
+                }
+
+                if (e.eq(args[0], "ps", "pause", "잠깐", "멈춰")) {
+
+                    if (Objects.requireNonNull(guild.getMember(DefaultListener.jda.getSelfUser())).hasPermission(Permission.MESSAGE_MANAGE))
+                        tc.deleteMessageById(msg.getId()).queue();
+
+                    if (guildInfo.getMusicChannel() != null) {
+                        if (!tc.getId().equals(guildInfo.getMusicChannel().getId())) {
+                            tc.sendMessage("이 곳에서는 **음악 명령어**를 사용할 수 없습니다! 대신, " + guildInfo.getMusicChannel().getAsMention() + " 채널에서 써 주세요.")
+                                    .delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        }
+                    }
+
+                    GuildMusicManager musicManager = getGuildAudioPlayer(guild);
+
+                    boolean pauseResult = !musicManager.pl.isPaused();
+                    musicManager.pl.setPaused(pauseResult);
+
+                    eb.setDescription(pauseResult ? "곡을 잠시 멈추겠습니다!" : "계속 들어 보실까요?");
+                    eb.setColor(pauseResult ? Color.ORANGE : Color.GREEN);
+                    eb.setFooter(user.getAsTag(), user.getAvatarUrl());
+
+                    tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+
                 }
 
                 if (e.eq(args[0], "vol", "volume", "볼륨", "음량")) {
