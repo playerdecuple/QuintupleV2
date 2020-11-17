@@ -1,5 +1,6 @@
 package com.DecupleProject.Core.Music;
 
+import com.DecupleProject.Listener.DefaultListener;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -9,6 +10,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.python.indexer.Def;
 
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -41,16 +43,16 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer pl, AudioTrack track, AudioTrackEndReason endReason) {
-        this.lastTrack = track;
 
         if (endReason.mayStartNext) {
             if (repeating) {
-                pl.startTrack(lastTrack.makeClone(), listRepeating);
+                pl.startTrack(lastTrack.makeClone(), false);
             } else {
                 if (queue.isEmpty()) return;
                 nextTrack();
             }
         }
+
     }
 
     public Set<AudioInfo> getQueuedTracks() {
@@ -64,19 +66,12 @@ public class TrackScheduler extends AudioEventAdapter {
         try {
             if (!queue.isEmpty()) {
                 pl.startTrack(tracks.get(0).getTrack(), false);
+                lastTrack = tracks.get(0).getTrack();
+
+                if (listRepeating) this.queue.add(new AudioInfo(tracks.get(0).getTrack().makeClone(), tc.getGuild().getMember(DefaultListener.jda.getSelfUser()), tc));
+
                 this.queue.remove();
                 tracks.remove(0);
-
-                /*
-                AudioTrack track = tracks.get(0).getTrack();
-                long pos = track.getDuration();
-
-                int ns = (int) (pos / 1000) % 60;
-                int nm = (int) (pos / (1000 * 60)) % 60;
-                int nh = (int) (pos / (1000 * 60 * 60));
-
-                // tc.getManager().setTopic("**" + track.getInfo().title + "** :arrow_forward: [" + nh + "시간 " + nm + "분 " + ns + "초] :loud_sound:").complete(false);
-                 */
             } else {
                 pl.destroy();
             }
@@ -102,21 +97,12 @@ public class TrackScheduler extends AudioEventAdapter {
                 }
 
                 pl.startTrack(tracks.get(0).getTrack(), false);
+                lastTrack = tracks.get(0).getTrack();
+
+                if (listRepeating) this.queue.add(new AudioInfo(tracks.get(0).getTrack().makeClone(), tc.getGuild().getMember(DefaultListener.jda.getSelfUser()), tc));
+
                 this.queue.remove();
                 tracks.remove(0);
-
-                /*
-
-                AudioTrack track = tracks.get(0).getTrack();
-                long pos = track.getDuration();
-
-                int ns = (int) (pos / 1000) % 60;
-                int nm = (int) (pos / (1000 * 60)) % 60;
-                int nh = (int) (pos / (1000 * 60 * 60));
-
-                // tc.getManager().setTopic("**" + track.getInfo().title + "** :arrow_forward: [" + nh + "시간 " + nm + "분 " + ns + "초] :loud_sound:").complete(false);
-
-                 */
             } else {
                 pl.destroy();
             }

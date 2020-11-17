@@ -524,12 +524,27 @@ public class MusicListener extends ListenerAdapter {
                     }
 
                     GuildMusicManager musicManager = getGuildAudioPlayer(tc.getGuild());
-                    musicManager.scheduler.setRepeating(!musicManager.scheduler.isRepeating());
 
-                    eb.setDescription("반복을 " + (musicManager.scheduler.isRepeating() ? "시작할게요!" : "끌게요!"));
-                    eb.setColor(Color.CYAN);
+                    if (args.length == 1) {
 
-                    tc.sendMessage(eb.build()).delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                        musicManager.scheduler.setRepeating(!musicManager.scheduler.isRepeating());
+
+                        eb.setDescription("반복을 " + (musicManager.scheduler.isRepeating() ? "시작할게요!" : "끌게요!"));
+                        eb.setColor(Color.CYAN);
+
+                        tc.sendMessage(eb.build()).delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+
+                    } else if (e.eq(args[1], "list", "ls", "리스트", "목록", "플레이리스트", "pl")) {
+
+                        musicManager.scheduler.setListRepeating(!musicManager.scheduler.isListRepeating());
+
+                        eb.setDescription(musicManager.scheduler.queue.size() + "개의 곡이 담긴 플레이리스트를 반복" +
+                                (musicManager.scheduler.isListRepeating() ? "할게요!" : " 취소할게요!"));
+                        eb.setColor(Color.CYAN);
+
+                        tc.sendMessage(eb.build()).delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+
+                    }
 
                 }
 
