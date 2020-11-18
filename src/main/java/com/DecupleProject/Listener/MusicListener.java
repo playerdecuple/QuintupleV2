@@ -1027,7 +1027,7 @@ public class MusicListener extends ListenerAdapter {
                 EmbedBuilder eb = new EmbedBuilder();
                 p.addValue(203, 1);
 
-                eb.setTitle("새로운 곡을 적었습니다!");
+                eb.setTitle("새로운 곡을 적었습니다!", trackUrl);
 
                 eb.addField("곡 이름", audioTrack.getInfo().title, true);
 
@@ -1039,7 +1039,7 @@ public class MusicListener extends ListenerAdapter {
 
                 eb.addField("곡 길이", hours + "시간 " + minutes + "분 " + seconds + "초", true);
                 eb.addField("채널", audioTrack.getInfo().author, true);
-                eb.setDescription(trackUrl);
+                eb.setDescription(musicManager.scheduler.isListRepeating() ? "플레이리스트 반복이 진행 중이므로 순서가 꼬일 수 있어요." : "자, 들어 보실까요?");
                 eb.setColor(Color.CYAN);
 
                 Youtube y = new Youtube();
