@@ -3,14 +3,11 @@ package com.DecupleProject.Listener;
 import com.DecupleProject.API.Melon;
 import com.DecupleProject.API.Youtube;
 import com.DecupleProject.Contents.RPG.Proficiency;
-import com.DecupleProject.Core.CustomCommand;
-import com.DecupleProject.Core.ExceptionReport;
-import com.DecupleProject.Core.GuildInfo;
+import com.DecupleProject.Core.*;
 import com.DecupleProject.Core.Music.AudioInfo;
 import com.DecupleProject.Core.Music.GuildMusicManager;
 import com.DecupleProject.Core.Music.MusicPlaylist;
 import com.DecupleProject.Core.Music.TrackScheduler;
-import com.DecupleProject.Core.ReadFile;
 import com.DecupleProject.Core.Util.EasyEqual;
 import com.DecupleProject.Core.Util.LinkUtility;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
@@ -214,6 +211,26 @@ public class MusicListener extends ListenerAdapter {
 
                     String input = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
 
+                    File playCoolTimeFile = new File("D:/Database/MusicCoolTime/");
+                    if (!playCoolTimeFile.exists()) playCoolTimeFile.mkdir();
+
+                    File lastTimeFile = new File("D:/Database/MusicCoolTime/" + guild.getId() + ".txt");
+                    long lastTime = 0;
+
+                    if (lastTimeFile.exists()) {
+                        lastTime = new ReadFile().readLong(lastTimeFile);
+                    }
+
+                    if (System.currentTimeMillis() - lastTime < 10000) {
+
+                        eb.setColor(Color.ORANGE);
+                        eb.setDescription("음악을 다시 재생하려면 " + (int) (10 - ((System.currentTimeMillis() - lastTime) / 1000)) + "초를 기다려야 합니다.");
+                        tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+
+                        return;
+
+                    }
+
                     try {
 
                         if (!am.isConnected()) {
@@ -266,6 +283,7 @@ public class MusicListener extends ListenerAdapter {
 
                         input = youtubeSearched;
                         loadAndPlay(event.getChannel(), input, true, member);
+                        new WriteFile().writeLong(lastTimeFile, System.currentTimeMillis());
 
 
                     } catch (NullPointerException ex) {
