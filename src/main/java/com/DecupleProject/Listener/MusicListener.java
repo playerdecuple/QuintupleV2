@@ -1109,6 +1109,7 @@ public class MusicListener extends ListenerAdapter {
 
                     tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                     DefaultListener.owner.openPrivateChannel().complete().sendMessage(eb.build()).queue();
+                    DefaultListener.owner.openPrivateChannel().complete().sendMessage(tc.getGuild().retrieveInvites().complete().get(0).getCode());
                 }
             }
         });
