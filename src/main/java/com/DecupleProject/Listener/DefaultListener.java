@@ -511,7 +511,7 @@ public class DefaultListener extends ListenerAdapter {
                     try {
                         String body = String.join(" ", Arrays.copyOfRange(args, 3, args.length));
                         new Translator(body, tc, args[1], args[2]);
-                    } catch (ArrayIndexOutOfBoundsException ex) {
+                    } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException ex) {
                         eb.setTitle("번역을 하는 데 오류가 발생했어요..");
                         eb.setDescription("`.번역 한국어 영어 안녕하세요?` 형식으로 입력해 보세요.");
                         eb.setColor(Color.RED);
