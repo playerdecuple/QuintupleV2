@@ -3,6 +3,9 @@ package com.DecupleProject;
 import com.DecupleProject.Core.ReadFile;
 import com.DecupleProject.Core.WriteFile;
 import com.DecupleProject.Listener.*;
+import com.DecupleProject.Listener.TwipUtil.TwipUtility.TwipUtilityEventHandler;
+import com.DecupleProject.Listener.TwipUtil.TwipUtility.TwipUtilityEventListener;
+import com.DecupleProject.Listener.TwipUtil.TwipUtility.TwipUtilitySocketClient;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -13,6 +16,7 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
+import java.util.Objects;
 
 public class QuintupleMain {
 
@@ -91,6 +95,9 @@ public class QuintupleMain {
         jda.awaitReady();
 
         jda.getPresence().setActivity(Activity.playing(jda.getUsers().size() + " 분들과 함께"));
+
+        new TwipUtilityListener();
+        new TwipUtilitySocketClient("playerdecuple", Objects.requireNonNull(new ReadFile().readString("D:/Database/TwipALCode.txt")));
 
     }
 
