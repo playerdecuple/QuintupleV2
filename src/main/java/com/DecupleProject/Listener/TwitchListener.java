@@ -20,7 +20,6 @@ public class TwitchListener implements TwirkListener {
     public String msgContents;
     public String msgTimeStamp;
 
-
     /*
     @Override
     public void onConnect() {
