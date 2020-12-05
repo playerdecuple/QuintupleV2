@@ -1135,7 +1135,8 @@ public class MusicListener extends ListenerAdapter {
     }
 
     public void play(Guild guild, GuildMusicManager musicManager, AudioTrack track, Member member, TextChannel tc) {
-        connectToFirstVoiceChannel(guild.getAudioManager());
+        boolean voiceChannelConnected = connectToFirstVoiceChannel(guild.getAudioManager());
+        if (!voiceChannelConnected) musicManager.pl.setVolume(20);
         musicManager.scheduler.queue(track, member, tc);
     }
 
@@ -1272,13 +1273,15 @@ public class MusicListener extends ListenerAdapter {
 
     }
 
-    public static void connectToFirstVoiceChannel(AudioManager audioManager) {
+    public static boolean connectToFirstVoiceChannel(AudioManager audioManager) {
         if (!audioManager.isConnected()) { // 'audioManager.isAttemptingConnect()' was deprecated
             for (VoiceChannel vc : audioManager.getGuild().getVoiceChannels()) {
                 audioManager.openAudioConnection(vc);
-                break;
+                return false;
             }
         }
+
+        return true;
     }
 
 }
