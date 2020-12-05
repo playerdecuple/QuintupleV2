@@ -221,7 +221,7 @@ public class MusicListener extends ListenerAdapter {
                         lastTime = new ReadFile().readLong(lastTimeFile);
                     }
 
-                    if (System.currentTimeMillis() - lastTime < 10000) {
+                    if (System.currentTimeMillis() - lastTime < 3000) {
 
                         eb.setColor(Color.ORANGE);
                         eb.setDescription("음악을 다시 재생하려면 " + (int) (10 - ((System.currentTimeMillis() - lastTime) / 1000)) + "초를 기다려야 합니다.");
