@@ -56,6 +56,8 @@ public class ExceptionReport {
                     + " - Exception thrown : \n" + msg + "\n" + stackTrace + "\n\nCaused By: \n" + e.getCause().getMessage() + "```").queue();
         } catch (IllegalStateException ex) {
             // ignore
+        } catch (NullPointerException nl) {
+            nl.printStackTrace();
         }
 
     }
@@ -109,6 +111,8 @@ public class ExceptionReport {
                     "[TextChannel] " + t.getName() + " <" + t.getGuild().getName() + "[" + t.getGuild().getId() + "]> / " + t.getId()).queue();
         } catch (IllegalStateException ex) {
             // ignore
+        } catch (NullPointerException nl) {
+            nl.printStackTrace();
         }
 
     }
