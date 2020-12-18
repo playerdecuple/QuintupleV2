@@ -214,7 +214,7 @@ public class MusicPlaylist {
     public String getTitle(String youtubeUrl) {
         try {
             if (youtubeUrl != null) {
-                URL url = new URL("http://www.youtube.com/oembed?url=" + youtubeUrl + "&format=json");
+                URL url = new URL("https://www.youtube.com/oembed?url=" + youtubeUrl + "&format=json");
                 return new JSONObject(IOUtils.toString(url, StandardCharsets.UTF_8)).getString("title");
             } else {
                 return null;
