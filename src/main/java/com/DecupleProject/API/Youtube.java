@@ -1,13 +1,10 @@
 package com.DecupleProject.API;
 
 import com.DecupleProject.Core.ExceptionReport;
-import com.DecupleProject.Core.Util.GetJSON;
 import com.DecupleProject.Core.Util.LinkUtility;
 import com.DecupleProject.Core.Util.LogWriter;
 import com.DecupleProject.Listener.DefaultListener;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchResult;
@@ -21,7 +18,6 @@ import java.util.List;
 public class Youtube {
 
     private YouTube youTube;
-    private String videoId;
 
     public Youtube() {
         try {
@@ -53,7 +49,6 @@ public class Youtube {
 
             if (!results.isEmpty()) {
                 String videoId = results.get(0).getId().getVideoId();
-                this.videoId = videoId;
                 return "https://www.youtube.com/watch?v=" + videoId;
             }
 
