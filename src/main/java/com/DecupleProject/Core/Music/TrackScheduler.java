@@ -72,8 +72,6 @@ public class TrackScheduler extends AudioEventAdapter {
 
                 this.queue.remove();
                 tracks.remove(0);
-            } else {
-                pl.destroy();
             }
         } catch (IndexOutOfBoundsException e) {
             EmbedBuilder eb = new EmbedBuilder();
@@ -103,8 +101,6 @@ public class TrackScheduler extends AudioEventAdapter {
 
                 this.queue.remove();
                 tracks.remove(0);
-            } else {
-                pl.destroy();
             }
         } catch (IndexOutOfBoundsException e) {
             EmbedBuilder eb = new EmbedBuilder();
