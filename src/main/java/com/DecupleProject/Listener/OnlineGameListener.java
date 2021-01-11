@@ -41,9 +41,6 @@ public class OnlineGameListener extends ListenerAdapter {
             DatabaseManager db = new DatabaseManager(user.getId(), tc, jda);
             if (!db.existsBasicFiles()) db.createAllDatabaseFromId();
 
-            UserStatus us = new UserStatus(user.getId(), tc);
-            us.setEXP(user.getId(), 1, false, true);
-
             CustomCommand CC = new CustomCommand(user);
             String prefix = CC.getPrefixStr();
 

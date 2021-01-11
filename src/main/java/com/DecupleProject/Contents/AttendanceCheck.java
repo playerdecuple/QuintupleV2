@@ -176,7 +176,7 @@ public class AttendanceCheck {
             tc.sendMessage(eb.build()).queue();
 
             UserStatus us = new UserStatus(id, tc);
-            us.setEXP(id, 50, true, true);
+            us.setEXP(id, 50, true, true, tc);
 
             w.writeString(lastCheckFile.getPath(), today);
         }
