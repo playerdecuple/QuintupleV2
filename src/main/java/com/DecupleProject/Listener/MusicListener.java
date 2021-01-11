@@ -233,42 +233,37 @@ public class MusicListener extends ListenerAdapter {
 
                     try {
 
-                        if (!am.isConnected()) {
+                        if (member == null) return;
 
-                            if (member == null) return;
-                            else {
-                                VoiceChannel vc = Objects.requireNonNull(member.getVoiceState()).getChannel();
+                        VoiceChannel vc = Objects.requireNonNull(member.getVoiceState()).getChannel();
 
-                                if (vc == null) {
-                                    tc.sendMessage("먼저 보이스 채널에 연결해 주세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
-                                    return;
-                                } else {
-                                    setVolume(tc, 20, false);
+                        if (vc == null) {
+                            tc.sendMessage("먼저 보이스 채널에 연결해 주세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            return;
+                        } else {
+                            setVolume(tc, 20, false);
 
-
-                                    am.setSendingHandler(new AudioSendHandler() {
-                                        @Override
-                                        public boolean canProvide() {
-                                            return false;
-                                        }
-
-                                        @Nullable
-                                        @Override
-                                        public ByteBuffer provide20MsAudio() {
-                                            return null;
-                                        }
-                                    });
-
-                                    am.openAudioConnection(vc);
-
-                                    eb.setDescription("`" + vc.getName() + "` 보이스 채널에 연결했어요!");
-                                    eb.setFooter(user.getAsTag(), user.getAvatarUrl());
-                                    eb.setColor(Color.CYAN);
-                                    tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            am.setSendingHandler(new AudioSendHandler() {
+                                @Override
+                                public boolean canProvide() {
+                                    return false;
                                 }
-                            }
 
+                                @Nullable
+                                @Override
+                                public ByteBuffer provide20MsAudio() {
+                                    return null;
+                                }
+                            });
+
+                            am.openAudioConnection(vc);
+
+                            eb.setDescription("`" + vc.getName() + "` 보이스 채널에 연결했어요!");
+                            eb.setFooter(user.getAsTag(), user.getAvatarUrl());
+                            eb.setColor(Color.CYAN);
+                            tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                         }
+
 
                         Youtube youtube = new Youtube();
                         String youtubeSearched = youtube.searchYoutube(input);
@@ -1031,7 +1026,6 @@ public class MusicListener extends ListenerAdapter {
         Proficiency p = new Proficiency(user.getUser());
 
         final String trackUrl;
-
 
         if (url.startsWith("<") && url.endsWith(">"))
             trackUrl = url.substring(1, url.length() - 1);

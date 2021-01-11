@@ -14,6 +14,8 @@ public class GuildMusicManager {
         scheduler = new TrackScheduler(pl);
         sendHandler = new AudioPlayerSendHandler(pl);
         pl.addListener(scheduler);
+
+        pl.setVolume(20);
     }
 
     public AudioPlayerSendHandler getSendHandler() {

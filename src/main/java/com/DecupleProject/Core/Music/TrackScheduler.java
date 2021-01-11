@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import org.python.indexer.Def;
 
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -39,6 +38,11 @@ public class TrackScheduler extends AudioEventAdapter {
         if (!pl.startTrack(track, true)) {
             queue.add(info);
         }
+    }
+
+    @Override
+    public void onTrackStart(AudioPlayer player, AudioTrack track) {
+        lastTrack = track;
     }
 
     @Override
