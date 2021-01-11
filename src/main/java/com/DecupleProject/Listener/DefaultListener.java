@@ -218,7 +218,11 @@ public class DefaultListener extends ListenerAdapter {
             if (!db.existsBasicFiles()) db.createAllDatabaseFromId();
 
             UserStatus us = new UserStatus(user.getId(), tc);
-            us.setEXP(user.getId(), 1, false, true);
+
+            GuildInfo guildInfo = new GuildInfo(guild);
+            TextChannel logChannel = guildInfo.getLoggingChannel();
+
+            us.setEXP(user.getId(), 1, false, true, logChannel);
 
             // ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ //
 

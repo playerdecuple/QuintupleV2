@@ -55,6 +55,28 @@ public class GuildInfo {
         return jda.getTextChannelById(Objects.requireNonNull(musicChannelId));
     }
 
+    public void setLoggingChannel(String id) { w.writeString(BASE_DIRECTORY.getPath() + "/LogChannel.txt", id); }
+
+    public TextChannel getLoggingChannel() {
+
+        String musicChannelId = null;
+        File n = new File(BASE_DIRECTORY.getPath() + "/LogChannel.txt");
+
+        if (n.exists())
+            musicChannelId = r.readString(n);
+
+        if (musicChannelId == null) {
+            return null;
+        }
+
+        if (musicChannelId.equals("0")) {
+            return null;
+        }
+
+        return jda.getTextChannelById(Objects.requireNonNull(musicChannelId));
+
+    }
+
     public Guild getGuild() {
         return guild;
     }

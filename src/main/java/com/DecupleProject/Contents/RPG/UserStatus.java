@@ -40,7 +40,7 @@ public class UserStatus {
         return r.readLong(expFile);
     }
 
-    public void setEXP(String id, int expAmount, boolean showMessage, boolean showLvUpMessage) {
+    public void setEXP(String id, int expAmount, boolean showMessage, boolean showLvUpMessage, TextChannel levelUpLogChannel) {
 
         EmbedBuilder eb = new EmbedBuilder();
 
@@ -90,11 +90,15 @@ public class UserStatus {
                 eb.setDescription("<@" + id + "> :arrow_up: " + "Lv. " + finalLevel + " / EXP : " + String.format("%.2f", afterEXPPercent) + "%");
                 eb.setColor(Color.GREEN);
 
+                boolean levelUp = false;
+
                 if (finalLevel == level + 1) {
                     if (showLvUpMessage) {
                         eb.setTitle("레벨 업!");
                         eb.setDescription("<@" + id + "> :up: " + "Lv. " + finalLevel + " / EXP : 0.00%");
                         eb.setColor(Color.YELLOW);
+
+                        levelUp = true;
                     }
                 } else {
                     showLvUpMessage = false;
@@ -105,6 +109,10 @@ public class UserStatus {
 
                 if ((showMessage || showLvUpMessage) && Objects.requireNonNull(tc.getGuild().getMember(jda.getSelfUser())).hasPermission(Permission.MESSAGE_WRITE)) {
                     try {
+                        if (levelUpLogChannel != null && levelUp) {
+                            levelUpLogChannel.sendMessage(eb.build()).queue();
+                            return;
+                        }
                         tc.sendMessage(eb.build()).queue();
                     } catch (InsufficientPermissionException ex) {
                         // ignore

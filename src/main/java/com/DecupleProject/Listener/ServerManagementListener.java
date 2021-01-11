@@ -54,7 +54,6 @@ public class ServerManagementListener extends ListenerAdapter {
             if (!db.existsBasicFiles()) db.createAllDatabaseFromId();
 
             UserStatus us = new UserStatus(user.getId(), tc);
-            us.setEXP(user.getId(), 1, false, true);
 
             // ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ //
 
@@ -269,6 +268,26 @@ public class ServerManagementListener extends ListenerAdapter {
                                 tc.sendMessage(message).delay(1, TimeUnit.MINUTES).flatMap(Message::delete).queue();
 
                                 guildInfo.setMusicChannel("0");
+
+                            }
+
+                        }
+
+                        if (e.eq(args[2], "로그")) {
+
+                            if (args.length == 3) {
+
+                                String message = "`" + tc.getName() + "` 채널의 용도를 **로그 채널**로 설정했습니다!";
+                                tc.sendMessage(message).delay(1, TimeUnit.MINUTES).flatMap(Message::delete).queue();
+
+                                guildInfo.setLoggingChannel(tc.getId());
+
+                            } else if (e.eq(args[3], "제거", "삭제", "리셋")) {
+
+                                String message = "`" + tc.getGuild().getName() + "` 서버의 **로그 채널** 용도를 제거했습니다!";
+                                tc.sendMessage(message).delay(1, TimeUnit.MINUTES).flatMap(Message::delete).queue();
+
+                                guildInfo.setLoggingChannel("0");
 
                             }
 
