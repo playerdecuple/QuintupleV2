@@ -40,6 +40,7 @@ public class MusicListener extends ListenerAdapter {
     private final AudioPlayerManager playerManager;
     private final Map<Long, GuildMusicManager> musicManagers;
 
+    private int defaultVolume = 20;
 
     public MusicListener() {
         this.musicManagers = new HashMap();
@@ -59,10 +60,11 @@ public class MusicListener extends ListenerAdapter {
         }
 
         guild.getAudioManager().setSendingHandler(musicManager.getSendHandler());
+        musicManager.pl.setVolume(defaultVolume);
+
         return musicManager;
 
     }
-
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
@@ -126,40 +128,12 @@ public class MusicListener extends ListenerAdapter {
 
                     try {
 
-                        if (!am.isConnected()) {
-
-                            if (member == null) return;
-                            else {
-                                VoiceChannel vc = Objects.requireNonNull(member.getVoiceState()).getChannel();
-
-                                if (vc == null) {
-                                    tc.sendMessage("먼저 보이스 채널에 연결해 주세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
-                                    return;
-                                } else {
-                                    am.setSendingHandler(new AudioSendHandler() {
-                                        @Override
-                                        public boolean canProvide() {
-                                            return false;
-                                        }
-
-                                        @Nullable
-                                        @Override
-                                        public ByteBuffer provide20MsAudio() {
-                                            return null;
-                                        }
-                                    });
-
-                                    am.openAudioConnection(vc);
-                                    setVolume(tc, 20, false);
-
-                                    eb.setDescription("`" + vc.getName() + "` 보이스 채널에 연결했어요!");
-                                    eb.setFooter(user.getAsTag(), user.getAvatarUrl());
-                                    eb.setColor(Color.CYAN);
-                                    tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
-                                }
-                            }
-
+                        if (member == null) return;
+                        else {
+                            VoiceChannel vc = Objects.requireNonNull(member.getVoiceState()).getChannel();
+                            connectToVoiceChannel(vc, tc, user, true);
                         }
+
 
                     } catch (NullPointerException ex) {
 
@@ -187,7 +161,7 @@ public class MusicListener extends ListenerAdapter {
                     }
 
                     am.closeAudioConnection();
-                    skipAllTrack(tc, false, guild);
+                    skipAllTrack(tc, false);
 
                     eb.setDescription("보이스 채널 연결을 끊었어요.");
                     eb.setColor(Color.ORANGE);
@@ -241,29 +215,17 @@ public class MusicListener extends ListenerAdapter {
                             tc.sendMessage("먼저 보이스 채널에 연결해 주세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                             return;
                         } else {
-                            setVolume(tc, 20, false);
+                            GuildVoiceState nowConnecting = Objects.requireNonNull(guild.getMember(event.getJDA().getSelfUser())).getVoiceState();
+                            boolean showMessage = false;
 
-                            am.setSendingHandler(new AudioSendHandler() {
-                                @Override
-                                public boolean canProvide() {
-                                    return false;
-                                }
+                            if (nowConnecting == null) showMessage = true;
+                            else {
+                                if (nowConnecting.getChannel() == null) showMessage = true;
+                                if (!vc.getId().equals(nowConnecting.getChannel().getId())) showMessage = true;
+                            }
 
-                                @Nullable
-                                @Override
-                                public ByteBuffer provide20MsAudio() {
-                                    return null;
-                                }
-                            });
-
-                            am.openAudioConnection(vc);
-
-                            eb.setDescription("`" + vc.getName() + "` 보이스 채널에 연결했어요!");
-                            eb.setFooter(user.getAsTag(), user.getAvatarUrl());
-                            eb.setColor(Color.CYAN);
-                            tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                            connectToVoiceChannel(vc, tc, user, showMessage);
                         }
-
 
                         Youtube youtube = new Youtube();
                         String youtubeSearched = youtube.searchYoutube(input);
@@ -309,7 +271,7 @@ public class MusicListener extends ListenerAdapter {
                         skipTrack(tc, true);
                         return;
                     } else if (e.eq(args[1], "ALL", "모두", "전체", "전부")) {
-                        skipAllTrack(tc, true, guild);
+                        skipAllTrack(tc, true);
                     } else {
                         int skipTrack = Integer.parseInt(args[1]);
 
@@ -343,45 +305,29 @@ public class MusicListener extends ListenerAdapter {
 
                     try {
 
-                        if (!am.isConnected()) {
+                        if (member == null) return;
+                        else {
+                            VoiceChannel vc = Objects.requireNonNull(member.getVoiceState()).getChannel();
 
-                            if (member == null) return;
-                            else {
-                                VoiceChannel vc = Objects.requireNonNull(member.getVoiceState()).getChannel();
+                            if (vc == null) {
+                                tc.sendMessage("먼저 보이스 채널에 연결해 주세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                                return;
+                            } else {
+                                GuildVoiceState nowConnecting = Objects.requireNonNull(guild.getMember(event.getJDA().getSelfUser())).getVoiceState();
+                                boolean showMessage = false;
 
-                                if (vc == null) {
-                                    tc.sendMessage("먼저 보이스 채널에 연결해 주세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
-                                    return;
-                                } else {
-                                    setVolume(tc, 20, false);
-
-
-                                    am.setSendingHandler(new AudioSendHandler() {
-                                        @Override
-                                        public boolean canProvide() {
-                                            return false;
-                                        }
-
-                                        @Nullable
-                                        @Override
-                                        public ByteBuffer provide20MsAudio() {
-                                            return null;
-                                        }
-                                    });
-
-                                    am.openAudioConnection(vc);
-
-                                    eb.setDescription("`" + vc.getName() + "` 보이스 채널에 연결했어요!");
-                                    eb.setFooter(user.getAsTag(), user.getAvatarUrl());
-                                    eb.setColor(Color.CYAN);
-                                    tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                                if (nowConnecting == null) showMessage = true;
+                                else {
+                                    if (nowConnecting.getChannel() == null) showMessage = true;
+                                    if (!vc.getId().equals(nowConnecting.getChannel().getId())) showMessage = true;
                                 }
+
+                                connectToVoiceChannel(vc, tc, user, showMessage);
                             }
 
                         }
 
                         loadAndPlay(tc, musicManager.scheduler.getLastTrack().getInfo().uri, true, member);
-
 
                     } catch (NullPointerException ex) {
 
@@ -446,6 +392,7 @@ public class MusicListener extends ListenerAdapter {
                     }
 
                     int vol = Integer.parseInt(args[1]);
+                    defaultVolume = vol;
                     setVolume(tc, vol, true);
 
                 }
@@ -477,29 +424,16 @@ public class MusicListener extends ListenerAdapter {
                                     tc.sendMessage("먼저 보이스 채널에 연결해 주세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                                     return;
                                 } else {
-                                    setVolume(tc, 20, false);
+                                    GuildVoiceState nowConnecting = Objects.requireNonNull(guild.getMember(event.getJDA().getSelfUser())).getVoiceState();
+                                    boolean showMessage = false;
 
+                                    if (nowConnecting == null) showMessage = true;
+                                    else {
+                                        if (nowConnecting.getChannel() == null) showMessage = true;
+                                        if (!vc.getId().equals(nowConnecting.getChannel().getId())) showMessage = true;
+                                    }
 
-                                    am.setSendingHandler(new AudioSendHandler() {
-                                        @Override
-                                        public boolean canProvide() {
-                                            return false;
-                                        }
-
-                                        @Nullable
-                                        @Override
-                                        public ByteBuffer provide20MsAudio() {
-                                            return null;
-                                        }
-                                    });
-
-                                    am.openAudioConnection(vc);
-
-                                    eb.setDescription("`" + vc.getName() + "` 보이스 채널에 연결했어요!");
-                                    eb.setFooter(user.getAsTag(), user.getAvatarUrl());
-                                    eb.setColor(Color.CYAN);
-                                    tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
-
+                                    connectToVoiceChannel(vc, tc, user, showMessage);
                                 }
                             }
 
@@ -704,6 +638,17 @@ public class MusicListener extends ListenerAdapter {
                             return;
                         }
 
+                        GuildVoiceState nowConnecting = Objects.requireNonNull(guild.getMember(event.getJDA().getSelfUser())).getVoiceState();
+                        boolean showMessage = false;
+
+                        if (nowConnecting == null) showMessage = true;
+                        else {
+                            if (nowConnecting.getChannel() == null) showMessage = true;
+                            if (!vc.getId().equals(nowConnecting.getChannel().getId())) showMessage = true;
+                        }
+
+                        connectToVoiceChannel(vc, tc, user, showMessage);
+
                         if (mp.playlistExists(user.getId())) {
 
                             int i = 1;
@@ -903,6 +848,17 @@ public class MusicListener extends ListenerAdapter {
                                 return;
                             }
 
+                            GuildVoiceState nowConnecting = Objects.requireNonNull(guild.getMember(event.getJDA().getSelfUser())).getVoiceState();
+                            boolean showMessage = false;
+
+                            if (nowConnecting == null) showMessage = true;
+                            else {
+                                if (nowConnecting.getChannel() == null) showMessage = true;
+                                if (!vc.getId().equals(nowConnecting.getChannel().getId())) showMessage = true;
+                            }
+
+                            connectToVoiceChannel(vc, tc, user, showMessage);
+
                             if (mp.playlistExists(victim)) {
 
                                 int v = 0;
@@ -936,6 +892,17 @@ public class MusicListener extends ListenerAdapter {
                                     tc.sendMessage("먼저 보이스 채널에 연결해 주세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                                     return;
                                 }
+
+                                GuildVoiceState nowConnecting = Objects.requireNonNull(guild.getMember(event.getJDA().getSelfUser())).getVoiceState();
+                                boolean showMessage = false;
+
+                                if (nowConnecting == null) showMessage = true;
+                                else {
+                                    if (nowConnecting.getChannel() == null) showMessage = true;
+                                    if (!vc.getId().equals(nowConnecting.getChannel().getId())) showMessage = true;
+                                }
+
+                                connectToVoiceChannel(vc, tc, user, showMessage);
 
                                 if (mp.playlistExists(targetId)) {
 
@@ -1129,8 +1096,7 @@ public class MusicListener extends ListenerAdapter {
     }
 
     public void play(Guild guild, GuildMusicManager musicManager, AudioTrack track, Member member, TextChannel tc) {
-        boolean voiceChannelConnected = connectToFirstVoiceChannel(guild.getAudioManager());
-        if (!voiceChannelConnected) musicManager.pl.setVolume(20);
+        connectToFirstVoiceChannel(guild.getAudioManager());
         musicManager.scheduler.queue(track, member, tc);
     }
 
@@ -1166,7 +1132,7 @@ public class MusicListener extends ListenerAdapter {
 
     }
 
-    public void skipAllTrack(TextChannel tc, boolean showMessage, Guild guild) {
+    public void skipAllTrack(TextChannel tc, boolean showMessage) {
         GuildMusicManager musicManager = getGuildAudioPlayer(tc.getGuild());
 
         File serverDirectory = new File("D:/Database/Servers/" + tc.getGuild().getId());
@@ -1179,10 +1145,6 @@ public class MusicListener extends ListenerAdapter {
 
         musicManager.pl.stopTrack();
         musicManager.scheduler.queue.clear();
-        musicManager.pl.destroy();
-
-        musicManagers.remove(guild.getIdLong());
-        guild.getAudioManager().setSendingHandler(null);
 
         if (showMessage) {
             EmbedBuilder eb = new EmbedBuilder();
@@ -1195,26 +1157,17 @@ public class MusicListener extends ListenerAdapter {
 
     public void setVolume(TextChannel tc, int volume, boolean showMessage) {
         GuildMusicManager musicManager = getGuildAudioPlayer(tc.getGuild());
-
-        int prVol = musicManager.scheduler.pl.getVolume();
         musicManager.scheduler.pl.setVolume(volume);
 
         EmbedBuilder eb = new EmbedBuilder();
 
-        if (prVol > volume) {
-            eb.setColor(Color.ORANGE);
-            eb.setTitle("볼륨을 줄였습니다!");
-        } else if (prVol == volume) {
-            eb.setColor(Color.YELLOW);
-            showMessage = false;
-        } else {
-            eb.setColor(Color.CYAN);
-            eb.setTitle("볼륨을 높였습니다!");
-        }
-        eb.setDescription(prVol + " :arrow_forward: " + volume);
+        eb.setDescription("볼륨을 `" + volume + "`(으)로 설정했습니다!");
+        eb.setColor(Color.GREEN);
 
         if (!showMessage) return;
         tc.sendMessage(eb.build()).delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+
+        defaultVolume = volume;
     }
 
     public void getNowPlaying(TextChannel tc) {
@@ -1267,15 +1220,46 @@ public class MusicListener extends ListenerAdapter {
 
     }
 
-    public static boolean connectToFirstVoiceChannel(AudioManager audioManager) {
+    public static void connectToFirstVoiceChannel(AudioManager audioManager) {
         if (!audioManager.isConnected()) { // 'audioManager.isAttemptingConnect()' was deprecated
             for (VoiceChannel vc : audioManager.getGuild().getVoiceChannels()) {
                 audioManager.openAudioConnection(vc);
-                return false;
+                return;
             }
         }
+    }
 
-        return true;
+    public void connectToVoiceChannel(VoiceChannel vc, TextChannel tc, User user, boolean showMessage) {
+        AudioManager am = tc.getGuild().getAudioManager();
+        EmbedBuilder eb = new EmbedBuilder();
+
+        if (vc == null) {
+            if (showMessage)
+                tc.sendMessage("먼저 보이스 채널에 연결해 주세요.").delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        } else {
+            if (!am.isConnected()) setVolume(tc, 20, false);
+
+            am.setSendingHandler(new AudioSendHandler() {
+                @Override
+                public boolean canProvide() {
+                    return false;
+                }
+
+                @Nullable
+                @Override
+                public ByteBuffer provide20MsAudio() {
+                    return null;
+                }
+            });
+
+            am.openAudioConnection(vc);
+            setVolume(tc, 20, false);
+
+            eb.setDescription("`" + vc.getName() + "` 보이스 채널에 연결했어요!");
+            eb.setFooter(user.getAsTag(), user.getAvatarUrl());
+            eb.setColor(Color.CYAN);
+            if (showMessage) tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        }
     }
 
 }
