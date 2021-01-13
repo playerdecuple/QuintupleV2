@@ -845,6 +845,11 @@ public class DefaultListener extends ListenerAdapter {
 
                             } catch (IndexOutOfBoundsException ex) {
                                 // ignored
+                            } catch (NullPointerException nl) {
+
+                                String emojiId = guild.getEmotesByName(args[3], true).get(0).getId();
+                                se.stealEmojiFromMessage(emojiId, args[2]);
+
                             }
 
                         }
