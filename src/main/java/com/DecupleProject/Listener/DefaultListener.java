@@ -841,11 +841,11 @@ public class DefaultListener extends ListenerAdapter {
 
                             try {
 
-                                se.stealEmojiFromMessage(msg.getEmotes().get(0).getId(), args[2]);
+                                se.stealEmojiFromMessage(msg.getEmotes().get(0).getId(), args[2].replace(":", ""));
 
                             } catch (IndexOutOfBoundsException ex) {
 
-                                se.stealEmojiFromMessage(guild.getEmotesByName(args[3], true).get(0).getId(), args[2]);
+                                se.stealEmojiFromMessage(guild.getEmotesByName(args[3].replace(":", ""), true).get(0).getId(), args[2].replace(":", ""));
 
                             }
 
