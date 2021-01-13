@@ -141,6 +141,8 @@ public class MusicListener extends ListenerAdapter {
                         eb.setDescription("혹시 보이스 채널에 계시지 않으신가요?");
                         eb.setColor(Color.RED);
 
+                        ex.printStackTrace();
+
                         tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
 
                     }
@@ -221,7 +223,7 @@ public class MusicListener extends ListenerAdapter {
                             if (nowConnecting == null) showMessage = true;
                             else {
                                 if (nowConnecting.getChannel() == null) showMessage = true;
-                                if (!vc.getId().equals(nowConnecting.getChannel().getId())) showMessage = true;
+                                else if (!vc.getId().equals(nowConnecting.getChannel().getId())) showMessage = true;
                             }
 
                             connectToVoiceChannel(vc, tc, user, showMessage);
@@ -248,6 +250,8 @@ public class MusicListener extends ListenerAdapter {
                         eb.setTitle("보이스 채널에 연결할 수 없었어요.");
                         eb.setDescription("혹시 보이스 채널에 계시지 않으신가요?");
                         eb.setColor(Color.RED);
+
+                        ex.printStackTrace();
 
                         tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
 
@@ -319,7 +323,7 @@ public class MusicListener extends ListenerAdapter {
                                 if (nowConnecting == null) showMessage = true;
                                 else {
                                     if (nowConnecting.getChannel() == null) showMessage = true;
-                                    if (!vc.getId().equals(nowConnecting.getChannel().getId())) showMessage = true;
+                                    else if (!vc.getId().equals(nowConnecting.getChannel().getId())) showMessage = true;
                                 }
 
                                 connectToVoiceChannel(vc, tc, user, showMessage);
@@ -334,6 +338,8 @@ public class MusicListener extends ListenerAdapter {
                         eb.setTitle("보이스 채널에 연결할 수 없었어요.");
                         eb.setDescription("혹시 보이스 채널에 계시지 않으신가요?");
                         eb.setColor(Color.RED);
+
+                        ex.printStackTrace();
 
                         tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
 
@@ -430,7 +436,7 @@ public class MusicListener extends ListenerAdapter {
                                     if (nowConnecting == null) showMessage = true;
                                     else {
                                         if (nowConnecting.getChannel() == null) showMessage = true;
-                                        if (!vc.getId().equals(nowConnecting.getChannel().getId())) showMessage = true;
+                                        else if (!vc.getId().equals(nowConnecting.getChannel().getId())) showMessage = true;
                                     }
 
                                     connectToVoiceChannel(vc, tc, user, showMessage);
@@ -486,6 +492,8 @@ public class MusicListener extends ListenerAdapter {
                         eb.setTitle("보이스 채널에 연결할 수 없었어요.");
                         eb.setDescription("혹시 보이스 채널에 계시지 않으신가요?");
                         eb.setColor(Color.RED);
+
+                        ex.printStackTrace();
 
                         tc.sendMessage(eb.build()).delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
 
@@ -644,7 +652,7 @@ public class MusicListener extends ListenerAdapter {
                         if (nowConnecting == null) showMessage = true;
                         else {
                             if (nowConnecting.getChannel() == null) showMessage = true;
-                            if (!vc.getId().equals(nowConnecting.getChannel().getId())) showMessage = true;
+                            else if (!vc.getId().equals(nowConnecting.getChannel().getId())) showMessage = true;
                         }
 
                         connectToVoiceChannel(vc, tc, user, showMessage);
@@ -854,7 +862,7 @@ public class MusicListener extends ListenerAdapter {
                             if (nowConnecting == null) showMessage = true;
                             else {
                                 if (nowConnecting.getChannel() == null) showMessage = true;
-                                if (!vc.getId().equals(nowConnecting.getChannel().getId())) showMessage = true;
+                                else if (!vc.getId().equals(nowConnecting.getChannel().getId())) showMessage = true;
                             }
 
                             connectToVoiceChannel(vc, tc, user, showMessage);
@@ -899,7 +907,7 @@ public class MusicListener extends ListenerAdapter {
                                 if (nowConnecting == null) showMessage = true;
                                 else {
                                     if (nowConnecting.getChannel() == null) showMessage = true;
-                                    if (!vc.getId().equals(nowConnecting.getChannel().getId())) showMessage = true;
+                                    else if (!vc.getId().equals(nowConnecting.getChannel().getId())) showMessage = true;
                                 }
 
                                 connectToVoiceChannel(vc, tc, user, showMessage);
