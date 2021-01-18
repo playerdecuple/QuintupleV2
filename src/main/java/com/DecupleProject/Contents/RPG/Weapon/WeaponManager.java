@@ -388,7 +388,7 @@ public class WeaponManager {
 
         double successPercentage = (1D / (double) getReinforce()) * (double) 7 * 100D;
         double decreasePercentage = (double) getReinforce() / 10D;
-        double destroyPercentage = (double) getReinforce() / 20D;
+        double destroyPercentage = (double) getReinforce() / 15D;
 
         if (successPercentage > 100D) successPercentage = 100D;
         if (100D - successPercentage < decreasePercentage) decreasePercentage = 0D;
