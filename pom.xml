@@ -237,5 +237,11 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.gitlab.siege-insights</groupId>
+            <artifactId>r6tab-java-api-client</artifactId>
+            <version>0.7-alpha</version><!-- Replace with current version number! -->
+        </dependency>
+
     </dependencies>
 </project>
