@@ -44,7 +44,7 @@ public class TrackScheduler extends AudioEventAdapter {
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
 
         lastTrack = track;
-        queue.remove();
+        if (queue.size() > 0) queue.remove();
 
     }
 
