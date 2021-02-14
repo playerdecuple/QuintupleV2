@@ -42,7 +42,10 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
+
         lastTrack = track;
+        queue.remove();
+
     }
 
     @Override
@@ -73,8 +76,6 @@ public class TrackScheduler extends AudioEventAdapter {
                 lastTrack = tracks.get(0).getTrack();
 
                 if (listRepeating) this.queue.add(new AudioInfo(tracks.get(0).getTrack().makeClone(), tc.getGuild().getMember(DefaultListener.jda.getSelfUser()), tc));
-
-                this.queue.remove();
                 tracks.remove(0);
             }
         } catch (IndexOutOfBoundsException e) {
@@ -102,8 +103,6 @@ public class TrackScheduler extends AudioEventAdapter {
                 lastTrack = tracks.get(0).getTrack();
 
                 if (listRepeating) this.queue.add(new AudioInfo(tracks.get(0).getTrack().makeClone(), tc.getGuild().getMember(DefaultListener.jda.getSelfUser()), tc));
-
-                this.queue.remove();
                 tracks.remove(0);
             }
         } catch (IndexOutOfBoundsException e) {
