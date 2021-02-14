@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.gitlab.siege-insights:r6tab-java-api-client:0.7-alpha">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/gitlab/siege-insights/r6tab-java-api-client/0.7-alpha/r6tab-java-api-client-0.7-alpha.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/gitlab/siege-insights/r6tab-java-api-client/0.7-alpha/r6tab-java-api-client-0.7-alpha-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/gitlab/siege-insights/r6tab-java-api-client/0.7-alpha/r6tab-java-api-client-0.7-alpha-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
