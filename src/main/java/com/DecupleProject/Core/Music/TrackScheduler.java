@@ -55,7 +55,7 @@ public class TrackScheduler extends AudioEventAdapter {
             if (repeating) {
                 pl.startTrack(lastTrack.makeClone(), false);
             } else {
-                if (queue.isEmpty()) return;
+                if (queue.isEmpty()) pl.stopTrack();
                 nextTrack();
             }
         }
@@ -77,6 +77,8 @@ public class TrackScheduler extends AudioEventAdapter {
 
                 if (listRepeating) this.queue.add(new AudioInfo(tracks.get(0).getTrack().makeClone(), tc.getGuild().getMember(DefaultListener.jda.getSelfUser()), tc));
                 tracks.remove(0);
+            } else {
+                pl.stopTrack();
             }
         } catch (IndexOutOfBoundsException e) {
             EmbedBuilder eb = new EmbedBuilder();
@@ -104,6 +106,8 @@ public class TrackScheduler extends AudioEventAdapter {
 
                 if (listRepeating) this.queue.add(new AudioInfo(tracks.get(0).getTrack().makeClone(), tc.getGuild().getMember(DefaultListener.jda.getSelfUser()), tc));
                 tracks.remove(0);
+            } else {
+                pl.stopTrack();
             }
         } catch (IndexOutOfBoundsException e) {
             EmbedBuilder eb = new EmbedBuilder();
