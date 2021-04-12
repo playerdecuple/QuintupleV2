@@ -1,5 +1,5 @@
 # QuintupleV2
-> **퀸튜플**의 2.0 버전입니다. (코드네임 : Easier-QUINTUPLE or EQ)  
+> **퀸튜플**의 2.0 버전입니다.
 > **Copyright (c) 2021 TEAM DECUPLE. All rights reserved.**
 
 ## QuintupleV2의 변경 사항
